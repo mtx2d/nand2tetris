@@ -15,5 +15,38 @@ CHIP RAM8 {
     OUT out[16];
 
     PARTS:
-    // Put your code here:
+    DMux(in=load, sel=address[0], a=c0, b=c1);
+    DMux4Way(in=load, sel=address[1..2], a=r0, b=r1, c=r2, d=r3);
+
+    // Reg 00
+    And(a=r0, b=c0, out=reg00);
+    Register(in=in, load=reg00, out=out);
+
+    // Reg 01
+    And(a=r0, b=c1, out=reg01);
+    Register(in=in, load=reg01, out=out);
+
+    // Reg 10
+    And(a=r1, b=c0, out=reg10);
+    Register(in=in, load=reg10, out=out);
+
+    // Reg 11
+    And(a=r1, b=c1, out=reg11);
+    Register(in=in, load=reg11, out=out);
+
+    // Reg 20
+    And(a=r2, b=c0, out=reg20);
+    Register(in=in, load=reg20, out=out);
+
+    // Reg 21
+    And(a=r2, b=c1, out=reg21);
+    Register(in=in, load=reg21, out=out);
+
+    // Reg 30
+    And(a=r3, b=c0, out=reg30);
+    Register(in=in, load=reg30, out=out);
+
+    // Reg 31
+    And(a=r3, b=c1, out=reg31);
+    Register(in=in, load=reg31, out=out);
 }
