@@ -20,8 +20,8 @@ CHIP PC {
     Mux16(a=x, b=in, sel=load, out=y);
     Mux16(a=y, b=false, sel=reset, out=z);
 
-    Or(a=inc, b=reset, out=orir);
-    Or(a=orir, b=load, out=orirl);
-    Register(in=z, load=orirl, out=u, out=out);
+    Or(a=inc, b=load, out=oRil);
+    Or(a=oRil, b=reset, out=oRilr);
+    Register(in=z, load=oRilr, out=u, out=out);
     Inc16(in=u, out=w);
 }
