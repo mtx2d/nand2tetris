@@ -61,7 +61,13 @@ CHIP ALU {
 
     //handle f
     Mux16(a=xAndy, b=xAddy, sel=f, out=fOut);
-    //handle no
+    //handle no, and ng flag
     Not16(in=fOut, out=negateFOut);
-    Mux16(a=fOut, b=negateFOut, sel=no, out=out);
+    Mux16(a=fOut, b=negateFOut, sel=no, out=out, out[15]=ng, out[8..15]=msb, out[0..7]=lsb);
+
+    //handle zr flag
+    Or8Way(in=msb, out=orMsb);
+    Or8Way(in=lsb, out=orLsb);
+    Or(a=orMsb, b=orLsb, out=orOut);
+    Not(in=orOut, out=zr);
 }
