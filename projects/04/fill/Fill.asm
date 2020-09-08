@@ -28,9 +28,9 @@
     @cnt // cnt = 0
     M=0
     (LOOP2)
-        @cnt // if cnt > 8160: break and go back to LOOP
+        @cnt // if cnt > 8191: break and go back to LOOP
         D=M
-        @8160
+        @8191
         D=D-A
         @LOOP
         D;JGT
@@ -53,9 +53,9 @@
     @cnt1 //cnt1 = 0
     M=0
     (LOOP3)
-        @cnt1 // if cnt1 > 8160: break and go back to LOOP
+        @cnt1 // if cnt1 > 8191: break and go back to LOOP
         D=M
-        @8160
+        @8191
         D=D-A
         @LOOP
         D;JGT
