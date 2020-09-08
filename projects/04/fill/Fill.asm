@@ -12,3 +12,49 @@
 // the screen should remain fully clear as long as no key is pressed.
 
 // Put your code here.
+(LOOP)
+    @KBD
+    D = M
+    @FILL_SCREEN
+    D; JNE // if KBD != 0: FILL_SCREEN
+
+    @CLEAR_SCREEN // else CLEAR_SCREEN
+    0;JMP
+
+    @LOOP
+    0;JMP
+
+(FILL_SCREEN)
+    @cnt // cnt = 0
+    M=0
+    (LOOP2)
+        @cnt // if cnt > 8160: break and go back to LOOP
+        D=M
+        @8160
+        D=D-A
+        @LOOP
+        D;JGT
+        
+        @cnt
+        M=M+1 // cnt++
+
+        @LOOP2
+        0;JMP
+
+
+(CLEAR_SCREEN)
+    @cnt1 //cnt1 = 0
+    M=0
+    (LOOP3)
+        @cnt1 // if cnt1 > 8160: break and go back to LOOP
+        D=M
+        @8160
+        D=D-A
+        @LOOP
+        D;JGT
+
+        @cnt1
+        M=M+1
+
+        @LOOP3
+        0;JMP 
