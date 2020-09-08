@@ -17,24 +17,24 @@ D=M
 M=D
 
 (LOOP)
-@loop_count
-D=M
+    @loop_count
+    D=M
 
-@END
-D; JEQ // if loop_count == 0: goto end
+    @END
+    D; JEQ // if loop_count == 0: goto end
 
-@R1 // read R[1]
-D=M
+    @R1 // read R[1]
+    D=M
 
-@R2
-M=M+D // R[2] = R[2] + R[1]
+    @R2
+    M=M+D // R[2] = R[2] + R[1]
 
-@loop_count
-M=M-1 // loop_count--
+    @loop_count
+    M=M-1 // loop_count--
 
-@LOOP // repeat
-0; JMP
+    @LOOP // repeat
+    0; JMP
 
 (END)
-@END
-0; JMP
+    @END
+    0; JMP
