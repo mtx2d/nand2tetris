@@ -39,7 +39,7 @@
         @cnt
         D=M
         @SCREEN
-        A=M+D
+        A=A+D
         M=-1
 
         @cnt
@@ -64,7 +64,7 @@
         @cnt1
         D=M
         @SCREEN
-        A=M+D
+        A=A+D
         M=0
 
         @cnt1 // cnt1++
