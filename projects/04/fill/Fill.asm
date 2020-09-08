@@ -35,6 +35,13 @@
         @LOOP
         D;JGT
         
+        // SCREEN[cnt] = -1
+        @cnt
+        D=M
+        @SCREEN
+        A=M+D
+        M=-1
+
         @cnt
         M=M+1 // cnt++
 
@@ -52,8 +59,15 @@
         D=D-A
         @LOOP
         D;JGT
-
+        
+        // SCREEN[cnt1] = 0
         @cnt1
+        D=M
+        @SCREEN
+        A=M+D
+        M=0
+
+        @cnt1 // cnt1++
         M=M+1
 
         @LOOP3
