@@ -54,13 +54,14 @@ CHIP CPU {
     Not(in=zr, out=notZr);
     Not(in=ng, out=notNg);
     And(a=notZr, b=notNg, out=JGT);
+    Mux(a=false/*no jump*/, b=JGT, sel=instruction[0] /*j3*/, out=x);
+    Mux(a=zr/*JEQ*/, b=notNg /*JGE*/, sel=instruction[0] /*j3*/, out=y);
+    Mux(a=ng/*JLT*/, b=notZr/*JNE*/, sel=instruction[0]/*j3*/, out=z);
     Or(a=ng, b=zr, out=JLE);
-    Mux8Way16(a=false/*no jump*/, b=JGT, c=zr/*JEQ*/, d=notNg/*JGE*/, e=ng/*JLT*/, 
-            f=notZr/*JNE*/, g=JLE, h=true/*JMP*/, sel=instruction[0..2]/*jump bits*/, 
-            out=shouldLoadPc16);
-    Or8Way(in=shouldLoadPc16[0..7], out=x);
-    Or8Way(in=shouldLoadPc16[8..15], out=y);
-    Or(a=x, b=y, out=shouldLoadPc);
+    Mux(a=JLE, b=true, sel=instruction[0]/*j3*/, out=u);
+    Mux(a=x, b=y, sel=instruction[1]/*j2*/, out=v);
+    Mux(a=z, b=u, sel=instruction[1]/*j2*/, out=w);
+    Mux(a=v, b=w, sel=instruction[0]/*j1*/, out=shouldLoadPc);
     
     PC(in=A, load=shouldLoadPc, inc=true, reset=reset, out[0..14]=pc);
 
