@@ -27,10 +27,11 @@ CHIP Memory {
     OUT out[16];
 
     PARTS:
-    DMux4Way(in=load, sel[0]=address[13], sel[1]=address[14], a=loadRam0, b=loadRam1, c=loadScreen, d=nil);
+    //For DMux4way: its sel[1]sel[0] <-> address[14]address[13], because HDL's array is right to left.
+    DMux4Way(in=load, sel=address[13..14], a=loadRam0, b=loadRam1, c=loadScreen, d=nil);
     Or(a=loadRam0, b=loadRam1, out=loadRam);
     RAM16K(in=in, load=loadRam, address=address[0..13], out=ramOut);
     Screen(in=in, load=loadScreen, address=address[0..12], out=screenOut);
     Keyboard(out=keyboardOut);
-    Mux4Way16(a=ramOut, b=ramOut, c=screenOut, d=keyboardOut, sel[0]=address[13], sel[1]=address[14], out=out);
+    Mux4Way16(a=ramOut, b=ramOut, c=screenOut, d=keyboardOut, sel=address[13..14], out=out);
 }
