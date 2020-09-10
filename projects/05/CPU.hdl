@@ -44,6 +44,7 @@ CHIP CPU {
     Mux(a=instruction[5] /*d1*/, b=true, sel=isAinst, out=shouldLoadA);
     Register(in=newA, load=shouldLoadA, out=A);
 
+    Register(in=aluOut, load=instruction[4] /*d2*/, out=D);
     Mux16(a=A, b=inM, sel=instruction[12] /*a*/, out=aOrM);
     ALU(x=D, y=aOrM, zx=instruction[11], nx=instruction[10],
         zy=instruction[9], ny=instruction[8], f=instruction[7], 
@@ -51,4 +52,8 @@ CHIP CPU {
 
     Not(in=zr, out=notZr);
     Not(in=ng, out=notNg)
+    DMux8Way(in=true, sel=instruction[0..2], a=noJump, b=JGT, c=JEQ, d=JGE, e=JLT, f=JNE, g=JLE, h=JMP);
+    PC(in=A, load=shouldLoadPc, inc=noJump, reset=reset, out=pc);
+
+    And(a=instruction[3]/*d3*/, b=instruction[15]/*C-instruction*/, out=writeM);
 }
