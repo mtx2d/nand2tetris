@@ -42,9 +42,9 @@ CHIP CPU {
     Not(in=instruction[15], out=isAinst);
     Mux16(a=aluOut, b=instruction, sel=isAinst, out=newA);
     Mux(a=instruction[5] /*d1*/, b=true, sel=isAinst, out=shouldLoadA);
-    DRegister(in=newA, load=shouldLoadA, out=A);
+    Register(in=newA, load=shouldLoadA, out=A);
 
-    Register(in=aluOut, load=instruction[4] /*d2*/, out=D);
+    DRegister(in=aluOut, load=instruction[4] /*d2*/, out=D);
     Mux16(a=A, b=inM, sel=instruction[12] /*a*/, out=aOrM);
     ALU(x=D, y=aOrM, zx=instruction[11], nx=instruction[10],
         zy=instruction[9], ny=instruction[8], f=instruction[7], 
