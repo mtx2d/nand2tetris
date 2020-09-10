@@ -48,7 +48,8 @@ CHIP CPU {
     Mux16(a=A, b=inM, sel=instruction[12] /*a*/, out=aOrM);
     ALU(x=D, y=aOrM, zx=instruction[11], nx=instruction[10],
         zy=instruction[9], ny=instruction[8], f=instruction[7], 
-        no=instruction[6], out=aluOut, out=outM, zr=zr, ng=ng);
+        no=instruction[6], out=aluOut, zr=zr, ng=ng);
+    Mux16(a=aluOut, b=false, sel=isAinst, out=outM);
 
     // Jump logic
     Not(in=zr, out=notZr);
@@ -61,7 +62,8 @@ CHIP CPU {
     Mux(a=JLE, b=true, sel=instruction[0]/*j3*/, out=u);
     Mux(a=x, b=y, sel=instruction[1]/*j2*/, out=v);
     Mux(a=z, b=u, sel=instruction[1]/*j2*/, out=w);
-    Mux(a=v, b=w, sel=instruction[0]/*j1*/, out=shouldLoadPc);
+    Mux(a=v, b=w, sel=instruction[0]/*j1*/, out=maybeLoadPc);
+    And(a=maybeLoadPc, b=instruction[15]/*isCinst*/, out=shouldLoadPc);
     
     PC(in=A, load=shouldLoadPc, inc=true, reset=reset, out[0..14]=pc);
 
