@@ -13,7 +13,8 @@ class Parser:
         with open(self._path, 'r') as f:
             count = self._count
             line = f.readline().strip()
-            while line.isspace():
-                line = f.readline()
+            while line.isspace() or not line:
+                print('isspace')
+                line = f.readline().strip()
             self._count += 1
             yield count, line

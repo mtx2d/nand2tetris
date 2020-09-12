@@ -12,8 +12,8 @@ class TestParser(unittest.TestCase):
 
         expected_insts = [
             *zip(
-                range(7),
-                ["R0", "D=M", "@R1", "D=D-M", "@OUTPUT_FIRST", "D;JGT", "@R1", "D=M"],
+                range(1, 8),
+                ["@R0", "D=M", "@R1", "D=D-M", "@OUTPUT_FIRST", "D;JGT", "@R1", "D=M"],
             )
         ]
         self.assertEqual(insts, expected_insts)
