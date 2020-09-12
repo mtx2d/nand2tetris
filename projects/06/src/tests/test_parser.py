@@ -25,8 +25,7 @@ class TestParser(unittest.TestCase):
             self.assertEqual(pair[0], pair[1])
 
     def test_get_instruction(self):
-        with open(os.path.join(THIS_DIR, "./test_parser_file.asm")) as fp:
-            insts = [inst for inst in self.parser.get_instruction(fp)]
+        insts = [inst for inst in self.parser.get_instruction()]
 
         expected_insts = [
             *zip(
