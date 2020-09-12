@@ -3,7 +3,7 @@ import re
 import sys
 
 from lib.instruction import Instruction
-from typing import Generator
+from typing import Generator, Tuple
 
 
 class Parser:
@@ -27,7 +27,7 @@ class Parser:
     def _parse(self, line) -> Instruction:
         pass
 
-    def get_instruction(self) -> Generator[int, Instruction]:
+    def get_instruction(self) -> Generator[Tuple[int, Instruction], None, None]:
         with open(self._path, "r") as f:
             for line in f:
                 line = self._get_clean_line(line)
