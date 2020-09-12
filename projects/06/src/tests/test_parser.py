@@ -21,7 +21,7 @@ class TestParser(unittest.TestCase):
         ]
         expected_lines = ["D=D-M", "D=M", "D;JGT"]
 
-        for pair in zip(lines, expected_lines):
+        for pair in zip(expected_lines, lines):
             self.assertEqual(pair[0], pair[1])
 
     def test_get_instruction(self):
