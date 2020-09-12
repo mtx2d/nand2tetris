@@ -45,8 +45,13 @@ class TestParser(unittest.TestCase):
             )
         ]
 
-        for (expected_num_inst_pair, actual_num_inst_pair) in zip(expected_num_inst_pairs, num_inst_pairs):
-            self.assertEqual(expected_num_inst_pair[0], actual_num_inst_pair[0])  # test line number
+        for (expected_num_inst_pair, actual_num_inst_pair) in zip(
+            expected_num_inst_pairs, num_inst_pairs
+        ):
             self.assertEqual(
-                expected_num_inst_pair[1].to_string(), actual_num_inst_pair[1].to_string()
+                expected_num_inst_pair[0], actual_num_inst_pair[0]
+            )  # test line number
+            self.assertEqual(
+                expected_num_inst_pair[1].to_string(),
+                actual_num_inst_pair[1].to_string(),
             )  # test actual instruction
