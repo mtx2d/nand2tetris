@@ -17,7 +17,7 @@ def main():
             pass
 
         # Second pass, generate machine code because address are all ready.
-        for inst in parser.get_instruction():
+        for (num, inst) in parser.get_instruction():
             machine_code = encoder.encode(inst)
             of.write(machine_code)
 

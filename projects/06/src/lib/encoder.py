@@ -73,6 +73,7 @@ class Encoder:
         return "1110" + comp_code + dest_code + jump_code
 
     def encode(self, inst: Instruction) -> str:
+        print("DEBUG: mqiu1", inst)
         if isinstance(inst, AInstruction):
             return self._encode_A_instruction(inst)
         elif isinstance(inst, CInstruction):

@@ -64,7 +64,7 @@ class TestParser(unittest.TestCase):
         expected_insts = [
             CInstruction(None, "D=M", "JMP"),
             CInstruction(None, "M", "JMP"),
-            CInstruction(None, "M=D", None),
+            CInstruction("M", "D", None),
             CInstruction(None, "M", None),
         ]
 

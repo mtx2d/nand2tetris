@@ -12,6 +12,9 @@ class AInstruction(Instruction):
     def to_string(self):
         return "@" + self.value
 
+    def __repr__(self):
+        return self.to_string()
+
 
 class CInstruction(Instruction):
     def __init__(self, dest: Optional[str], comp: str, jump: Optional[str]):
@@ -26,3 +29,6 @@ class CInstruction(Instruction):
         if self.jump:
             processed_cmd = processed_cmd + ";" + self.jump
         return processed_cmd
+
+    def __repr__(self):
+        return self.to_string()
