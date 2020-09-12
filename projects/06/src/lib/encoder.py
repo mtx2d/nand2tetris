@@ -1,6 +1,15 @@
 from lib.instruction import Instruction, AInstruction, CInstruction
 
-dest_map = {}
+dest_map = {
+    "null":"000",
+    "M":"001",
+    "D":"010",
+    "MD":"011",
+    "A":"100",
+    "AM":"110",
+    "AD":"101",
+    "AMD":"111",
+}
 jump_map = {}
 comp_map = {
     "0":"101010",
