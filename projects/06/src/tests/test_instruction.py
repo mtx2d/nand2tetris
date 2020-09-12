@@ -16,5 +16,8 @@ class TestCInstruction(unittest.TestCase):
 
         for pair in zip(insts, expected_insts):
             self.assertEqual(pair[0].to_string(), pair[1].to_string())
-        
-        self.assertRaises(ValueError, CInstruction.from_line("M=D;;J"))
+
+    def test_from_line_raise_for_invalid_lines(self):
+        lines_malformated = ["M=D;;J", "A==D"]
+        for line in lines_malformated:
+            self.assertRaises(ValueError, CInstruction.from_line, line)

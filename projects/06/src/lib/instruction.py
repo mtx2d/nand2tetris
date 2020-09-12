@@ -16,6 +16,11 @@ class AInstruction(Instruction):
 class CInstruction(Instruction):
     @classmethod
     def from_line(cls, line: str):
+        if line.count(";") > 1:
+            raise ValueError('line format error, should not have more than one ";" ')
+
+        if line.count("=") > 1:
+            raise ValueError('line format error, should not have more than one "="')
 
         if "=" in line and ";" in line:
             # D=M; JMP
@@ -33,7 +38,7 @@ class CInstruction(Instruction):
             # D
             return cls(dest=None, comp=line.strip(), jump=None)
 
-        raise ValueError('line format invalid: ', line)
+        raise ValueError("line format invalid: ", line)
 
     def __init__(self, dest: Optional[str], comp: str, jump: Optional[str]):
         self.dest: Optional[str] = dest
