@@ -8,6 +8,9 @@ class TestSymbolTable(unittest.TestCase):
         st.add("LOOP", 5)
         st.add("i", 17)
 
+        self.assertTrue(st.has_symbol("R0"))
+        self.assertTrue(st.has_symbol("R1"))
+        self.assertTrue(st.has_symbol("R2"))
         self.assertEqual(5, st.table["LOOP"])
         self.assertEqual(17, st.table["i"])
 
