@@ -9,8 +9,24 @@ class TestParser(unittest.TestCase):
     def setUp(self):
         self.parser = Parser(os.path.join(THIS_DIR, "./test_parser_file.asm"))
 
+    def test_strip_comments(self):
+        lines = [
+            self.parser.strip_comments(
+                "D=D-M            // D = first number - second number"
+            ),
+            self.parser.strip_comments("D=M              // D = first number"),
+            self.parser.strip_comments(
+                "D;JGT              // if D>0 (first is greater) goto output_first"
+            ),
+        ]
+        expected_lines = ["D=D-M", "D=M", "D;JGT"]
+
+        for pair in zip(lines, expected_lines):
+            self.assertEqual(pair[0], pair[1])
+
     def test_get_instruction(self):
-        insts = [inst for inst in self.parser.get_instruction()]
+        with open(os.path.join(THIS_DIR, "./test_parser_file.asm")) as fp:
+            insts = [inst for inst in self.parser.get_instruction(fp)]
 
         expected_insts = [
             *zip(
@@ -19,9 +35,3 @@ class TestParser(unittest.TestCase):
             )
         ]
         self.assertEqual(insts, expected_insts)
-
-    def test_strip_comments(self):
-        line_with_comments = "D=D-M            // D = first number - second number"
-        line = self.parser.strip_comments(line_with_comments)
-        expected_line = "D=D-M"
-        self.assertEqual(line, expected_line)

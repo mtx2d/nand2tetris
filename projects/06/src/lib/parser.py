@@ -11,17 +11,16 @@ class Parser:
         self._path = path
         self._count = 0
 
-    def get_instruction(self):
-        with open(self._path, "r") as f:
-            count = self._count
+    def get_instruction(self, f):
+        for line in f:
             line = f.readline().strip()
             # skip empty lines
-            while line.isspace() or not line:
-                line = f.readline().strip()
+            if line.isspace() or len(line) == 0:
+                continue
             # strip comments
             line = self.strip_comments(line)
             self._count += 1
-            yield count, line
+            yield self._count, line
 
     def strip_comments(self, text):
         return re.sub(
