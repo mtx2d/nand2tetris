@@ -10,6 +10,12 @@ def main():
     symbol_table = SymbolTable()
     encoder = Encoder()
 
-    while parser.has_next_instruction():
-        inst = parser.get_instruction()
-        encoder
+    # First pass, prepares symbol table
+    for inst in parser.get_instruction():
+        symbol_table
+        pass
+
+    # Second pass, generate machine code because address are all ready.
+    for inst in parser.get_instruction():
+        machine_code = encoder.encode(inst)
+        pass
