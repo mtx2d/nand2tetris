@@ -1,7 +1,7 @@
 from lib.instruction import Instruction, AInstruction, CInstruction
 
 dest_map = {
-    "null": "000",
+    None: "000",
     "M": "001",
     "D": "010",
     "MD": "011",
@@ -12,7 +12,7 @@ dest_map = {
 }
 
 jump_map = {
-    "null": "000",
+    None: "000",
     "JGT": "001",
     "JEQ": "010",
     "JGE": "011",
