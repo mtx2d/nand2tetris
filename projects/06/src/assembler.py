@@ -11,7 +11,7 @@ def main():
     symbol_table = SymbolTable()
     encoder = Encoder()
 
-    with open("./output.hack", "w") as of:
+    with open(argv[2] or "./output.hack", "w") as of:
         # First pass, prepares symbol table
         for inst in parser.get_instruction():
             pass
