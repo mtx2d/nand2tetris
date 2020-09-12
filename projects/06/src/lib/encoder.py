@@ -57,7 +57,7 @@ comp_map = {
 class Encoder:
     def __init__(self):
         self._encoders = {
-            type(AInstruction) : self._encode_A_instruction,
+            type(AInstruction): self._encode_A_instruction,
             type(CInstruction): self._encode_C_instruction,
         }
 
