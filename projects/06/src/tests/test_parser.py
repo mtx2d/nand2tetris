@@ -27,24 +27,25 @@ class TestParser(unittest.TestCase):
             self.assertEqual(pair[0], pair[1])
 
     def test_get_instruction(self):
-        insts = [(num, inst) for (num, inst) in self.parser.get_instruction()]
+        num_inst_pairs = [(num, inst) for (num, inst) in self.parser.get_instruction()]
 
         expected_insts = [
+            AInstruction(value="R0"),
+            CInstruction(dest="D", comp="M", jump=None),
+            AInstruction(value="R1"),
+            CInstruction(dest="D", comp="D-M", jump=None),
+            CInstruction(dest=None, comp="D", jump="JGT"),
+            AInstruction(value="R1"),
+            CInstruction(dest="D", comp="M", jump=None),
+        ]
+        expected_num_inst_pairs = [
             *zip(
-                range(1, len(insts)),
-                [
-                    AInstruction(value="R0"),
-                    CInstruction(dest="D", comp="M", jump=None),
-                    AInstruction(value="R1"),
-                    CInstruction(dest="D", comp="D-M", jump=None),
-                    CInstruction(dest=None, comp="D", jump="JGT"),
-                    AInstruction(value="R1"),
-                    CInstruction(dest="D", comp="M", jump=None),
-                ],
+                range(1, len(expected_insts)),
+                expected_insts,
             )
         ]
 
-        for pair in zip(expected_insts, insts):
+        for pair in zip(expected_num_inst_pairs, num_inst_pairs):
             self.assertEqual(pair[0][0], pair[1][0])  # test line number
             self.assertEqual(
                 pair[0][1].to_string(), pair[1][1].to_string()
