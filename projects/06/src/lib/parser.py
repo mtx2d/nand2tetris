@@ -3,6 +3,8 @@ import re
 import sys
 
 from lib.instruction import Instruction
+from typing import Generator
+
 
 class Parser:
     """
@@ -22,14 +24,18 @@ class Parser:
     def _get_clean_line(self, line):
         return self.strip_comments(line.strip())
 
-    def get_instruction(self):
+    def _parse(self, line) -> Instruction:
+        pass
+
+    def get_instruction(self) -> Generator[int, Instruction]:
         with open(self._path, "r") as f:
             for line in f:
                 line = self._get_clean_line(line)
                 if not line:
                     continue
                 self._count += 1
-                yield self._count, line
+                instruction = self._parse(line)
+                yield self._count, instruction
 
     def strip_comments(self, text):
         return re.sub(

@@ -1,6 +1,8 @@
-import unittest
-from lib.parser import Parser
 import os
+import unittest
+
+from lib.parser import Parser
+from lib.instruction import Instruction, AInstruction, CInstruction, Label
 
 THIS_DIR = os.path.dirname(os.path.abspath(__file__))
 
@@ -30,7 +32,16 @@ class TestParser(unittest.TestCase):
         expected_insts = [
             *zip(
                 range(1, 9),
-                ["@R0", "D=M", "@R1", "D=D-M", "@OUTPUT_FIRST", "D;JGT", "@R1", "D=M"],
+                [
+                    AInstruction(value="R0"),
+                    CInstruction(dest="D", comp="M", jump=None),
+                    AInstruction(value="R1"),
+                    CInstruction(dest="D", comp="D-M", jump=None),
+                    Label(name="OUTPUT_FIRST"),
+                    CInstruction(dest=None, comp="D", jump="JGT"),
+                    AInstruction(value="R1"),
+                    CInstruction(dest="D", comp="M", jump=None),
+                ],
             )
         ]
         self.assertEqual(insts, expected_insts)
