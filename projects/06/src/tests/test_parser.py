@@ -50,18 +50,21 @@ class TestParser(unittest.TestCase):
         ):  # check line number match
             self.assertEqual(exp_num_inst[0], test_num_inst[0])
             # chectk instruction match
-            self.assertEqual(
-                exp_num_inst[1].dest,
-                test_num_inst[1].dest,
-            )
-            self.assertEqual(
-                exp_num_inst[1].comp,
-                test_num_inst[1].comp,
-            )
-            self.assertEqual(
-                exp_num_inst[1].jump,
-                test_num_inst[1].jump,
-            )
+            if isinstance(exp_num_inst[1], AInstruction):
+                self.assertEqual(exp_num_inst[1].value, test_num_inst[1].value)
+            else:
+                self.assertEqual(
+                    exp_num_inst[1].dest,
+                    test_num_inst[1].dest,
+                )
+                self.assertEqual(
+                    exp_num_inst[1].comp,
+                    test_num_inst[1].comp,
+                )
+                self.assertEqual(
+                    exp_num_inst[1].jump,
+                    test_num_inst[1].jump,
+                )
 
     def test__C_instruction_builder(self):
         # good cases
