@@ -23,7 +23,7 @@ class Parser:
     def _get_clean_line(self, line):
         return self.strip_comments(line.strip())
 
-    def _C_instruction_builder(self, line):
+    def _parse_c_instruction(self, line):
         if line.count(";") > 1:
             raise ValueError('line format error, should not have more than one ";" ')
 
@@ -54,7 +54,7 @@ class Parser:
         if line.startswith("@"):
             inst = AInstruction(value=line[1:])
         else:
-            inst = self._C_instruction_builder(line)
+            inst = self._parse_c_instruction(line)
 
         return inst
 

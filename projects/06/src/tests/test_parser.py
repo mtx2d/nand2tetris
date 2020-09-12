@@ -66,22 +66,23 @@ class TestParser(unittest.TestCase):
                     test_num_inst[1].jump,
                 )
 
-    def test__C_instruction_builder(self):
-        # good cases
-        lines = ["D=M; JMP", "M; JMP", "M=D", "M"]
-        insts = [self.parser._C_instruction_builder(line) for line in lines]
+    def test__parse_c_instruction(self):
+        # normal line cases
+        lines = ["D=M; JMP", "M; JMP", "M=D", "M", "AM=M-1"]
+        insts = [self.parser._parse_c_instruction(line) for line in lines]
 
         expected_insts = [
             CInstruction("D", "M", "JMP"),
             CInstruction(None, "M", "JMP"),
             CInstruction("M", "D", None),
             CInstruction(None, "M", None),
+            CInstruction("AM", "M-1", None),
         ]
 
         for pair in zip(insts, expected_insts):
             self.assertEqual(pair[0].to_string(), pair[1].to_string())
 
-        # bad cases
+        # bad line cases
         lines_malformated = ["M=D;;J", "A==D"]
         for line in lines_malformated:
-            self.assertRaises(ValueError, self.parser._C_instruction_builder, line)
+            self.assertRaises(ValueError, self.parser._parse_c_instruction, line)
