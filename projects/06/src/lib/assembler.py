@@ -1,8 +1,8 @@
 from os import path
 
 from parser import Parser
-from symbol_table import SymbolTable
-from encoder import Encoder
+from lib.symbol_table import SymbolTable
+from lib.encoder import Encoder
 
 
 def main():
@@ -10,12 +10,14 @@ def main():
     symbol_table = SymbolTable()
     encoder = Encoder()
 
-    # First pass, prepares symbol table
-    for inst in parser.get_instruction():
-        symbol_table
-        pass
+    with open("/output.hack", "w") as of:
+        # First pass, prepares symbol table
+        for inst in parser.get_instruction():
+            symbol_table
+            pass
 
-    # Second pass, generate machine code because address are all ready.
-    for inst in parser.get_instruction():
-        machine_code = encoder.encode(inst)
-        pass
+        # Second pass, generate machine code because address are all ready.
+        for inst in parser.get_instruction():
+            machine_code = encoder.encode(inst)
+            of.write(machine_code)
+            pass
