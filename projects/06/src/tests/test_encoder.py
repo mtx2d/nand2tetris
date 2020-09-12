@@ -27,6 +27,7 @@ class TestEncoder(unittest.TestCase):
             CInstruction(dest="M", comp="D", jump=None),
             AInstruction(value="14"),
             CInstruction(dest=None, comp="0", jump="JMP"),
+            CInstruction(dest="AM", comp="M-1", jump=None),
         ]
         expected_machine_codes = [
             "0000000001111011",
@@ -47,6 +48,7 @@ class TestEncoder(unittest.TestCase):
             "1110001100001000",
             "0000000000001110",
             "1110101010000111",
+            "1111110010101000",
         ]
         machine_codes = [self.encoder.encode(i) for i in insts]
 
