@@ -11,6 +11,13 @@ class AInstruction(Instruction):
 
 
 class CInstruction(Instruction):
+
+    @classmethod
+    def from_line(cls, line: str):
+        dest, line = line.split("=")
+        comp, jump = line.split(";")
+        return cls(dest=dest.strip(), comp=comp.strip(), jump=jump.strip())
+
     def __init__(self, dest: str, comp: str, jump: str):
         self.dest: str = dest
         self.comp: str = comp
@@ -24,10 +31,3 @@ class CInstruction(Instruction):
             processed_cmd = processed_cmd + ";" + self.jump
         return processed_cmd
 
-
-class Label(Instruction):
-    def __init__(self, name):
-        self.name = name
-    
-    def __repr__(self):
-        return "@" + self.name

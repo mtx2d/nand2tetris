@@ -2,7 +2,7 @@ import os
 import re
 import sys
 
-from lib.instruction import Instruction
+from lib.instruction import Instruction, AInstruction, CInstruction
 from typing import Generator, Tuple
 
 
@@ -14,7 +14,6 @@ class Parser:
     - break each into different components
         - C: dest, comp, jump
         - A: value
-        - Label: label name
     """
 
     def __init__(self, path: str):
@@ -25,7 +24,14 @@ class Parser:
         return self.strip_comments(line.strip())
 
     def _parse(self, line) -> Instruction:
-        pass
+        inst = Instruction()
+        if line.startswith("@"):
+            _, value = line[1:]
+            inst = AInstruction(value)
+        else:
+            inst = CInstruction.from_line(line)
+
+        return inst
 
     def get_instruction(self) -> Generator[Tuple[int, Instruction], None, None]:
         with open(self._path, "r") as f:
