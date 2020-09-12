@@ -41,7 +41,8 @@ class Parser:
             return CInstruction(dest=None, comp=comp.strip(), jump=jump.strip())
         elif "=" in line:
             # M=D
-            return CInstruction(dest=None, comp=line.strip(), jump=None)
+            dest, comp = line.split("=")
+            return CInstruction(dest=dest.strip(), comp=comp.strip(), jump=None)
         else:
             # D
             return CInstruction(dest=None, comp=line.strip(), jump=None)

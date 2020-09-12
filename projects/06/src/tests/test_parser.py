@@ -47,14 +47,21 @@ class TestParser(unittest.TestCase):
 
         for (exp_num_inst, test_num_inst) in zip(
             expected_num_inst_pairs, num_inst_pairs
-        ):
+        ):  # check line number match
+            self.assertEqual(exp_num_inst[0], test_num_inst[0])
+            # chectk instruction match
             self.assertEqual(
-                exp_num_inst[0], test_num_inst[0]
-            )  # check line number match
+                exp_num_inst[1].dest,
+                test_num_inst[1].dest,
+            )
             self.assertEqual(
-                exp_num_inst[1].to_string(),
-                test_num_inst[1].to_string(),
-            )  # chectk instruction match
+                exp_num_inst[1].comp,
+                test_num_inst[1].comp,
+            )
+            self.assertEqual(
+                exp_num_inst[1].jump,
+                test_num_inst[1].jump,
+            )
 
     def test__C_instruction_builder(self):
         # good cases
@@ -62,7 +69,7 @@ class TestParser(unittest.TestCase):
         insts = [self.parser._C_instruction_builder(line) for line in lines]
 
         expected_insts = [
-            CInstruction(None, "D=M", "JMP"),
+            CInstruction("D", "M", "JMP"),
             CInstruction(None, "M", "JMP"),
             CInstruction("M", "D", None),
             CInstruction(None, "M", None),
