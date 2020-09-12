@@ -55,7 +55,6 @@ class TestParser(unittest.TestCase):
                 exp_num_inst[1].to_string(),
                 test_num_inst[1].to_string(),
             )  # chectk instruction match
-    
 
     def test__C_instruction_builder(self):
         # good cases
@@ -76,4 +75,3 @@ class TestParser(unittest.TestCase):
         lines_malformated = ["M=D;;J", "A==D"]
         for line in lines_malformated:
             self.assertRaises(ValueError, self.parser._C_instruction_builder, line)
-

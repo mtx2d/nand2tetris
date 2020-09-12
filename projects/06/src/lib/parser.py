@@ -22,7 +22,7 @@ class Parser:
 
     def _get_clean_line(self, line):
         return self.strip_comments(line.strip())
-    
+
     def _C_instruction_builder(self, line):
         if line.count(";") > 1:
             raise ValueError('line format error, should not have more than one ";" ')

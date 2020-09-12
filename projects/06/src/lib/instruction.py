@@ -14,7 +14,6 @@ class AInstruction(Instruction):
 
 
 class CInstruction(Instruction):
-
     def __init__(self, dest: Optional[str], comp: str, jump: Optional[str]):
         self.dest: Optional[str] = dest
         self.comp: str = comp
