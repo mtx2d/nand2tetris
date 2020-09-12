@@ -55,8 +55,26 @@ comp_map = {
 
 
 class Encoder:
+
     def __init__(self):
+        self.encoders = {
+            AInstruction: self._encode_A_instruction,
+            CInstruction: self._encode_C_instruction,
+        }
+
+    def _encode_A_instruction(self, inst):
         pass
 
-    def encode_instruction(self, instruction: Instruction) -> str:
-        pass
+    def _encode_C_instruction(self, inst):
+        dest_code = dest_map(inst.dest)
+        comp_code = comp_map(inst.comp)
+        jump_code = jump_map(inst.jump)
+        if 'M' in inst.comp:
+            return "1111" + comp_code + dest_code + jump_code
+        return "1110" + comp_code + dest_code + jump_code
+
+    def encode_instruction(self, inst: Instruction) -> str:
+        if inst not in self.encoders:
+            raise ValueError("Do not have encoder for instruction type: ", type(inst))
+        return self.encoders[inst]
+

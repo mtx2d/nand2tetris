@@ -22,13 +22,38 @@ class Parser:
 
     def _get_clean_line(self, line):
         return self.strip_comments(line.strip())
+    
+    def _C_instruction_builder(self, line):
+        if line.count(";") > 1:
+            raise ValueError('line format error, should not have more than one ";" ')
+
+        if line.count("=") > 1:
+            raise ValueError('line format error, should not have more than one "="')
+
+        if "=" in line and ";" in line:
+            # D=M; JMP
+            dest, tail = line.split("=")
+            comp, jump = tail.split(";")
+            return CInstruction(dest=dest.strip(), comp=comp.strip(), jump=jump.strip())
+        elif ";" in line:
+            # M; JMP
+            comp, jump = line.split(";")
+            return CInstruction(dest=None, comp=comp.strip(), jump=jump.strip())
+        elif "=" in line:
+            # M=D
+            return CInstruction(dest=None, comp=line.strip(), jump=None)
+        else:
+            # D
+            return CInstruction(dest=None, comp=line.strip(), jump=None)
+
+        raise ValueError("line format invalid: ", line)
 
     def _parse(self, line) -> Instruction:
         inst = Instruction()
         if line.startswith("@"):
             inst = AInstruction(value=line[1:])
         else:
-            inst = CInstruction.from_line(line)
+            inst = self._C_instruction_builder(line)
 
         return inst
 
