@@ -1,13 +1,3 @@
-class Instrucion:
-    pass
-
-
-class AInstruction(Instruction):
-    pass
-
-
-class CInstruction(Instruction):
-    pass
 
 
 class Encoder:
