@@ -30,7 +30,7 @@ class TestParser(unittest.TestCase):
 
         expected_insts = [
             *zip(
-                range(1, 8),
+                range(1, 9),
                 ["@R0", "D=M", "@R1", "D=D-M", "@OUTPUT_FIRST", "D;JGT", "@R1", "D=M"],
             )
         ]

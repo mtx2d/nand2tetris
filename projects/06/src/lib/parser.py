@@ -1,6 +1,6 @@
 import os
 import re
-
+import sys
 
 class Parser:
     """
@@ -13,7 +13,7 @@ class Parser:
 
     def get_instruction(self, f):
         for line in f:
-            line = f.readline().strip()
+            line = line.strip()
             # skip empty lines
             if line.isspace() or len(line) == 0:
                 continue
