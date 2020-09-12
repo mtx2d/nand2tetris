@@ -9,7 +9,7 @@ class AInstruction(Instruction):
     def __init__(self, value):
         self.value = value
 
-    def __repr__(self):
+    def to_string(self):
         return "@" + self.value
 
 

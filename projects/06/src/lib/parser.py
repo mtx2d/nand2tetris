@@ -26,8 +26,7 @@ class Parser:
     def _parse(self, line) -> Instruction:
         inst = Instruction()
         if line.startswith("@"):
-            _, value = line[1:]
-            inst = AInstruction(value)
+            inst = AInstruction(value=line[1:])
         else:
             inst = CInstruction.from_line(line)
 
