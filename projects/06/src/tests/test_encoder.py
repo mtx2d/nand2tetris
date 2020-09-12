@@ -7,7 +7,7 @@ class TestEncoder(unittest.TestCase):
     def setUp(self):
         self.encoder = Encoder()
 
-    def test_encode_instruction(self):
+    def test_encode(self):
         insts = [
             AInstruction(value="123"),
             CInstruction(dest="D", comp="M", jump="JGT"),
@@ -31,10 +31,10 @@ class TestEncoder(unittest.TestCase):
         expected_machine_codes = [
             "0000000001111011",
             "1111110000010001",
-            "0000000000000000", # @0
-            "1111110000010000", # D=M
-            "0000000000000001", # @1
-            "1111010011010000", # D=D-M
+            "0000000000000000",  # @0
+            "1111110000010000",  # D=M
+            "0000000000000001",  # @1
+            "1111010011010000",  # D=D-M
             "0000000000001010",
             "1110001100000001",
             "0000000000000001",
@@ -48,6 +48,6 @@ class TestEncoder(unittest.TestCase):
             "0000000000001110",
             "1110101010000111",
         ]
-        machine_codes = [self.encoder.encode_instruction(i) for i in insts]
+        machine_codes = [self.encoder.encode(i) for i in insts]
 
         self.assertEqual(expected_machine_codes, machine_codes)

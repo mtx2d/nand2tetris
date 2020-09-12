@@ -72,7 +72,7 @@ class Encoder:
             return "1111" + comp_code + dest_code + jump_code
         return "1110" + comp_code + dest_code + jump_code
 
-    def encode_instruction(self, inst: Instruction) -> str:
+    def encode(self, inst: Instruction) -> str:
         if isinstance(inst, AInstruction):
             return self._encode_A_instruction(inst)
         elif isinstance(inst, CInstruction):

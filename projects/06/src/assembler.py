@@ -22,5 +22,5 @@ def main():
             of.write(machine_code)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()
