@@ -24,10 +24,6 @@ def main():
             if isinstance(inst, LInstruction):
                 continue
             machine_code = encoder.encode(inst, symbol_table.get_or_add)
-            # DEBUG
-            if isinstance(inst, AInstruction):
-                if inst.value == "math.1":
-                    print("debug1: ", machine_code)
             of.write(machine_code + "\n")
 
         if len(argv) > 3:
