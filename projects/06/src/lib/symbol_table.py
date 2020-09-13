@@ -28,24 +28,21 @@ PREDEFINED_SYMBOLS = {
 class SymbolTable:
     def __init__(self, table=PREDEFINED_SYMBOLS):
         self.table: dict(str, int) = table
-        self.used_addr: set(int) = set(table.values())
-        self.next_avlb_addr = 16
+        #self.used_addr: set(int) = set(table.values())
+        self.cnt_free_ram_addr = 16
 
-    def add(self, name: str, addr: int) -> None:
+    def add_label(self, name: str, addr: int) -> None:
+        # Add program lable, the address here is ROM addr.
         if not self.has_symbol(name):
             self.table[name] = addr
-            self.used_addr.add(addr)
 
     def get_or_add(self, name: str) -> int:
         # if not exist, add and then return
         # if exists, directly return
         if not self.has_symbol(name):
-            while self.next_avlb_addr in self.used_addr:
-                self.next_avlb_addr += 1
-            self.add(name, self.next_avlb_addr)
-            return self.table[name]
-        else:
-            return self.table[name]
+            self.table[name] = self.cnt_free_ram_addr
+            self.cnt_free_ram_addr += 1
+        return self.table[name]
 
     def has_symbol(self, name) -> bool:
         return name in self.table

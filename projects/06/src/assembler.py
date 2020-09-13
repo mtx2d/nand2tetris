@@ -12,7 +12,7 @@ def main():
     symbol_table = SymbolTable()
     encoder = Encoder()
 
-    with open(argv[2] or "./output.hack", "w") as of:
+    with open(argv[2] if len(argv) > 2 else "./output.hack", "w") as of:
         # First pass, prepares symbol table with label address
         for (num, inst) in parser.get_instruction():
             if isinstance(inst, LInstruction):
@@ -25,6 +25,8 @@ def main():
                 continue
             machine_code = encoder.encode(inst, symbol_table.get_or_add)
             of.write(machine_code + "\n")
+
+        #print(symbol_table.table)
 
 
 if __name__ == "__main__":

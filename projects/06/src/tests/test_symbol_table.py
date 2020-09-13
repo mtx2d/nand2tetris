@@ -3,16 +3,16 @@ from lib.symbol_table import SymbolTable
 
 
 class TestSymbolTable(unittest.TestCase):
-    def test_add(self):
+    def test_add_label(self):
         st = SymbolTable()
-        st.add("LOOP", 20)
-        st.add("i", 17)
+        st.add_label("LOOP", 3)
+        st.add_label("END EQ", 5)
 
         self.assertTrue(st.has_symbol("R0"))
         self.assertTrue(st.has_symbol("R1"))
         self.assertTrue(st.has_symbol("R2"))
-        self.assertEqual(20, st.table["LOOP"])
-        self.assertEqual(17, st.table["i"])
+        self.assertEqual(3, st.table["LOOP"])
+        self.assertEqual(5, st.table["END EQ"])
 
     def test_has_symbol(self):
         st = SymbolTable({"LOOP": 123, "SUM": 23})
