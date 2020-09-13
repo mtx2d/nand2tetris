@@ -72,6 +72,9 @@ class Encoder:
         else:
             # symbol lable case
             addr = st_get_or_add(inst.value)
+            if inst.value == "math.1":
+                print("inst: ", inst.to_string())
+                print("addr: ", addr)
             return "{0:016b}".format(addr)[-16:]
 
     def _encode_C_instruction(self, inst: CInstruction) -> str:
