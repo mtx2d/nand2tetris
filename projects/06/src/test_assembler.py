@@ -3,6 +3,7 @@ import assembler
 import tempfile
 import filecmp
 import os
+import random
 
 THIS_DIR = os.path.dirname(os.path.abspath(__file__))
 
@@ -17,13 +18,13 @@ TEST_ASM_FILES = [
 ]
 
 TEST_EXP_HACK_FILES = [
-    "../add/ExpectedAdd.hack",
-    "../max/ExpectedMax.hack",
-    "../max/ExpectedMaxL.hack",
-    "../pong/ExpectedPong.hack",
-    "../pong/ExpectedPongL.hack",
-    "../rect/ExpectedRect.hack",
-    "../rect/ExpectedRectL.hack",
+    "../add/Add.hack",
+    "../max/Max.hack",
+    "../max/Max.hack",
+    "../pong/Pong.hack",
+    "../pong/Pong.hack",
+    "../rect/Rect.hack",
+    "../rect/Rect.hack",
 ]
 
 
@@ -37,8 +38,12 @@ class TestAssembler(unittest.TestCase):
         for (input_asm_file, exp_hack_file) in zip(TEST_ASM_FILES, TEST_EXP_HACK_FILES):
             with tempfile.TemporaryDirectory() as tempdir:
                 input_file = os.path.join(THIS_DIR, input_asm_file)
-                output_file = os.path.join(tempdir, "output.hack")
+                output_file = os.path.join(
+                    tempdir, "output{}.hack".format(random.randint(0, 999))
+                )
                 expected_output_file = os.path.join(THIS_DIR, exp_hack_file)
+
+                print("debug", input_file, output_file, expected_output_file)
 
                 assembler.main(
                     "assember.py {} {}".format(input_file, output_file).split()
