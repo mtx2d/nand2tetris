@@ -33,11 +33,6 @@ def parse_args(argv: List[str]) -> argparse.Namespace:
         help="Binary file for machine code: *.hack",
         default="./output.hack",
     )
-    parser.add_argument(
-        "--dump_symbol_table",
-        action="store_true",
-        help="Filepath to dump symbol table",
-    )
     return parser.parse_args(argv[1:])
 
 
@@ -58,15 +53,6 @@ def main(argv: List[str]) -> int:
         for machine_code in machine_code_gnerator:
             of.write(machine_code + "\n")
 
-        if args.dump_symbol_table:
-            with open(argv[3], "w") as debug_f:
-                sorted_st = {
-                    k: v
-                    for k, v in sorted(
-                        symbol_table.table.items(), key=lambda item: item[1]
-                    )
-                }
-                debug_f.write("x = " + str(sorted_st))
     return 0
 
 

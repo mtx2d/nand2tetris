@@ -17,7 +17,7 @@ TEST_ASM_FILES = [
 ]
 
 TEST_EXP_HACK_FILES = [
-    "../add/Expected_Add.hack",
+    "../add/ExpectedAdd.hack",
     "../max/ExpectedMax.hack",
     "../max/ExpectedMaxL.hack",
     "../pong/ExpectedPong.hack",
