@@ -7,23 +7,36 @@ from lib.parser import Parser
 from lib.symbol_table import SymbolTable
 
 
+def add_labels_to_symbol_table(parser: Parser, symbol_table: SymbolTable):
+    line_count = 0
+    for inst in parser.get_instruction():
+        if isinstance(inst, LInstruction):
+            symbol_table.add_label(inst.name, line_count)
+        line_count += 1
+
+
+def generate_machine_code(parser: Parser, symbol_table: SymbolTable, encoder: Encoder):
+    for inst in parser.get_instruction():
+        if isinstance(inst, LInstruction):
+            continue
+        machine_code = encoder.encode(inst, symbol_table.get_or_add)
+        yield machine_code
+
+
 def main():
     parser = Parser(path=argv[1])
     symbol_table = SymbolTable()
     encoder = Encoder()
 
     with open(argv[2] if len(argv) > 2 else "./output.hack", "w") as of:
-        # First pass, prepares symbol table with label address
-        for (num, inst) in parser.get_instruction():
-            if isinstance(inst, LInstruction):
-                if not symbol_table.has_symbol(inst.name):
-                    symbol_table.add_label(inst.name, num + 1)
+        # First pass
+        add_labels_to_symbol_table(parser, symbol_table)
 
-        # Second pass, generate machine code because address are all ready.
-        for (_, inst) in parser.get_instruction():
-            if isinstance(inst, LInstruction):
-                continue
-            machine_code = encoder.encode(inst, symbol_table.get_or_add)
+        # Second pass
+        machine_code_gnerator = generate_machine_code(parser, symbol_table, encoder)
+
+        # Write to file
+        for machine_code in machine_code_gnerator:
             of.write(machine_code + "\n")
 
         if len(argv) > 3:
