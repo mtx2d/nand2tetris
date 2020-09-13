@@ -68,11 +68,11 @@ class Encoder:
         self, inst: AInstruction, st_get_or_add: Callable[[str], int]
     ) -> str:
         if all([v.isdigit() for v in inst.value]):
-            return "{0:016b}".format(int(inst.value))[-16:]
+            return "{0:0>16b}".format(int(inst.value))
         else:
             # symbol lable case
             addr = st_get_or_add(inst.value)
-            return "{0:016b}".format(addr)[-16:]
+            return "{0:0>16b}".format(addr)
 
     def _encode_C_instruction(self, inst: CInstruction) -> str:
         dest_code = dest_map[inst.dest]
