@@ -18,7 +18,6 @@ class Parser:
 
     def __init__(self, path: str):
         self._path = path
-        self._count = -1
 
     def _get_clean_line(self, line):
         return self.strip_comments(line.strip())
@@ -66,12 +65,7 @@ class Parser:
                 if not line:
                     continue
                 instruction = self._parse(line)
-                if isinstance(instruction, LInstruction):
-                    yield self._count, instruction
-                else:
-                    # Do NOT count label
-                    self._count += 1
-                    yield self._count, instruction
+                yield instruction
 
     def strip_comments(self, text):
         return re.sub(

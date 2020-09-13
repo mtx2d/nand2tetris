@@ -27,46 +27,42 @@ class TestParser(unittest.TestCase):
             self.assertEqual(pair[0], pair[1])
 
     def test_get_instruction(self):
-        # TODO mock the file read
-        num_inst_pairs = [(num, inst) for (num, inst) in self.parser.get_instruction()]
+        insts = [inst for inst in self.parser.get_instruction()]
 
-        expected_num_inst_pairs = [
-            (0, AInstruction(value="R0")),
-            (1, CInstruction(dest="D", comp="M", jump=None)),
-            (2, AInstruction(value="R1")),
-            (3, CInstruction(dest="D", comp="D-M", jump=None)),
-            (4, CInstruction(dest=None, comp="D", jump="JGT")),
-            (5, AInstruction(value="R1")),
-            (6, CInstruction(dest="D", comp="M", jump=None)),
-            (6, LInstruction(name="INFINITE_LOOP")),
-            (7, AInstruction(value="INFINITE_LOOP")),
-            (8, CInstruction(dest=None, comp="0", jump="JMP")),
-            (8, LInstruction(name="END EQ")),
-            (9, AInstruction(value="END EQ")),
-            (10, CInstruction(dest=None, comp="D", jump="JNE")),
+        expected_insts = [
+            AInstruction(value="R0"),
+            CInstruction(dest="D", comp="M", jump=None),
+            AInstruction(value="R1"),
+            CInstruction(dest="D", comp="D-M", jump=None),
+            CInstruction(dest=None, comp="D", jump="JGT"),
+            AInstruction(value="R1"),
+            CInstruction(dest="D", comp="M", jump=None),
+            LInstruction(name="INFINITE_LOOP"),
+            AInstruction(value="INFINITE_LOOP"),
+            CInstruction(dest=None, comp="0", jump="JMP"),
+            LInstruction(name="END EQ"),
+            AInstruction(value="END EQ"),
+            CInstruction(dest=None, comp="D", jump="JNE"),
         ]
 
-        for (exp_num_inst, test_num_inst) in zip(
-            expected_num_inst_pairs, num_inst_pairs
-        ):  # check line number match
-            self.assertEqual(exp_num_inst[0], test_num_inst[0])
-            # chectk instruction match
-            if isinstance(exp_num_inst[1], AInstruction):
-                self.assertEqual(exp_num_inst[1].value, test_num_inst[1].value)
-            elif isinstance(exp_num_inst[1], LInstruction):
-                self.assertEqual(exp_num_inst[1].name, test_num_inst[1].name)
+        # TODO implement __eq__ for all these instructions
+        for (exp_inst, inst) in zip(expected_insts, insts):
+            if isinstance(exp_inst, AInstruction):
+                self.assertEqual(exp_inst.value, inst.value)
+            elif isinstance(exp_inst, LInstruction):
+                self.assertEqual(exp_inst.name, inst.name)
             else:
                 self.assertEqual(
-                    exp_num_inst[1].dest,
-                    test_num_inst[1].dest,
+                    exp_inst.dest,
+                    inst.dest,
                 )
                 self.assertEqual(
-                    exp_num_inst[1].comp,
-                    test_num_inst[1].comp,
+                    exp_inst.comp,
+                    inst.comp,
                 )
                 self.assertEqual(
-                    exp_num_inst[1].jump,
-                    test_num_inst[1].jump,
+                    exp_inst.jump,
+                    inst.jump,
                 )
 
     def test__parse_c_instruction(self):
