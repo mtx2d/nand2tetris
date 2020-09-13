@@ -38,11 +38,6 @@ def parse_args(argv: List[str]) -> argparse.Namespace:
         action="store_true",
         help="Filepath to dump symbol table",
     )
-    parser.add_argument(
-        "--verbose",
-        action="store_true",
-        help="Output machine code to stdout",
-    )
     return parser.parse_args(argv[1:])
 
 
@@ -61,9 +56,6 @@ def main(argv: List[str]) -> int:
 
         # Write to file
         for machine_code in machine_code_gnerator:
-            # DEBUG
-            if args.verbose:
-                print(machine_code)
             of.write(machine_code + "\n")
 
         if args.dump_symbol_table:
