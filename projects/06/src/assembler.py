@@ -12,6 +12,7 @@ def add_labels_to_symbol_table(parser: Parser, symbol_table: SymbolTable):
     for inst in parser.get_instruction():
         if isinstance(inst, LInstruction):
             symbol_table.add_label(inst.name, line_count)
+            continue
         line_count += 1
 
 
