@@ -13,15 +13,15 @@ def main():
     encoder = Encoder()
 
     with open(argv[2] or "./output.hack", "w") as of:
-        # First pass, prepares symbol table
+        # First pass, prepares symbol table with label address
         for (num, inst) in parser.get_instruction():
             if isinstance(inst, LInstruction):
                 if not symbol_table.has_symbol(inst.name):
                     symbol_table.add(inst.name, num + 1)
 
         # Second pass, generate machine code because address are all ready.
-        for (num, inst) in parser.get_instruction():
-            machine_code = encoder.encode(inst)
+        for (_, inst) in parser.get_instruction():
+            machine_code = encoder.encode(inst, symbol_table.get_or_add)
             of.write(machine_code + "\n")
 
 

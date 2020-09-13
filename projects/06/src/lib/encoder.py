@@ -1,4 +1,7 @@
+from typing import Callable
+
 from lib.instruction import Instruction, AInstruction, CInstruction
+from lib.symbol_table import SymbolTable
 
 dest_map = {
     None: "000",
@@ -61,8 +64,15 @@ class Encoder:
             type(CInstruction): self._encode_C_instruction,
         }
 
-    def _encode_A_instruction(self, inst: AInstruction) -> str:
-        return "{0:016b}".format(int(inst.value))[-16:]
+    def _encode_A_instruction(
+        self, inst: AInstruction, st_get_or_add: Callable[[str], int]
+    ) -> str:
+        if all([v.isdigit() for v in inst.value]):
+            return "{0:016b}".format(int(inst.value))[-16:]
+        else:
+            # symbol lable case
+            addr = st_get_or_add(inst.value)
+            return "{0:016b}".format(addr)[-16:]
 
     def _encode_C_instruction(self, inst: CInstruction) -> str:
         dest_code = dest_map[inst.dest]
@@ -72,9 +82,9 @@ class Encoder:
             return "1111" + comp_code + dest_code + jump_code
         return "1110" + comp_code + dest_code + jump_code
 
-    def encode(self, inst: Instruction) -> str:
+    def encode(self, inst: Instruction, st_get_or_add: Callable[[str], int]) -> str:
         if isinstance(inst, AInstruction):
-            return self._encode_A_instruction(inst)
+            return self._encode_A_instruction(inst, st_get_or_add)
         elif isinstance(inst, CInstruction):
             return self._encode_C_instruction(inst)
         else:

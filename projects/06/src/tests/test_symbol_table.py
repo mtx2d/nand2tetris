@@ -27,12 +27,11 @@ class TestSymbolTable(unittest.TestCase):
         self.assertEqual(st.get("LOOP"), 222)
         self.assertEqual(st.get("SUM"), 32)
         self.assertRaises(ValueError, st.get, "WRONG_KEY")
-    
+
     def test_get_or_add(self):
         st = SymbolTable()
-        st.get_or_add("SUM") # SUM, 16
-        st.get_or_add("i") # i, 17
+        st.get_or_add("SUM")  # SUM, 16
+        st.get_or_add("i")  # i, 17
 
-        self.assertEqual(16, st.get('SUM'))
-        self.assertEqual(17, st.get('i'))
-        
+        self.assertEqual(16, st.get("SUM"))
+        self.assertEqual(17, st.get("i"))

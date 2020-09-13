@@ -1,11 +1,13 @@
 import unittest
 from lib.encoder import Encoder
 from lib.instruction import Instruction, AInstruction, CInstruction
+from lib.symbol_table import SymbolTable
 
 
 class TestEncoder(unittest.TestCase):
     def setUp(self):
         self.encoder = Encoder()
+        self.st = SymbolTable()
 
     def test_encode(self):
         insts = [
@@ -50,6 +52,6 @@ class TestEncoder(unittest.TestCase):
             "1110101010000111",
             "1111110010101000",
         ]
-        machine_codes = [self.encoder.encode(i) for i in insts]
+        machine_codes = [self.encoder.encode(i, self.st.get_or_add) for i in insts]
 
         self.assertEqual(expected_machine_codes, machine_codes)
