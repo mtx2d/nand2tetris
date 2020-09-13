@@ -32,3 +32,14 @@ class CInstruction(Instruction):
 
     def __repr__(self):
         return self.to_string()
+
+
+class LInstruction(Instruction):
+    def __init__(self, name: str):
+        self.name = name
+
+    def to_string(self):
+        return "(" + self.name + ")"
+
+    def __repr__(self):
+        return self.to_string()

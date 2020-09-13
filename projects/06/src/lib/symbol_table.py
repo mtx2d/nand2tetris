@@ -28,6 +28,7 @@ PREDEFINED_SYMBOLS = {
 class SymbolTable:
     def __init__(self, table=PREDEFINED_SYMBOLS):
         self.table: dict(str, int) = table
+        self.next_avlb_addr = 16
 
     def add(self, name, addr) -> None:
         if not self.has_symbol(name):

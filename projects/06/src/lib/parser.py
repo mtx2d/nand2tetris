@@ -2,7 +2,7 @@ import os
 import re
 import sys
 
-from lib.instruction import Instruction, AInstruction, CInstruction
+from lib.instruction import Instruction, AInstruction, CInstruction, LInstruction
 from typing import Generator, Tuple
 
 
@@ -50,8 +50,9 @@ class Parser:
         raise ValueError("line format invalid: ", line)
 
     def _parse(self, line) -> Instruction:
-        inst = Instruction()
-        if line.startswith("@"):
+        if line.startswith("("):
+            inst = LInstruction(name=line[1:-1].strip())
+        elif line.startswith("@"):
             inst = AInstruction(value=line[1:])
         else:
             inst = self._parse_c_instruction(line)
@@ -64,9 +65,13 @@ class Parser:
                 line = self._get_clean_line(line)
                 if not line:
                     continue
-                self._count += 1
                 instruction = self._parse(line)
-                yield self._count, instruction
+                if isinstance(instruction, LInstruction):
+                    yield self._count, instruction
+                else:
+                    # Do NOT count label
+                    self._count += 1
+                    yield self._count, instruction
 
     def strip_comments(self, text):
         return re.sub(

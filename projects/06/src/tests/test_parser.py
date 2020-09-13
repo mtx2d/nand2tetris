@@ -2,7 +2,7 @@ import os
 import unittest
 
 from lib.parser import Parser
-from lib.instruction import Instruction, AInstruction, CInstruction
+from lib.instruction import Instruction, AInstruction, CInstruction, LInstruction
 
 THIS_DIR = os.path.dirname(os.path.abspath(__file__))
 
@@ -27,22 +27,20 @@ class TestParser(unittest.TestCase):
             self.assertEqual(pair[0], pair[1])
 
     def test_get_instruction(self):
+        # TODO mock the file read
         num_inst_pairs = [(num, inst) for (num, inst) in self.parser.get_instruction()]
 
-        expected_insts = [
-            AInstruction(value="R0"),
-            CInstruction(dest="D", comp="M", jump=None),
-            AInstruction(value="R1"),
-            CInstruction(dest="D", comp="D-M", jump=None),
-            CInstruction(dest=None, comp="D", jump="JGT"),
-            AInstruction(value="R1"),
-            CInstruction(dest="D", comp="M", jump=None),
-        ]
         expected_num_inst_pairs = [
-            *zip(
-                range(1, len(expected_insts)),
-                expected_insts,
-            )
+            (1, AInstruction(value="R0")),
+            (2, CInstruction(dest="D", comp="M", jump=None)),
+            (3, AInstruction(value="R1")),
+            (4, CInstruction(dest="D", comp="D-M", jump=None)),
+            (5, CInstruction(dest=None, comp="D", jump="JGT")),
+            (6, AInstruction(value="R1")),
+            (7, CInstruction(dest="D", comp="M", jump=None)),
+            (7, LInstruction(name="INFINITE_LOOP")),
+            (8, AInstruction(value="INFINITE_LOOP")),
+            (9, CInstruction(dest=None, comp="0", jump="JMP")),
         ]
 
         for (exp_num_inst, test_num_inst) in zip(
@@ -52,6 +50,8 @@ class TestParser(unittest.TestCase):
             # chectk instruction match
             if isinstance(exp_num_inst[1], AInstruction):
                 self.assertEqual(exp_num_inst[1].value, test_num_inst[1].value)
+            elif isinstance(exp_num_inst[1], LInstruction):
+                self.assertEqual(exp_num_inst[1].name, test_num_inst[1].name)
             else:
                 self.assertEqual(
                     exp_num_inst[1].dest,
