@@ -1,5 +1,5 @@
-from os import path
-from sys import argv
+import argparse
+import sys
 
 from lib.encoder import Encoder
 from lib.instruction import Instruction, AInstruction, CInstruction, LInstruction
@@ -24,12 +24,33 @@ def generate_machine_code(parser: Parser, symbol_table: SymbolTable, encoder: En
         yield machine_code
 
 
-def main():
-    parser = Parser(path=argv[1])
+def parse_arg(argv: List[str]) -> argparse.NamespaceArgument:
+    parser = argparse.ArgumentParser()
+    parser.add_argument(
+        "input", nargs="+", help="Assembly file for assembly commands: *.asm"
+    )
+    parser.add_argument(
+        "output",
+        nargs="+",
+        help="Binary file for machine code: *.hack",
+        default="./output.hack",
+    )
+    parser.add_argument(
+        "--dump_symbol_table",
+        help="Filepath to dump symbol table",
+        optional=True,
+        defualt="./debug_symbol_table.py",
+    )
+    return parser.parse_arg(argv[1:])
+
+
+def main(argv: List[str]) -> int:
+    args = parse_arg(argv)
+    parser = Parser(path=args.input)
     symbol_table = SymbolTable()
     encoder = Encoder()
 
-    with open(argv[2] if len(argv) > 2 else "./output.hack", "w") as of:
+    with open(args.output, "w") as of:
         # First pass
         add_labels_to_symbol_table(parser, symbol_table)
 
@@ -40,7 +61,7 @@ def main():
         for machine_code in machine_code_gnerator:
             of.write(machine_code + "\n")
 
-        if len(argv) > 3:
+        if args.dump_symbol_table:
             with open(argv[3], "w") as debug_f:
                 sorted_st = {
                     k: v
@@ -49,7 +70,8 @@ def main():
                     )
                 }
                 debug_f.write("x = " + str(sorted_st))
+    return 0
 
 
 if __name__ == "__main__":
-    main()
+    sys.exit(main(sys.argv[1:]))
