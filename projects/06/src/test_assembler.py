@@ -16,7 +16,15 @@ TEST_ASM_FILES = [
     "../rect/RectL.asm",
 ]
 
-TEST_EXP_HACK_FILES = ["../add/Expected_Add.hack"]
+TEST_EXP_HACK_FILES = [
+    "../add/Expected_Add.hack",
+    "../max/ExpectedMax.hack",
+    "../max/ExpectedMaxL.hack",
+    "../pong/ExpectedPong.hack",
+    "../pong/ExpectedPongL.hack",
+    "../rect/ExpectedRect.hack",
+    "../rect/ExpectedRectL.hack",
+]
 
 
 class TestAssembler(unittest.TestCase):
