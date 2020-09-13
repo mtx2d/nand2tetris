@@ -20,9 +20,6 @@ TEST_EXP_HACK_FILES = ["../add/Expected_Add.hack"]
 
 
 class TestAssembler(unittest.TestCase):
-    def test_main(self):
-        with self.assertRaises(SystemExit):
-            assembler.main(["assembler.py"])
 
     def test_parse_args(self):
         args = assembler.parse_args("assembler.py in.asm out.hack".split())
@@ -31,16 +28,24 @@ class TestAssembler(unittest.TestCase):
 
     def test_assembling_add(self):
         with tempfile.TemporaryDirectory() as tempdir:
-            output = os.path.join(tempdir, "output.hack")
             input_file = os.path.join(THIS_DIR, TEST_ASM_FILES[0])
+            output_file = os.path.join(tempdir, "output.hack")
+            expected_output_file = os.path.join(THIS_DIR, TEST_EXP_HACK_FILES[0])
+
             assembler.main(
-                "assember.py {} {} {}".format("--verbose", input_file, output).split()
+                "assember.py {} {}".format(input_file, output_file).split()
             )
 
-            expected_file = os.path.join(THIS_DIR, TEST_EXP_HACK_FILES[0])
+            with open(output_file) as f:
+                print(f.read())
+            
+
+            with open(expected_output_file) as f:
+                print(f.read())
+
             self.assertTrue(
-                filecmp.cmp(output, expected_file, shallow=False),
+                filecmp.cmp(output_file, expected_output_file),
                 "File differ: {} differnt from ground truth {}".format(
-                    output, expected_file
+                    output_file, expected_output_file
                 ),
             )
