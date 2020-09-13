@@ -25,15 +25,18 @@ class TestAssembler(unittest.TestCase):
         self.assertEqual(args.input, "in.asm")
         self.assertEqual(args.output, "out.hack")
 
-    def test_assembling_add(self):
-        with tempfile.TemporaryDirectory() as tempdir:
-            input_file = os.path.join(THIS_DIR, TEST_ASM_FILES[0])
-            output_file = os.path.join(tempdir, "output.hack")
-            expected_output_file = os.path.join(THIS_DIR, TEST_EXP_HACK_FILES[0])
+    def test_assembling(self):
+        for (input_asm_file, exp_hack_file) in zip(TEST_ASM_FILES, TEST_EXP_HACK_FILES):
+            with tempfile.TemporaryDirectory() as tempdir:
+                input_file = os.path.join(THIS_DIR, input_asm_file)
+                output_file = os.path.join(tempdir, "output.hack")
+                expected_output_file = os.path.join(THIS_DIR, exp_hack_file)
 
-            assembler.main("assember.py {} {}".format(input_file, output_file).split())
+                assembler.main(
+                    "assember.py {} {}".format(input_file, output_file).split()
+                )
 
-            self.assertTrue(
-                filecmp.cmp(output_file, expected_output_file),
-                "{} is differnt from {}".format(output_file, expected_output_file),
-            )
+                self.assertTrue(
+                    filecmp.cmp(output_file, expected_output_file),
+                    "{} is differnt from {}".format(output_file, expected_output_file),
+                )
