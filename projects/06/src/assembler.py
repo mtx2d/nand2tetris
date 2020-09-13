@@ -1,5 +1,6 @@
 import argparse
 import sys
+from typing import List
 
 from lib.encoder import Encoder
 from lib.instruction import Instruction, AInstruction, CInstruction, LInstruction
@@ -24,28 +25,24 @@ def generate_machine_code(parser: Parser, symbol_table: SymbolTable, encoder: En
         yield machine_code
 
 
-def parse_arg(argv: List[str]) -> argparse.NamespaceArgument:
+def parse_args(argv: List[str]) -> argparse.Namespace:
     parser = argparse.ArgumentParser()
-    parser.add_argument(
-        "input", nargs="+", help="Assembly file for assembly commands: *.asm"
-    )
+    parser.add_argument("input", help="Assembly file for assembly commands: *.asm")
     parser.add_argument(
         "output",
-        nargs="+",
         help="Binary file for machine code: *.hack",
         default="./output.hack",
     )
     parser.add_argument(
         "--dump_symbol_table",
+        nargs="?",
         help="Filepath to dump symbol table",
-        optional=True,
-        defualt="./debug_symbol_table.py",
     )
-    return parser.parse_arg(argv[1:])
+    return parser.parse_args(argv[1:])
 
 
 def main(argv: List[str]) -> int:
-    args = parse_arg(argv)
+    args = parse_args(argv)
     parser = Parser(path=args.input)
     symbol_table = SymbolTable()
     encoder = Encoder()
