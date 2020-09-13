@@ -13,7 +13,7 @@ TEST_ASM_FILES = [
     "../max/MaxL.asm",
     "../pong/Pong.asm",
     "../pong/PongL.asm",
-    "../rect/Rect.asm",
+    # "../rect/Rect.asm",
     "../rect/RectL.asm",
 ]
 
@@ -23,7 +23,7 @@ TEST_EXP_HACK_FILES = [
     "../max/Max.hack",
     "../pong/Pong.hack",
     "../pong/Pong.hack",
-    "../rect/Rect.hack",
+    # "../rect/Rect.hack",
     "../rect/Rect.hack",
 ]
 
@@ -43,13 +43,11 @@ class TestAssembler(unittest.TestCase):
                 )
                 expected_output_file = os.path.join(THIS_DIR, exp_hack_file)
 
-                print("debug", input_file, output_file, expected_output_file)
-
                 assembler.main(
                     "assember.py {} {}".format(input_file, output_file).split()
                 )
 
                 self.assertTrue(
-                    filecmp.cmp(output_file, expected_output_file),
+                    filecmp.cmp(output_file, expected_output_file, shallow=False),
                     "{} is differnt from {}".format(output_file, expected_output_file),
                 )
