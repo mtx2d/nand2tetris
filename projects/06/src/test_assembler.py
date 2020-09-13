@@ -8,23 +8,23 @@ import random
 THIS_DIR = os.path.dirname(os.path.abspath(__file__))
 
 TEST_ASM_FILES = [
+    "../rect/Rect.asm",
+    "../rect/RectL.asm",
     "../add/Add.asm",
     "../max/Max.asm",
     "../max/MaxL.asm",
     "../pong/Pong.asm",
     "../pong/PongL.asm",
-    # "../rect/Rect.asm",
-    "../rect/RectL.asm",
 ]
 
 TEST_EXP_HACK_FILES = [
+    "../rect/Rect.hack",
+    "../rect/Rect.hack",
     "../add/Add.hack",
     "../max/Max.hack",
     "../max/Max.hack",
     "../pong/Pong.hack",
     "../pong/Pong.hack",
-    # "../rect/Rect.hack",
-    "../rect/Rect.hack",
 ]
 
 
