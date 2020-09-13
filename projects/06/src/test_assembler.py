@@ -33,9 +33,8 @@ class TestAssembler(unittest.TestCase):
         with tempfile.TemporaryDirectory() as tempdir:
             output = os.path.join(tempdir, "output.hack")
             input_file = os.path.join(THIS_DIR, TEST_ASM_FILES[0])
-            print('input file:', input_file)
             assembler.main(
-                "assember.py {} {}".format(input_file, output).split()
+                "assember.py {} {} {}".format("--verbose", input_file, output).split()
             )
 
             expected_file = os.path.join(THIS_DIR, TEST_EXP_HACK_FILES[0])
