@@ -20,7 +20,6 @@ TEST_EXP_HACK_FILES = ["../add/Expected_Add.hack"]
 
 
 class TestAssembler(unittest.TestCase):
-
     def test_parse_args(self):
         args = assembler.parse_args("assembler.py in.asm out.hack".split())
         self.assertEqual(args.input, "in.asm")
@@ -32,13 +31,9 @@ class TestAssembler(unittest.TestCase):
             output_file = os.path.join(tempdir, "output.hack")
             expected_output_file = os.path.join(THIS_DIR, TEST_EXP_HACK_FILES[0])
 
-            assembler.main(
-                "assember.py {} {}".format(input_file, output_file).split()
-            )
+            assembler.main("assember.py {} {}".format(input_file, output_file).split())
 
             self.assertTrue(
                 filecmp.cmp(output_file, expected_output_file),
-                "{} is differnt from {}".format(
-                    output_file, expected_output_file
-                ),
+                "{} is differnt from {}".format(output_file, expected_output_file),
             )
