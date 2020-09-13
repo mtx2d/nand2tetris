@@ -36,13 +36,6 @@ class TestAssembler(unittest.TestCase):
                 "assember.py {} {}".format(input_file, output_file).split()
             )
 
-            with open(output_file) as f:
-                print(f.read())
-            
-
-            with open(expected_output_file) as f:
-                print(f.read())
-
             self.assertTrue(
                 filecmp.cmp(output_file, expected_output_file),
                 "{} is differnt from {}".format(
