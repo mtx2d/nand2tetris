@@ -11,20 +11,20 @@ TEST_ASM_FILES = [
     "../rect/Rect.asm",
     "../rect/RectL.asm",
     "../add/Add.asm",
-    "../max/Max.asm",
-    "../max/MaxL.asm",
     "../pong/Pong.asm",
     "../pong/PongL.asm",
+    "../max/Max.asm",
+    "../max/MaxL.asm",
 ]
 
 TEST_EXP_HACK_FILES = [
     "../rect/Rect.hack",
     "../rect/Rect.hack",
     "../add/Add.hack",
-    "../max/Max.hack",
-    "../max/Max.hack",
     "../pong/Pong.hack",
     "../pong/Pong.hack",
+    "../max/Max.hack",
+    "../max/Max.hack",
 ]
 
 
@@ -35,8 +35,10 @@ class TestAssembler(unittest.TestCase):
         self.assertEqual(args.output, "out.hack")
 
     def test_assembling(self):
-        for (input_asm_file, exp_hack_file) in zip(TEST_ASM_FILES, TEST_EXP_HACK_FILES):
-            with tempfile.TemporaryDirectory() as tempdir:
+        with tempfile.TemporaryDirectory() as tempdir:
+            for (input_asm_file, exp_hack_file) in zip(
+                TEST_ASM_FILES, TEST_EXP_HACK_FILES
+            ):
                 input_file = os.path.join(THIS_DIR, input_asm_file)
                 output_file = os.path.join(
                     tempdir, "output{}.hack".format(random.randint(0, 999))
@@ -44,7 +46,7 @@ class TestAssembler(unittest.TestCase):
                 expected_output_file = os.path.join(THIS_DIR, exp_hack_file)
 
                 assembler.main(
-                    "assember.py {} {}".format(input_file, output_file).split()
+                    "assembler.py {} {}".format(input_file, output_file).split()
                 )
 
                 self.assertTrue(
