@@ -45,7 +45,7 @@ class TestAssembler(unittest.TestCase):
 
             self.assertTrue(
                 filecmp.cmp(output_file, expected_output_file),
-                "File differ: {} differnt from ground truth {}".format(
+                "{} is differnt from {}".format(
                     output_file, expected_output_file
                 ),
             )
