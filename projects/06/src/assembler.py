@@ -17,7 +17,7 @@ def main():
         for (num, inst) in parser.get_instruction():
             if isinstance(inst, LInstruction):
                 if not symbol_table.has_symbol(inst.name):
-                    symbol_table.add(inst.name, num + 1)
+                    symbol_table.add_label(inst.name, num + 1)
 
         # Second pass, generate machine code because address are all ready.
         for (_, inst) in parser.get_instruction():
