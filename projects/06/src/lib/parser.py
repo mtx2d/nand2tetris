@@ -18,7 +18,7 @@ class Parser:
 
     def __init__(self, path: str):
         self._path = path
-        self._count = 0
+        self._count = -1
 
     def _get_clean_line(self, line):
         return self.strip_comments(line.strip())

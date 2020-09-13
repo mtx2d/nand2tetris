@@ -31,16 +31,19 @@ class TestParser(unittest.TestCase):
         num_inst_pairs = [(num, inst) for (num, inst) in self.parser.get_instruction()]
 
         expected_num_inst_pairs = [
-            (1, AInstruction(value="R0")),
-            (2, CInstruction(dest="D", comp="M", jump=None)),
-            (3, AInstruction(value="R1")),
-            (4, CInstruction(dest="D", comp="D-M", jump=None)),
-            (5, CInstruction(dest=None, comp="D", jump="JGT")),
-            (6, AInstruction(value="R1")),
-            (7, CInstruction(dest="D", comp="M", jump=None)),
-            (7, LInstruction(name="INFINITE_LOOP")),
-            (8, AInstruction(value="INFINITE_LOOP")),
-            (9, CInstruction(dest=None, comp="0", jump="JMP")),
+            (0, AInstruction(value="R0")),
+            (1, CInstruction(dest="D", comp="M", jump=None)),
+            (2, AInstruction(value="R1")),
+            (3, CInstruction(dest="D", comp="D-M", jump=None)),
+            (4, CInstruction(dest=None, comp="D", jump="JGT")),
+            (5, AInstruction(value="R1")),
+            (6, CInstruction(dest="D", comp="M", jump=None)),
+            (6, LInstruction(name="INFINITE_LOOP")),
+            (7, AInstruction(value="INFINITE_LOOP")),
+            (8, CInstruction(dest=None, comp="0", jump="JMP")),
+            (8, LInstruction(name="END EQ")),
+            (9, AInstruction(value="END EQ")),
+            (10, CInstruction(dest=None, comp="D", jump="JNE")),
         ]
 
         for (exp_num_inst, test_num_inst) in zip(

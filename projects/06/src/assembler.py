@@ -21,6 +21,8 @@ def main():
 
         # Second pass, generate machine code because address are all ready.
         for (_, inst) in parser.get_instruction():
+            if isinstance(inst, LInstruction):
+                continue
             machine_code = encoder.encode(inst, symbol_table.get_or_add)
             of.write(machine_code + "\n")
 
