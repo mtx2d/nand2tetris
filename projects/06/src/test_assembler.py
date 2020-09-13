@@ -4,6 +4,8 @@ import tempfile
 import filecmp
 import os
 
+THIS_DIR = os.path.dirname(os.path.abspath(__file__))
+
 TEST_ASM_FILES = [
     "../add/Add.asm",
     "../max/Max.asm",
@@ -14,7 +16,7 @@ TEST_ASM_FILES = [
     "../rect/RectL.asm",
 ]
 
-TEST_EXP_HACK_FILES = ["../add/Add/Expected_Add.hack"]
+TEST_EXP_HACK_FILES = ["../add/Expected_Add.hack"]
 
 
 class TestAssembler(unittest.TestCase):
@@ -30,13 +32,16 @@ class TestAssembler(unittest.TestCase):
     def test_assembling_add(self):
         with tempfile.TemporaryDirectory() as tempdir:
             output = os.path.join(tempdir, "output.hack")
+            input_file = os.path.join(THIS_DIR, TEST_ASM_FILES[0])
+            print('input file:', input_file)
             assembler.main(
-                "assember.py {} {}".format(TEST_ASM_FILES[0], output).split()
+                "assember.py {} {}".format(input_file, output).split()
             )
 
+            expected_file = os.path.join(THIS_DIR, TEST_EXP_HACK_FILES[0])
             self.assertTrue(
-                filecmp.cmp(output, TEST_EXP_HACK_FILES[0], shallow=False),
+                filecmp.cmp(output, expected_file, shallow=False),
                 "File differ: {} differnt from ground truth {}".format(
-                    output, TEST_EXP_HACK_FILES[0]
+                    output, expected_file
                 ),
             )
