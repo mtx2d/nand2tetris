@@ -26,7 +26,15 @@ def main():
             machine_code = encoder.encode(inst, symbol_table.get_or_add)
             of.write(machine_code + "\n")
 
-        #print(symbol_table.table)
+        if len(argv) > 3:
+            with open(argv[3], "w") as debug_f:
+                sorted_st = {
+                    k: v
+                    for k, v in sorted(
+                        symbol_table.table.items(), key=lambda item: item[1]
+                    )
+                }
+                debug_f.write("x = " + str(sorted_st))
 
 
 if __name__ == "__main__":

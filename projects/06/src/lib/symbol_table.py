@@ -28,7 +28,7 @@ PREDEFINED_SYMBOLS = {
 class SymbolTable:
     def __init__(self, table=PREDEFINED_SYMBOLS):
         self.table: dict(str, int) = table
-        #self.used_addr: set(int) = set(table.values())
+        # self.used_addr: set(int) = set(table.values())
         self.cnt_free_ram_addr = 16
 
     def add_label(self, name: str, addr: int) -> None:
