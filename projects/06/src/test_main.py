@@ -30,7 +30,7 @@ TEST_EXP_HACK_FILES = [
 
 class TestAssembler(unittest.TestCase):
     def test_parse_args(self):
-        args = main.parse_args("assembler.py in.asm out.hack".split())
+        args = main.parse_args("main.py in.asm out.hack".split())
         self.assertEqual(args.input, "in.asm")
         self.assertEqual(args.output, "out.hack")
 
@@ -45,7 +45,7 @@ class TestAssembler(unittest.TestCase):
                 )
                 expected_output_file = os.path.join(THIS_DIR, exp_hack_file)
 
-                main.main("assembler.py {} {}".format(input_file, output_file).split())
+                main.main("main.py {} {}".format(input_file, output_file).split())
 
                 self.assertTrue(
                     filecmp.cmp(output_file, expected_output_file, shallow=False),

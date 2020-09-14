@@ -30,7 +30,6 @@ class TestSymbolTable(unittest.TestCase):
         self.assertFalse(st.contains("NEW_KEY"))
         st.get_address("NEW_KEY")
         self.assertTrue(st.contains("NEW_KEY"))
-        
 
     def test_get_address(self):
         st = SymbolTable()
