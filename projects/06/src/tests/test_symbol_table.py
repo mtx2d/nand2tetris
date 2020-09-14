@@ -21,17 +21,21 @@ class TestSymbolTable(unittest.TestCase):
         self.assertTrue(st.contains("SUM"))
         self.assertFalse(st.contains("SYMBOL_DOES_NOT_EXIST"))
 
-    def test_get(self):
+    def test_get_address(self):
         st = SymbolTable({"LOOP": 222, "SUM": 32})
 
-        self.assertEqual(st.get("LOOP"), 222)
-        self.assertEqual(st.get("SUM"), 32)
-        self.assertRaises(ValueError, st.get, "WRONG_KEY")
+        self.assertEqual(st.get_address("LOOP"), 222)
+        self.assertEqual(st.get_address("SUM"), 32)
+
+        self.assertFalse(st.contains("NEW_KEY"))
+        st.get_address("NEW_KEY")
+        self.assertTrue(st.contains("NEW_KEY"))
+        
 
     def test_get_address(self):
         st = SymbolTable()
         st.get_address("SUM")  # SUM, 16
         st.get_address("i")  # i, 17
 
-        self.assertEqual(16, st.get("SUM"))
-        self.assertEqual(17, st.get("i"))
+        self.assertEqual(16, st.get_address("SUM"))
+        self.assertEqual(17, st.get_address("i"))

@@ -3,7 +3,7 @@ import tempfile
 import filecmp
 import os
 import random
-from main import main
+import main
 
 THIS_DIR = os.path.dirname(os.path.abspath(__file__))
 
@@ -45,7 +45,7 @@ class TestAssembler(unittest.TestCase):
                 )
                 expected_output_file = os.path.join(THIS_DIR, exp_hack_file)
 
-                main("assembler.py {} {}".format(input_file, output_file).split())
+                main.main("assembler.py {} {}".format(input_file, output_file).split())
 
                 self.assertTrue(
                     filecmp.cmp(output_file, expected_output_file, shallow=False),

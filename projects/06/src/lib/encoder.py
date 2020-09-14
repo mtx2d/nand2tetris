@@ -65,7 +65,7 @@ class Encoder:
             return "{0:0>16b}".format(int(inst.value))
         else:
             # variable symbol case
-            return "{0:0>16b}".format(symbol_table.get(inst.value))
+            return "{0:0>16b}".format(symbol_table.get_address(inst.value))
 
     def _encode_C_instruction(self, inst: CInstruction) -> str:
         dest_code = dest_map[inst.dest]
