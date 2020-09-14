@@ -31,7 +31,7 @@ class SymbolTable:
         self.cnt_free_ram_addr = iter(range(16, PREDEFINED_SYMBOLS["SCREEN"]))
 
     def add_entry(self, symbol: str, addr: int) -> None:
-        # Add program lable, the address here is ROM addr.
+        # Add program label, the address here is ROM addr.
         if not self.contains(symbol):
             self.table[symbol] = addr
 
