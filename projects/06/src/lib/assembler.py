@@ -22,15 +22,12 @@ class Assembler:
                 continue
             line_count += 1
 
-            if isinstance(inst, AInstruction):
-                if all([v.isdigit() for v in inst.value]):
-                    continue
-                addr = self.symbol_table.get_address(inst.value)
-                self.symbol_table.add_entry(inst.value, addr)  # RAM addr
-
         # Second pass, look up symbols in the symbol_table.
         for inst in self.parser.get_instruction():
             if isinstance(inst, LInstruction):
                 continue
+            if isinstance(inst, AInstruction):
+                if not all([v.isdigit() for v in inst.value]):
+                    self.symbol_table.get_address(inst.value)  # RAM addr
             machine_code = self.encoder.encode(inst, self.symbol_table)
             yield machine_code
