@@ -1,4 +1,5 @@
-sample usage:
+Run Tests
 ```
-python3 assembler.py ../max/MaxL.asm
+cd ./src
+nosetests -v
 ```
