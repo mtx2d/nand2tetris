@@ -18,15 +18,9 @@ class Assembler:
         line_count = 0
         for inst in self.parser.get_instruction():
             if isinstance(inst, LInstruction):
-                if inst.name == "INFINITE_LOOP":
-                    print(
-                        "DEBUG, line_count", line_count, "self path", self.parser._path
-                    )
                 self.symbol_table.add_entry(inst.name, line_count)  # ROM addr
                 continue
             line_count += 1
-
-        print("DEBUG: ", self.symbol_table.table)
 
         # Second pass, look up symbols in the symbol_table.
         for inst in self.parser.get_instruction():
