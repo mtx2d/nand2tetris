@@ -27,7 +27,7 @@ PREDEFINED_SYMBOLS = {
 
 class SymbolTable:
     def __init__(self, table=PREDEFINED_SYMBOLS):
-        self.table: dict(str, int) = table
+        self.table: dict(str, int) = {k: v for k, v in table.items()}
         self.cnt_free_ram_addr = iter(range(16, PREDEFINED_SYMBOLS["SCREEN"]))
 
     def add_entry(self, symbol: str, addr: int) -> None:
