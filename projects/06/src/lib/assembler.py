@@ -28,6 +28,8 @@ class Assembler:
                 continue
             if isinstance(inst, AInstruction):
                 if not all([v.isdigit() for v in inst.value]):
-                    self.symbol_table.get_address(inst.value)  # RAM addr
+                    self.symbol_table.get_address(
+                        inst.value
+                    )  # RAM addr, NOTE this mutates the Symbol Table as well
             machine_code = self.encoder.encode(inst, self.symbol_table)
             yield machine_code
