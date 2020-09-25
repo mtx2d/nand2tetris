@@ -20,7 +20,7 @@ class CodeWriter:
             "D=A", # D = value
             f"@{inst.segment.upper()}", # @SEGMENT
             "A=D+M", # A = value + SEGMENT -> element addr
-            "A=M", # D = *addr
+            "D=M", # D = *addr
 
             "@SP",
             "A=M"
@@ -41,13 +41,24 @@ class CodeWriter:
             f"@{inst.value}"
             "D=A", # D = value
             f"@{inst.segment.upper()}", # @SEGMENT
-            "A=D+A",  # A = value + SEGMENT -> element addr -> point to the element in memory
-            "D=A" # D = addr
+            "M=D+M",  # update @SEGMENT to point to LCL + val
 
             "@SP",
             "M=M-1", # SP-- 
 
+            "@SP",  
+            "A=M", 
+            "D=M", # D=*SP
 
+            f"@{inst.segment.upper()}",
+            "A=M",
+            "M=D", # *addr = *SP
+        
+            #need to set back to LCL
+            f"@{inst.value}"
+            "D=A", # D = value
+            f"@{inst.segment.upper()}",
+            "M=M-D"
         ])
 
     def write(self, inst: Instruction) -> str:
