@@ -33,32 +33,43 @@ class CodeWriter:
     @staticmethod
     def write_pop(inst: PopInstruction) -> str:
         """
-        addr = segment + value;  SP--; *addr = *SP;
+         SP--; addr = segment + value; *addr = *SP;
         """
         "\n".join([
             "// " + inst.__repr__(),
-
-            f"@{inst.value}"
-            "D=A", # D = value
-            f"@{inst.segment.upper()}", # @SEGMENT
-            "M=D+M",  # update @SEGMENT to point to LCL + val
-
             "@SP",
             "M=M-1", # SP-- 
-
-            "@SP",  
-            "A=M", 
-            "D=M", # D=*SP
-
-            f"@{inst.segment.upper()}",
-            "A=M",
-            "M=D", # *addr = *SP
-        
-            #need to set back to LCL
+            
+            #---------------------------
             f"@{inst.value}"
-            "D=A", # D = value
+            "D=A",
             f"@{inst.segment.upper()}",
-            "M=M-D"
+            "A=D+A",
+            "D=M", # D = *addr
+
+            "@SP"
+            "A=M"
+            "M=M+D" # *SP = *SP + *addr
+            #---------------------------
+            "@SP",
+            "A=M",
+            "D=M", # D = *SP
+
+            f"@{inst.value}"
+            "D=A", 
+            f"@{inst.segment.upper()}",
+            "A=D+A",
+            "M=D-M" # *addr = *SP - *addr
+            #-------------------------- 
+            f"@{inst.value}"
+            "D=A",
+            f"@{inst.segment.upper()}",
+            "A=D+A",
+            "D=M", # D = *addr
+
+            "@SP",
+            "A=M",
+            "M=M-D", # *SP = *SP - *addr 
         ])
 
     def write(self, inst: Instruction) -> str:
