@@ -1,7 +1,7 @@
 from typing import Generator
 
-from parser import Parser
-from code_writer import CodeWriter
+from .parser import Parser
+from .code_writer import CodeWriter
 
 
 class Translator:
