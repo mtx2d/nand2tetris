@@ -98,10 +98,6 @@ class CodeWriter:
             ]
         )
 
-    @staticmethod
-    def write_sub(inst: SubInstruction) -> str:
-        return "\n".join([""])
-
     def write(self, inst: Instruction) -> str:
         return INST_ASM_MAP[inst.name](inst)
 
