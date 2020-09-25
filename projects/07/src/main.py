@@ -15,7 +15,7 @@ def parse_args(argv: List[str]) -> argparse.Namespace:
 def main(argv: List[str]) -> int:
     args = parse_args(argv)
     with open(args.output, "w") as of:
-        for line in translator(args.intput).translate():
+        for line in translator(args.input).translate():
             print(line, file=of)
 
     return 0
