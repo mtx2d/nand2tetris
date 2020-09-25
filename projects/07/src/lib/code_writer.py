@@ -1,4 +1,4 @@
-from instruction import Instruction
+from .instruction import Instruction
 
 INST_ASM_MAP = {
     "push": CodeWriter.write_push,
