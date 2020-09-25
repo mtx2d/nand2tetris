@@ -19,6 +19,7 @@ class Parser:
         with open(self.input_file, "r") as f:
             for line in f:
                 line = line.strip()
-                if not self.strip_comments(line):
+                line = self.strip_comments(line)
+                if not line:
                     continue
                 yield line
