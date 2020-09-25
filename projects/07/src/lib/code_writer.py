@@ -47,7 +47,7 @@ class CodeWriter:
                 "D=M",  # D = *addr
                 "@SP",
                 "A=M",
-                "M=M+D"  # *SP = *SP + *addr
+                "M=M+D",  # *SP = *SP + *addr
                 # ---------------------------
                 "@SP",
                 "A=M",
