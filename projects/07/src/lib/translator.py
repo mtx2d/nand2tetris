@@ -10,5 +10,5 @@ class Translator:
         self.code_writer = CodeWriter()
 
     def translate(self) -> Generator[str, None, None]:
-        for inst in parser.parse():
+        for inst in self.parser.parse():
             yield self.code_writer.write(inst)
