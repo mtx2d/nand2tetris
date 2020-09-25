@@ -22,7 +22,8 @@ class CodeWriter:
                 "A=D+M",  # A = value + SEGMENT -> element addr
                 "D=M",  # D = *addr
                 "@SP",
-                "A=M" "M=D",  # *SP = *addr
+                "A=M",
+                "M=D",  # *SP = *addr
                 "@SP",
                 "M=M+1",  # SP++
             ]
@@ -43,7 +44,9 @@ class CodeWriter:
                 f"@{inst.segment.upper()}",
                 "A=D+A",
                 "D=M",  # D = *addr
-                "@SP" "A=M" "M=M+D"  # *SP = *SP + *addr
+                "@SP",
+                "A=M",
+                "M=M+D"  # *SP = *SP + *addr
                 # ---------------------------
                 "@SP",
                 "A=M",
@@ -68,13 +71,16 @@ class CodeWriter:
         return "\n".join(
             [
                 "@SP",
-                "M=M-1" "@SP",  # SP--
+                "M=M-1",
+                "@SP",  # SP--
                 "A=M",
                 "D=M",  # D = op1
                 "@SP",
-                "M=M-1" "@SP",  # SP--
+                "M=M-1",
+                "@SP",  # SP--
                 "A=M",
-                "M=M+D" "@SP",  # add op2 op1
+                "M=M+D",
+                "@SP",  # add op2 op1
                 "M=M+1",  # SP++
             ]
         )
@@ -93,7 +99,8 @@ class CodeWriter:
                 "M=M-1",  # SP--
                 "@SP",
                 "A=M",
-                "M=D+M" "@SP",  # x - y
+                "M=D+M",
+                "@SP",  # x - y
                 "M=M+1",  # SP++
             ]
         )
