@@ -58,21 +58,14 @@ comp_map = {
 
 
 class Encoder:
-    def __init__(self):
-        self._encoders = {
-            type(AInstruction): self._encode_A_instruction,
-            type(CInstruction): self._encode_C_instruction,
-        }
-
     def _encode_A_instruction(
-        self, inst: AInstruction, st_get_or_add: Callable[[str], int]
+        self, inst: AInstruction, symbol_table: SymbolTable
     ) -> str:
         if all([v.isdigit() for v in inst.value]):
             return "{0:0>16b}".format(int(inst.value))
         else:
-            # symbol lable case
-            addr = st_get_or_add(inst.value)
-            return "{0:0>16b}".format(addr)
+            # variable symbol case
+            return "{0:0>16b}".format(symbol_table.get_address(inst.value))
 
     def _encode_C_instruction(self, inst: CInstruction) -> str:
         dest_code = dest_map[inst.dest]
@@ -80,9 +73,9 @@ class Encoder:
         jump_code = jump_map[inst.jump]
         return "111{}{}{}".format(comp_code, dest_code, jump_code)
 
-    def encode(self, inst: Instruction, st_get_or_add: Callable[[str], int]) -> str:
+    def encode(self, inst: Instruction, symbol_table: SymbolTable) -> str:
         if isinstance(inst, AInstruction):
-            return self._encode_A_instruction(inst, st_get_or_add)
+            return self._encode_A_instruction(inst, symbol_table)
         elif isinstance(inst, CInstruction):
             return self._encode_C_instruction(inst)
         else:

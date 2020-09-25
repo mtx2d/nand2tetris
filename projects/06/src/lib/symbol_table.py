@@ -27,27 +27,19 @@ PREDEFINED_SYMBOLS = {
 
 class SymbolTable:
     def __init__(self, table=PREDEFINED_SYMBOLS):
-        self.table: dict(str, int) = table
-        self.cnt_free_ram_addr = 16
+        self.table: dict(str, int) = {k: v for k, v in table.items()}
+        self.cnt_free_ram_addr = iter(range(16, PREDEFINED_SYMBOLS["SCREEN"]))
 
-    def add_label(self, name: str, addr: int) -> None:
+    def add_entry(self, symbol: str, addr: int) -> None:
         # Add program lable, the address here is ROM addr.
-        if not self.has_symbol(name):
-            self.table[name] = addr
+        if not self.contains(symbol):
+            self.table[symbol] = addr
 
-    def get_or_add(self, name: str) -> int:
-        # if not exist, add and then return
-        # if exists, directly return
-        if not self.has_symbol(name):
-            self.table[name] = self.cnt_free_ram_addr
-            self.cnt_free_ram_addr += 1
-        return self.table[name]
+    def get_address(self, symbol: str) -> int:
+        # Compute the adderss to be associated with the given symbol
+        if not self.contains(symbol):
+            self.table[symbol] = next(self.cnt_free_ram_addr)
+        return self.table[symbol]
 
-    def has_symbol(self, name) -> bool:
-        return name in self.table
-
-    def get(self, name) -> int:
-        if not self.has_symbol(name):
-            raise ValueError("Does not have such a symbol: ", name)
-
-        return self.table[name]
+    def contains(self, symbol) -> bool:
+        return symbol in self.table
