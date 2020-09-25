@@ -35,13 +35,13 @@ class TestParser(unittest.TestCase):
             insts = [*Parser("some_file_path").parse()]
 
         exp_insts = [
-            "push constant 10",
-            "pop local 0",
-            "pop argument 1",
-            "push argument 1",
-            "pop this 6",
-            "add",
-            "sub",
+            InstPush("constant", 10),
+            InstPop("local", 0),
+            InstPop("argument", 1),
+            InstPush("argument", 1),
+            InstPop("this", 6),
+            InstAdd(),
+            InstSub(),
         ]
 
         self.assertEqual(exp_insts, insts)

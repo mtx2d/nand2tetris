@@ -1,5 +1,6 @@
 import re
 from lib.instruction import Instruction
+from typing import Generator
 
 
 class Parser:
@@ -15,11 +16,11 @@ class Parser:
     def __init__(self, input_file: str):
         self.input_file = input_file
 
-    def parse(self) -> Instruction:
+    def parse(self) -> Generator[Instruction, None, None]:
         with open(self.input_file, "r") as f:
             for line in f:
                 line = line.strip()
                 line = self.strip_comments(line)
                 if not line:
                     continue
-                yield line
+                yield Instruction.from_line(line)
