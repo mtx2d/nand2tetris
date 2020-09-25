@@ -17,7 +17,7 @@ def main(argv: List[str]) -> int:
     with open(args.output, "w") as of:
         for line in translator(arg.intput).translate():
             print(line, file=of)
-    
+
     return 0
 
 
