@@ -1,11 +1,5 @@
 from .instruction import Instruction
 
-INST_ASM_MAP = {
-    "push": CodeWriter.write_push,
-    "pop": CodeWriter.write_pop,
-    "add": CodeWriter.write_add,
-    "sub": CodeWriter.write_sub,
-}
 
 
 class CodeWriter:
@@ -123,3 +117,11 @@ class CodeWriter:
 
     def write(self, inst: Instruction) -> str:
         return INST_ASM_MAP[inst.name](inst)
+
+
+INST_ASM_MAP = {
+    "push": CodeWriter.write_push,
+    "pop": CodeWriter.write_pop,
+    "add": CodeWriter.write_add,
+    "sub": CodeWriter.write_sub,
+}
