@@ -14,7 +14,7 @@ class CodeWriter:
         """
         addr = segment + value; *SP=*addr; SP++;
         """
-        "\n".join([
+        return "\n".join([
             "// " + inst.__repr__(),
             f"@{inst.value}",
             "D=A", # D = value
@@ -35,11 +35,11 @@ class CodeWriter:
         """
          SP--; addr = segment + value; *addr = *SP;
         """
-        "\n".join([
+        return "\n".join([
             "// " + inst.__repr__(),
             "@SP",
             "M=M-1", # SP-- 
-            
+
             #---------------------------
             f"@{inst.value}"
             "D=A",
@@ -70,6 +70,55 @@ class CodeWriter:
             "@SP",
             "A=M",
             "M=M-D", # *SP = *SP - *addr 
+        ])
+    
+    @staticmethod
+    def write_add(inst: AddInstruction) -> str:
+        return "\n".join([
+            "@SP",
+            "M=M-1" # SP--
+
+            "@SP",
+            "A=M",
+            "D=M", # D = op1
+
+            "@SP",
+            "M=M-1" # SP--
+
+            "@SP",
+            "A=M",
+            "M=M+D" # add op2 op1
+
+            "@SP",
+            "M=M+1", # SP++
+        ])
+    
+    @staticmethod
+    def write_sub(inst: SubInstruction) -> str:
+        return "\n".join([
+            "@SP",
+            "M=M-1", # SP--
+            
+            "@SP",
+            "A=M", 
+            "M=-M", # -y
+            "D=M",
+
+            "@SP",
+            "M=M-1", # SP--
+
+            "@SP",
+            "A=M", 
+            "M=D+M" # x - y
+
+            "@SP",
+            "M=M+1", # SP++
+        ])
+    
+    @staticmethod
+    def write_sub(inst: SubInstruction) -> str:
+        return "\n".join([
+            ""
         ])
 
     def write(self, inst: Instruction) -> str:
