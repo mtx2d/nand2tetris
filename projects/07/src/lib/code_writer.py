@@ -40,7 +40,8 @@ class CodeWriter:
                 "@SP",
                 "M=M-1",  # SP--
                 # ---------------------------
-                f"@{inst.value}" "D=A",
+                f"@{inst.value}",
+                "D=A",
                 f"@{inst.segment.upper()}",
                 "A=D+A",
                 "D=M",  # D = *addr
@@ -51,12 +52,14 @@ class CodeWriter:
                 "@SP",
                 "A=M",
                 "D=M",  # D = *SP
-                f"@{inst.value}" "D=A",
+                f"@{inst.value}",
+                "D=A",
                 f"@{inst.segment.upper()}",
                 "A=D+A",
                 "M=D-M"  # *addr = *SP - *addr
                 # --------------------------
-                f"@{inst.value}" "D=A",
+                f"@{inst.value}",
+                "D=A",
                 f"@{inst.segment.upper()}",
                 "A=D+A",
                 "D=M",  # D = *addr
