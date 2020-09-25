@@ -1,7 +1,7 @@
-import mock
 import unittest
+from unittest import mock
 from lib.parser import Parser
-from lib.instructions import InstPush, InstPop, InstAdd, InstNeg
+from lib.instruction import InstPush, InstPop, InstAdd, InstSub
 
 
 class TestParser(unittest.TestCase):
@@ -17,7 +17,7 @@ class TestParser(unittest.TestCase):
             self.assertEqual(pair[0], pair[1])
 
     def test_parse(self):
-        read_data = [
+        read_data = "\n".join([
             "push constant 10",
             "pop local 0",
             "pop argument 1",
@@ -25,10 +25,10 @@ class TestParser(unittest.TestCase):
             "pop this 6",
             "add",
             "sub",
-        ]
+        ])
         mock_open = mock.mock_open(read_data=read_data)
-
-        insts = [*Parser("some_file_path").parser()]
+        with mock.patch('builtins.open', mock_open):
+            insts = [*Parser("some_file_path").parse()]
 
         exp_insts = [
             InstPush("constant", 10),
@@ -40,4 +40,4 @@ class TestParser(unittest.TestCase):
             InstSub(),
         ]
 
-        self.assertEqual()
+        self.assertEqual(exp_insts, insts)
