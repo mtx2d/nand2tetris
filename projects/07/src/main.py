@@ -14,6 +14,9 @@ def parse_args(argv: List[str]) -> argparse.Namespace:
 
 def main(argv: List[str]):
     args = parse_args(argv)
+    with open(args.output, "w") as of:
+        for line in translator(arg.intput).translate():
+            print(line, file=of)
 
 
 if __name__ == "__main__":
