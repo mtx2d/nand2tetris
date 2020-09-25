@@ -1,15 +1,15 @@
 from .instruction import (
     Instruction,
-    PushInstruction,
-    PopInstruction,
-    AddInstruction,
-    SubInstruction,
+    InstPush,
+    InstPop,
+    InstAdd,
+    InstSub,
 )
 
 
 class CodeWriter:
     @staticmethod
-    def write_push(inst: PushInstruction) -> str:
+    def write_push(inst: InstPush) -> str:
         """
         addr = segment + value; *SP=*addr; SP++;
         """
@@ -29,7 +29,7 @@ class CodeWriter:
         )
 
     @staticmethod
-    def write_pop(inst: PopInstruction) -> str:
+    def write_pop(inst: InstPop) -> str:
         """
         SP--; addr = segment + value; *addr = *SP;
         """
@@ -64,7 +64,7 @@ class CodeWriter:
         )
 
     @staticmethod
-    def write_add(inst: AddInstruction) -> str:
+    def write_add(inst: InstAdd) -> str:
         return "\n".join(
             [
                 "@SP",
@@ -80,7 +80,7 @@ class CodeWriter:
         )
 
     @staticmethod
-    def write_sub(inst: SubInstruction) -> str:
+    def write_sub(inst: InstSub) -> str:
         return "\n".join(
             [
                 "@SP",
