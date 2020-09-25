@@ -56,7 +56,7 @@ class CodeWriter:
                 "D=A",
                 f"@{inst.segment.upper()}",
                 "A=D+A",
-                "M=D-M"  # *addr = *SP - *addr
+                "M=D-M",  # *addr = *SP - *addr
                 # --------------------------
                 f"@{inst.value}",
                 "D=A",
