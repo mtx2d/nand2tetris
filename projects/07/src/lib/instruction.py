@@ -7,7 +7,7 @@ class InstPush(Instruction):
         self.name = name
         self.segment = segment
         self.value = value
-    
+
     def __eq__(self, other):
         self.name = other.name
         self.segment = other.segment
@@ -29,7 +29,7 @@ class InstPop(Instruction):
 class InstAdd(Instruction):
     def __init__(self, name: str = "add"):
         self.name = name
-    
+
     def __eq__(self, other):
         self.name = other.name
 

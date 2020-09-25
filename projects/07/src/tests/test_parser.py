@@ -17,19 +17,21 @@ class TestParser(unittest.TestCase):
             self.assertEqual(pair[0], pair[1])
 
     def test_parse(self):
-        read_data = "\n".join([
-            "push constant 10 //comment 1, shoud not show up",
-            "pop local 0",
-            "pop argument 1 // comment 2",
-            " push argument 1",
-            " pop this 6 ",
-            "  ",
-            "",
-            "add ",
-            " sub",
-        ])
+        read_data = "\n".join(
+            [
+                "push constant 10 //comment 1, shoud not show up",
+                "pop local 0",
+                "pop argument 1 // comment 2",
+                " push argument 1",
+                " pop this 6 ",
+                "  ",
+                "",
+                "add ",
+                " sub",
+            ]
+        )
         mock_open = mock.mock_open(read_data=read_data)
-        with mock.patch('builtins.open', mock_open):
+        with mock.patch("builtins.open", mock_open):
             insts = [*Parser("some_file_path").parse()]
 
         exp_insts = [
