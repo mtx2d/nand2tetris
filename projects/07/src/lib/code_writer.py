@@ -42,8 +42,9 @@ class CodeWriter:
         }
 
     def write_lt(self, inst: InstLt) -> str:
-        if_id = CodeWriter.get_next_label_id()
-        IF_BRANCH = f"IF_{if_id}"
+        block_id = CodeWriter.get_next_label_id()
+        IF = f"IF_{block_id}"
+        END = f"END_{block_id}"
         return "\n".join(
             [
                 "// " + inst.__repr__(),
@@ -54,22 +55,25 @@ class CodeWriter:
                 "@SP",
                 "A=M-1",
                 "D=M-D",
-                f"@{IF_BRANCH}",
+                f"@{IF}",
                 "D;JLT",
                 "@SP",  # ELSE_BRANCH
                 "A=M-1",
                 "M=0",  # set to false
-                "@END",
+                f"@{END}",
                 "0;JMP",
-                f"({IF_BRANCH})",
+                f"({IF})",
                 "@SP",
                 "A=M-1",
-                "M=-1",
-                "(END)",  # set to true
+                "M=-1",  # set to true
+                f"({END})",
             ]
         )
 
     def write_eq(self, inst: InstEq) -> str:
+        block_id = CodeWriter.get_next_label_id()
+        IF = f"IF_{block_id}"
+        END = f"END_{block_id}"
         return "\n".join(
             [
                 "// " + inst.__repr__(),
@@ -77,6 +81,21 @@ class CodeWriter:
                 "M=M-1",
                 "A=M",
                 "D=M",
+                "@SP",
+                "A=M-1",
+                "D=D-M",
+                f"@{IF}",
+                "D;JEQ",
+                "@SP",
+                "A=M-1",
+                "M=0",  # set to false
+                f"@{END}",
+                "0;JMP",
+                f"({IF})",
+                "@SP",
+                "A=M-1",
+                "M=-1",  # set to true
+                f"({END})",
             ]
         )
 
