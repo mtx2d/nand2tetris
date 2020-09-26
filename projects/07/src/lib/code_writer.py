@@ -39,6 +39,7 @@ class CodeWriter:
             "sub": CodeWriter.write_sub,
             "eq": CodeWriter.write_eq,
             "lt": CodeWriter.write_lt,
+            "gt": CodeWriter.write_gt,
         }
 
     def write_lt(self, inst: InstLt) -> str:
@@ -57,6 +58,35 @@ class CodeWriter:
                 "D=M-D",
                 f"@{IF}",
                 "D;JLT",
+                "@SP",  # ELSE_BRANCH
+                "A=M-1",
+                "M=0",  # set to false
+                f"@{END}",
+                "0;JMP",
+                f"({IF})",
+                "@SP",
+                "A=M-1",
+                "M=-1",  # set to true
+                f"({END})",
+            ]
+        )
+
+    def write_gt(self, inst: InstGt) -> str:
+        block_id = CodeWriter.get_next_label_id()
+        IF = f"IF_{block_id}"
+        END = f"END_{block_id}"
+        return "\n".join(
+            [
+                "// " + inst.__repr__(),
+                "@SP",
+                "M=M-1",
+                "A=M",
+                "D=M",
+                "@SP",
+                "A=M-1",
+                "D=M-D",
+                f"@{IF}",
+                "D;JGT",
                 "@SP",  # ELSE_BRANCH
                 "A=M-1",
                 "M=0",  # set to false
