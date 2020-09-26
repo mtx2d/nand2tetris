@@ -54,18 +54,17 @@ class CodeWriter:
             return "\n".join([
                 "// " + inst.__repr__, 
                 f"@{self.filename}.{str(inst.value)}",
-                "D=M"
+                "D=M",
 
                 "@SP",
                 "A=M",
                 "M=D",
 
                 "@SP",
-                "M=M+1"
+                "M=M+1",
             ])
 
-    @staticmethod
-    def write_pop(inst: InstPop) -> str:
+    def write_pop(self, inst: InstPop) -> str:
         """
         SP--; addr = segment + value; *addr = *SP;
         """
@@ -105,7 +104,18 @@ class CodeWriter:
                 ]
             )
         elif inst.segment == 'static':
-            return "\n".join([])
+            return "\n".join([
+                "// "  + inst.__repr__,
+                "@SP",
+                "A=M",
+                "D=M",
+
+                "@SP",
+                "M=M-1",
+
+                f"@{self.filename}.{str(inst.value)}",
+                "M=D",
+            ])
 
     @staticmethod
     def write_add(inst: InstAdd) -> str:
