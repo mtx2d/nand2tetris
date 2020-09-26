@@ -12,6 +12,7 @@ M=M-1
 @0
 D=A
 @LCL
+A=M
 D=D+A
 @SP
 A=M
@@ -42,6 +43,7 @@ M=M-1
 @2
 D=A
 @ARG
+A=M
 D=D+A
 @SP
 A=M
@@ -56,6 +58,7 @@ M=M-1
 @1
 D=A
 @ARG
+A=M
 D=D+A
 @SP
 A=M
@@ -78,6 +81,7 @@ M=M-1
 @6
 D=A
 @THIS
+A=M
 D=D+A
 @SP
 A=M
@@ -108,6 +112,7 @@ M=M-1
 @5
 D=A
 @THAT
+A=M
 D=D+A
 @SP
 A=M
@@ -122,6 +127,7 @@ M=M-1
 @2
 D=A
 @THAT
+A=M
 D=D+A
 @SP
 A=M

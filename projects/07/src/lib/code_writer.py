@@ -116,6 +116,7 @@ class CodeWriter:
                     f"@{inst.value}",
                     "D=A",
                     f"@{HACK_MEM_SYMBOL_MAP[inst.segment]}",
+                    "A=M",
                     "D=D+A", # D = addr
                     "@SP",
                     "A=M",
