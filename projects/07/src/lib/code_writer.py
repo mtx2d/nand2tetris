@@ -73,20 +73,32 @@ class CodeWriter:
                 ]
             )
         elif inst.segment == "temp":
-            return "\n".join([
-                "// " + inst.__repr__(),
-                f"@R{5 + inst.value}",
-                "D=M",
-                "@SP",
-                "A=M",
-                "M=D",
-                "@SP",
-                "M=M+1",
-            ])
+            return "\n".join(
+                [
+                    "// " + inst.__repr__(),
+                    f"@R{5 + inst.value}",
+                    "D=M",
+                    "@SP",
+                    "A=M",
+                    "M=D",
+                    "@SP",
+                    "M=M+1",
+                ]
+            )
         elif inst.segment == "pointer":
-            return "\n".join([
-
-            ])
+            # *SP=THIS/THAT, SP++
+            POINTER = "THIS" if inst.value == 0 else "THAT"
+            return "\n".join(
+                [
+                    "// " + inst.__repr__(),
+                    f"@{POINTER}",
+                    "A=M",
+                    "D=M",
+                    "@SP",
+                    "A=M",
+                    "M=D",
+                ]
+            )
         else:
             raise ValueError("Could not gen code for:", inst)
 
@@ -143,20 +155,32 @@ class CodeWriter:
                 ]
             )
         elif inst.segment == "temp":
-            return "\n".join([
-                "// " + inst.__repr__(),
-                "@SP",
-                "M=M-1",
-                "A=M",
-                "D=M",
-                f"R@{5 + inst.value}",
-                "M=D",
-            ])
+            return "\n".join(
+                [
+                    "// " + inst.__repr__(),
+                    "@SP",
+                    "M=M-1",
+                    "A=M",
+                    "D=M",
+                    f"R@{5 + inst.value}",
+                    "M=D",
+                ]
+            )
         elif inst.segment == "pointer":
-            return "\n".join([])
+            # SP--, THIS/THAT = *SP
+            POINTER = "THIS" if inst.value == 0 else "THAT"
+            return "\n".join(
+                [
+                    "// " + inst.__repr__(),
+                    "@SP",
+                    "A=M",
+                    "D=M",
+                    f"@{POINTER}",
+                    "M=D",
+                ]
+            )
         else:
             raise ValueError("Could not gen code for:", inst)
-
 
     @staticmethod
     def write_add(inst: InstAdd) -> str:
@@ -201,5 +225,3 @@ class CodeWriter:
 
     def write(self, inst: Instruction) -> str:
         return self.inst_asm_map[inst.name](inst)
-
-
