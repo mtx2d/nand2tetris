@@ -7,6 +7,11 @@ from .instruction import (
     InstPop,
     InstAdd,
     InstSub,
+    InstEq,
+    InstLt,
+    InstGt,
+    InstOr,
+    InstNot,
 )
 
 HACK_MEM_SYMBOL_MAP = {
@@ -25,7 +30,34 @@ class CodeWriter:
             "pop": self.write_pop,
             "add": CodeWriter.write_add,
             "sub": CodeWriter.write_sub,
+            "eq": CodeWriter.write_eq,
+            "lt": CodeWriter.write_lt,
         }
+
+    def write_eq(self, inst: InstEq) -> str:
+        return "\n".join(
+            [
+                "// " + inst.__repr__(),
+                "@SP",
+                "M=M-1",
+                "@SP",
+                "A=M",
+                "D=M" "@SP",
+                "A=M-1",
+                "M=D&M",
+            ]
+        )
+
+    def write_lt(self, inst: InstLt) -> str:
+        return "\n".join(
+            [
+                "// " + inst.__repr__(),
+                "@SP",
+                "M=M-1",
+                "A=M",
+                "D=M",
+            ]
+        )
 
     def write_push(self, inst: InstPush) -> str:
         """
@@ -118,10 +150,10 @@ class CodeWriter:
                     "D=A",
                     f"@{HACK_MEM_SYMBOL_MAP[inst.segment]}",
                     "A=M",
-                    "D=D+A", # D = addr
+                    "D=D+A",  # D = addr
                     "@SP",
                     "A=M",
-                    "D=D+M", # D = addr + stack_top_val
+                    "D=D+M",  # D = addr + stack_top_val
                     "A=D-M",
                     "D=D-A",
                     "M=D",

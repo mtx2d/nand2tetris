@@ -69,3 +69,58 @@ class InstSub(Instruction):
 
     def __repr__(self) -> str:
         return self.name
+
+
+class InstEq(Instruction):
+    def __init__(self, name: str = "eq"):
+        self.name = name
+
+    def __eq__(self, other) -> bool:
+        return self.name == other.name
+
+    def __repr__(self) -> str:
+        return self.name
+
+
+class InstLt(Instruction):
+    def __init__(self, name: str = "lt"):
+        self.name = name
+
+    def __eq__(self, other) -> bool:
+        return self.name == other.name
+
+    def __repr__(self) -> str:
+        return self.name
+
+
+class InstGt(Instruction):
+    def __init__(self, name: str = "gt"):
+        self.name = name
+
+    def __eq__(self, other) -> bool:
+        return self.name == other.name
+
+    def __repr__(self) -> str:
+        return self.name
+
+
+class InstOr(Instruction):
+    def __init__(self, name: str = "or"):
+        self.name = name
+
+    def __eq__(self, other) -> bool:
+        return self.name == other.name
+
+    def __repr__(self) -> str:
+        return self.name
+
+
+class InstNot(Instruction):
+    def __init__(self, name: str = "not"):
+        self.name = name
+
+    def __eq__(self, other) -> bool:
+        return self.name == other.name
+
+    def __repr__(self) -> str:
+        return self.name
