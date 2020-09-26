@@ -123,7 +123,6 @@ class CodeWriter:
                     "D=D+M", # D = addr + stack_top_val
                     "A=D-M",
                     "D=D-A",
-                    "A=M",
                     "M=D",
                 ]
             )

@@ -19,7 +19,6 @@ A=M
 D=D+M
 A=D-M
 D=D-A
-A=M
 M=D
 // push constant 21
 @21
@@ -50,7 +49,6 @@ A=M
 D=D+M
 A=D-M
 D=D-A
-A=M
 M=D
 // pop argument 1
 @SP
@@ -65,7 +63,6 @@ A=M
 D=D+M
 A=D-M
 D=D-A
-A=M
 M=D
 // push constant 36
 @36
@@ -88,7 +85,6 @@ A=M
 D=D+M
 A=D-M
 D=D-A
-A=M
 M=D
 // push constant 42
 @42
@@ -119,7 +115,6 @@ A=M
 D=D+M
 A=D-M
 D=D-A
-A=M
 M=D
 // pop that 2
 @SP
@@ -134,7 +129,6 @@ A=M
 D=D+M
 A=D-M
 D=D-A
-A=M
 M=D
 // push constant 510
 @510
