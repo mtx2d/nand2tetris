@@ -50,7 +50,7 @@ class CodeWriter:
             return "\n".join(
                 [
                     "// " + inst.__repr__(),
-                    "@{str(inst.value)}",
+                    f"@{str(inst.value)}",
                     "D=A",
                     "@SP",
                     "A=M",
@@ -130,6 +130,7 @@ class CodeWriter:
     def write_add(inst: InstAdd) -> str:
         return "\n".join(
             [
+                "// " + inst.__repr__(),
                 "@SP",
                 "M=M-1",
                 "@SP",  # SP--
@@ -149,6 +150,7 @@ class CodeWriter:
     def write_sub(inst: InstSub) -> str:
         return "\n".join(
             [
+                "// " + inst.__repr__(),
                 "@SP",
                 "M=M-1",  # SP--
                 "@SP",

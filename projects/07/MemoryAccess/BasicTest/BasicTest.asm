@@ -1,6 +1,7 @@
 // push constant 10
 @{str(inst.value)}
-D=A@SP
+D=A
+@SP
 A=M
 M=D
 @SP
@@ -34,14 +35,16 @@ A=M
 M=M-D
 // push constant 21
 @{str(inst.value)}
-D=A@SP
+D=A
+@SP
 A=M
 M=D
 @SP
 M=M+1
 // push constant 22
 @{str(inst.value)}
-D=A@SP
+D=A
+@SP
 A=M
 M=D
 @SP
@@ -102,7 +105,8 @@ A=M
 M=M-D
 // push constant 36
 @{str(inst.value)}
-D=A@SP
+D=A
+@SP
 A=M
 M=D
 @SP
@@ -136,14 +140,16 @@ A=M
 M=M-D
 // push constant 42
 @{str(inst.value)}
-D=A@SP
+D=A
+@SP
 A=M
 M=D
 @SP
 M=M+1
 // push constant 45
 @{str(inst.value)}
-D=A@SP
+D=A
+@SP
 A=M
 M=D
 @SP
@@ -204,7 +210,8 @@ A=M
 M=M-D
 // push constant 510
 @{str(inst.value)}
-D=A@SP
+D=A
+@SP
 A=M
 M=D
 @SP
