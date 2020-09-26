@@ -1,7 +1,8 @@
 // push constant 10
-@SP
+@{str(inst.value)}
+D=A@SP
 A=M
-M=10
+M=D
 @SP
 M=M+1
 // pop local 0
@@ -32,15 +33,17 @@ D=M
 A=M
 M=M-D
 // push constant 21
-@SP
+@{str(inst.value)}
+D=A@SP
 A=M
-M=21
+M=D
 @SP
 M=M+1
 // push constant 22
-@SP
+@{str(inst.value)}
+D=A@SP
 A=M
-M=22
+M=D
 @SP
 M=M+1
 // pop argument 2
@@ -98,9 +101,10 @@ D=M
 A=M
 M=M-D
 // push constant 36
-@SP
+@{str(inst.value)}
+D=A@SP
 A=M
-M=36
+M=D
 @SP
 M=M+1
 // pop this 6
@@ -131,15 +135,17 @@ D=M
 A=M
 M=M-D
 // push constant 42
-@SP
+@{str(inst.value)}
+D=A@SP
 A=M
-M=42
+M=D
 @SP
 M=M+1
 // push constant 45
-@SP
+@{str(inst.value)}
+D=A@SP
 A=M
-M=45
+M=D
 @SP
 M=M+1
 // pop that 5
@@ -197,9 +203,10 @@ D=M
 A=M
 M=M-D
 // push constant 510
-@SP
+@{str(inst.value)}
+D=A@SP
 A=M
-M=510
+M=D
 @SP
 M=M+1
 None

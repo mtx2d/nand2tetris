@@ -51,7 +51,7 @@ class CodeWriter:
                 [
                     "// " + inst.__repr__(),
                     "@{str(inst.value)}",
-                    "D=A"
+                    "D=A",
                     "@SP",
                     "A=M",
                     "M=D",
