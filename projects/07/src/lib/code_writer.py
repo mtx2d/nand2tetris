@@ -19,7 +19,7 @@ HACK_MEM_SYMBOL_MAP = {
 class CodeWriter:
     def __init__(self, input_file):
         self.filename = os.path.basename(input_file)
-    
+
     def write_push(self, inst: InstPush) -> str:
         """
         addr = segment + value; *SP=*addr; SP++;
@@ -41,28 +41,29 @@ class CodeWriter:
                 ]
             )
         elif inst.segment == "constant":
-            return "\n".join([
-                "// " + inst.__repr__,
-                "@SP",
-                "A=M",
-                f"M={str(inst.value)}",
-
-                "@SP",
-                "M=M+1",
-            ])
+            return "\n".join(
+                [
+                    "// " + inst.__repr__,
+                    "@SP",
+                    "A=M",
+                    f"M={str(inst.value)}",
+                    "@SP",
+                    "M=M+1",
+                ]
+            )
         elif inst.segment == "static":
-            return "\n".join([
-                "// " + inst.__repr__, 
-                f"@{self.filename}.{str(inst.value)}",
-                "D=M",
-
-                "@SP",
-                "A=M",
-                "M=D",
-
-                "@SP",
-                "M=M+1",
-            ])
+            return "\n".join(
+                [
+                    "// " + inst.__repr__,
+                    f"@{self.filename}.{str(inst.value)}",
+                    "D=M",
+                    "@SP",
+                    "A=M",
+                    "M=D",
+                    "@SP",
+                    "M=M+1",
+                ]
+            )
 
     def write_pop(self, inst: InstPop) -> str:
         """
@@ -103,19 +104,19 @@ class CodeWriter:
                     "M=M-D",  # *SP = *SP - *addr
                 ]
             )
-        elif inst.segment == 'static':
-            return "\n".join([
-                "// "  + inst.__repr__,
-                "@SP",
-                "A=M",
-                "D=M",
-
-                "@SP",
-                "M=M-1",
-
-                f"@{self.filename}.{str(inst.value)}",
-                "M=D",
-            ])
+        elif inst.segment == "static":
+            return "\n".join(
+                [
+                    "// " + inst.__repr__,
+                    "@SP",
+                    "A=M",
+                    "D=M",
+                    "@SP",
+                    "M=M-1",
+                    f"@{self.filename}.{str(inst.value)}",
+                    "M=D",
+                ]
+            )
 
     @staticmethod
     def write_add(inst: InstAdd) -> str:
