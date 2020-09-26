@@ -74,7 +74,14 @@ class CodeWriter:
             )
         elif inst.segment == "temp":
             return "\n".join([
-
+                "// " + inst.__repr__(),
+                f"@R{5 + inst.value}",
+                "D=M",
+                "@SP",
+                "A=M",
+                "M=D",
+                "@SP",
+                "M=M+1",
             ])
         elif inst.segment == "pointer":
             return "\n".join([
@@ -131,12 +138,20 @@ class CodeWriter:
                     "D=M",
                     "@SP",
                     "M=M-1",
-                    f"@{self.filename}.{str(inst.value)}",
+                    f"@{self.filename}.{inst.value}",
                     "M=D",
                 ]
             )
         elif inst.segment == "temp":
-            return "\n".join([])
+            return "\n".join([
+                "// " + inst.__repr__(),
+                "@SP",
+                "M=M-1",
+                "A=M",
+                "D=M",
+                f"R@{5 + inst.value}",
+                "M=D",
+            ])
         elif inst.segment == "pointer":
             return "\n".join([])
         else:
