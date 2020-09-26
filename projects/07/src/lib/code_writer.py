@@ -47,53 +47,58 @@ class CodeWriter:
             "and": CodeWriter.write_and,
             "not": CodeWriter.write_not,
         }
-    
+
     @staticmethod
     def write_neg(inst: InstNeg) -> str:
-        return "\n".join([ 
-            "// " + inst.__repr__(),
-            "@SP",
-            "A=M-1",
-            "M=-M",
-        ])
+        return "\n".join(
+            [
+                "// " + inst.__repr__(),
+                "@SP",
+                "A=M-1",
+                "M=-M",
+            ]
+        )
 
     @staticmethod
     def write_not(inst: InstNot) -> str:
-        return "\n".join([ 
-            "// " + inst.__repr__(),
-            "@SP",
-            "A=M-1",
-            "M=!M",
-        ])
-    
+        return "\n".join(
+            [
+                "// " + inst.__repr__(),
+                "@SP",
+                "A=M-1",
+                "M=!M",
+            ]
+        )
+
     @staticmethod
     def write_or(inst: InstOr) -> str:
-        return "\n".join([
-            "// " + inst.__repr__(),
-            "@SP",
-            "A=M-1",
-            "D=M",
+        return "\n".join(
+            [
+                "// " + inst.__repr__(),
+                "@SP",
+                "A=M-1",
+                "D=M",
+                "@SP",
+                "M=M-1",
+                "A=M-1",
+                "M=D|M",
+            ]
+        )
 
-            "@SP",
-            "M=M-1",
-            "A=M-1",
-            "M=D|M"
-        ])
-
-    
     @staticmethod
     def write_and(inst: InstAnd) -> str:
-        return "\n".join([
-            "// " + inst.__repr__(),
-            "@SP",
-            "A=M-1",
-            "D=M",
-
-            "@SP",
-            "M=M-1",
-            "A=M-1",
-            "M=D&M"
-        ])
+        return "\n".join(
+            [
+                "// " + inst.__repr__(),
+                "@SP",
+                "A=M-1",
+                "D=M",
+                "@SP",
+                "M=M-1",
+                "A=M-1",
+                "M=D&M",
+            ]
+        )
 
     @staticmethod
     def write_lt(inst: InstLt) -> str:
