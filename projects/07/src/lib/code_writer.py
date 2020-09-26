@@ -116,29 +116,12 @@ class CodeWriter:
                     f"@{inst.value}",
                     "D=A",
                     f"@{HACK_MEM_SYMBOL_MAP[inst.segment]}",
-                    "A=D+A",
-                    "D=M",  # D = *addr
+                    "D=D+A", # D = addr
                     "@SP",
                     "A=M",
-                    "M=M+D",  # *SP = *SP + *addr
-                    # ---------------------------
-                    "@SP",
-                    "A=M",
-                    "D=M",  # D = *SP
-                    f"@{inst.value}",
-                    "D=A",
-                    f"@{HACK_MEM_SYMBOL_MAP[inst.segment]}",
-                    "A=D+A",
-                    "M=D-M",  # *addr = *SP - *addr
-                    # --------------------------
-                    f"@{inst.value}",
-                    "D=A",
-                    f"@{HACK_MEM_SYMBOL_MAP[inst.segment]}",
-                    "A=D+A",
-                    "D=M",  # D = *addr
-                    "@SP",
-                    "A=M",
-                    "M=M-D",  # *SP = *SP - *addr
+                    "D=D+M", # D = addr + stack_top_val
+                    "A=D-M",
+                    "M=D-A",
                 ]
             )
         elif inst.segment == "static":
