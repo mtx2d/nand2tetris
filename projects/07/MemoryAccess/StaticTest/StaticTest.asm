@@ -24,26 +24,26 @@ M=D
 M=M+1
 // pop static 8
 @SP
+M=M-1
+@SP
 A=M
 D=M
-@SP
-M=M-1
 @StaticTest.8
 M=D
 // pop static 3
 @SP
+M=M-1
+@SP
 A=M
 D=M
-@SP
-M=M-1
 @StaticTest.3
 M=D
 // pop static 1
 @SP
+M=M-1
+@SP
 A=M
 D=M
-@SP
-M=M-1
 @StaticTest.1
 M=D
 // push static 3

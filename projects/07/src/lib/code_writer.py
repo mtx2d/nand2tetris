@@ -1,4 +1,5 @@
 import os
+from pathlib import Path
 
 from .instruction import (
     Instruction,
@@ -18,7 +19,7 @@ HACK_MEM_SYMBOL_MAP = {
 
 class CodeWriter:
     def __init__(self, input_file):
-        self.filename = os.path.basename(input_file)
+        self.filename = Path(input_file).stem
         self.inst_asm_map = {
             "push": self.write_push,
             "pop": self.write_pop,
@@ -131,10 +132,10 @@ class CodeWriter:
                 [
                     "// " + inst.__repr__(),
                     "@SP",
+                    "M=M-1",
+                    "@SP",
                     "A=M",
                     "D=M",
-                    "@SP",
-                    "M=M-1",
                     f"@{self.filename}.{inst.value}",
                     "M=D",
                 ]
@@ -158,7 +159,7 @@ class CodeWriter:
                 [
                     "// " + inst.__repr__(),
                     "@SP",
-                    "A=M",
+                    "A=M-1",
                     "D=M",
                     f"@{POINTER}",
                     "M=D",
