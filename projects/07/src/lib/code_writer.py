@@ -1,3 +1,5 @@
+import os
+
 from .instruction import (
     Instruction,
     InstPush,
@@ -15,8 +17,10 @@ HACK_MEM_SYMBOL_MAP = {
 
 
 class CodeWriter:
-    @staticmethod
-    def write_push(inst: InstPush) -> str:
+    def __init__(self, input_file):
+        self.filename = os.path.basename(input_file)
+    
+    def write_push(self, inst: InstPush) -> str:
         """
         addr = segment + value; *SP=*addr; SP++;
         """
@@ -36,8 +40,29 @@ class CodeWriter:
                     "M=M+1",  # SP++
                 ]
             )
+        elif inst.segment == "constant":
+            return "\n".join([
+                "// " + inst.__repr__,
+                "@SP",
+                "A=M",
+                f"M={str(inst.value)}",
+
+                "@SP",
+                "M=M+1",
+            ])
         elif inst.segment == "static":
-            return "\n".join([])
+            return "\n".join([
+                "// " + inst.__repr__, 
+                f"@{self.filename}.{str(inst.value)}",
+                "D=M"
+
+                "@SP",
+                "A=M",
+                "M=D",
+
+                "@SP",
+                "M=M+1"
+            ])
 
     @staticmethod
     def write_pop(inst: InstPop) -> str:
