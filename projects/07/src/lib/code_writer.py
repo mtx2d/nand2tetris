@@ -72,6 +72,16 @@ class CodeWriter:
                     "M=M+1",
                 ]
             )
+        elif inst.segment == "temp":
+            return "\n".join([
+
+            ])
+        elif inst.segment == "pointer":
+            return "\n".join([
+
+            ])
+        else:
+            raise ValueError("Could not gen code for:", inst)
 
     def write_pop(self, inst: InstPop) -> str:
         """
@@ -125,6 +135,13 @@ class CodeWriter:
                     "M=D",
                 ]
             )
+        elif inst.segment == "temp":
+            return "\n".join([])
+        elif inst.segment == "pointer":
+            return "\n".join([])
+        else:
+            raise ValueError("Could not gen code for:", inst)
+
 
     @staticmethod
     def write_add(inst: InstAdd) -> str:
