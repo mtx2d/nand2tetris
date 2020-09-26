@@ -1,4 +1,5 @@
 import os
+import itertools
 from pathlib import Path
 
 from .instruction import (
@@ -23,6 +24,8 @@ HACK_MEM_SYMBOL_MAP = {
 
 
 class CodeWriter:
+    label_id = itertools.count()
+
     def __init__(self, input_file):
         self.filename = Path(input_file).stem
         self.inst_asm_map = {
@@ -34,21 +37,38 @@ class CodeWriter:
             "lt": CodeWriter.write_lt,
         }
 
-    def write_eq(self, inst: InstEq) -> str:
+    @staticmethod
+    def get_next_label_id():
+        return next(CodeWriter.label_id)
+
+    def write_lt(self, inst: InstLt) -> str:
+        if_id = CodeWriter.get_next_label_id()
+        IF_BRANCH = f"IF_{if_id}"
         return "\n".join(
             [
                 "// " + inst.__repr__(),
                 "@SP",
                 "M=M-1",
-                "@SP",
                 "A=M",
-                "D=M" "@SP",
+                "D=M",
+                "@SP",
                 "A=M-1",
-                "M=D&M",
+                "D=M-D",
+                f"@{IF_BRANCH}",
+                "D;JLT",
+                "@SP",  # ELSE_BRANCH
+                "A=M-1",
+                "M=0",  # set to false
+                "@END",
+                "0;JMP",
+                f"({IF_BRANCH})",
+                "@SP",
+                "A=M-1",
+                "M=-1" "(END)",  # set to true
             ]
         )
 
-    def write_lt(self, inst: InstLt) -> str:
+    def write_eq(self, inst: InstEq) -> str:
         return "\n".join(
             [
                 "// " + inst.__repr__(),
