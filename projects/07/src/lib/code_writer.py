@@ -6,6 +6,13 @@ from .instruction import (
     InstSub,
 )
 
+HACK_MEM_SYMBOL_MAP = {
+    "local": "LCL",
+    "argument": "ARG",
+    "this": "THIS",
+    "that": "THAT",
+}
+
 
 class CodeWriter:
     @staticmethod
@@ -13,61 +20,67 @@ class CodeWriter:
         """
         addr = segment + value; *SP=*addr; SP++;
         """
-        return "\n".join(
-            [
-                "// " + inst.__repr__(),
-                f"@{inst.value}",
-                "D=A",  # D = value
-                f"@{inst.segment.upper()}",  # @SEGMENT
-                "A=D+M",  # A = value + SEGMENT -> element addr
-                "D=M",  # D = *addr
-                "@SP",
-                "A=M",
-                "M=D",  # *SP = *addr
-                "@SP",
-                "M=M+1",  # SP++
-            ]
-        )
+        if inst.segment in HACK_MEM_SYMBOL_MAP.keys():
+            return "\n".join(
+                [
+                    "// " + inst.__repr__(),
+                    f"@{inst.value}",
+                    "D=A",  # D = value
+                    f"@{HACK_MEM_SYMBOL_MAP[inst.segment]}",  # @SEGMENT
+                    "A=D+M",  # A = value + SEGMENT -> element addr
+                    "D=M",  # D = *addr
+                    "@SP",
+                    "A=M",
+                    "M=D",  # *SP = *addr
+                    "@SP",
+                    "M=M+1",  # SP++
+                ]
+            )
+        elif inst.segment == "static":
+            return "\n".join([])
 
     @staticmethod
     def write_pop(inst: InstPop) -> str:
         """
         SP--; addr = segment + value; *addr = *SP;
         """
-        return "\n".join(
-            [
-                "// " + inst.__repr__(),
-                "@SP",
-                "M=M-1",  # SP--
-                # ---------------------------
-                f"@{inst.value}",
-                "D=A",
-                f"@{inst.segment.upper()}",
-                "A=D+A",
-                "D=M",  # D = *addr
-                "@SP",
-                "A=M",
-                "M=M+D",  # *SP = *SP + *addr
-                # ---------------------------
-                "@SP",
-                "A=M",
-                "D=M",  # D = *SP
-                f"@{inst.value}",
-                "D=A",
-                f"@{inst.segment.upper()}",
-                "A=D+A",
-                "M=D-M",  # *addr = *SP - *addr
-                # --------------------------
-                f"@{inst.value}",
-                "D=A",
-                f"@{inst.segment.upper()}",
-                "A=D+A",
-                "D=M",  # D = *addr
-                "@SP",
-                "A=M",
-                "M=M-D",  # *SP = *SP - *addr
-            ]
-        )
+        if inst.segment in HACK_MEM_SYMBOL_MAP.keys():
+            return "\n".join(
+                [
+                    "// " + inst.__repr__(),
+                    "@SP",
+                    "M=M-1",  # SP--
+                    # ---------------------------
+                    f"@{inst.value}",
+                    "D=A",
+                    f"@{HACK_MEM_SYMBOL_MAP[inst.segment]}",
+                    "A=D+A",
+                    "D=M",  # D = *addr
+                    "@SP",
+                    "A=M",
+                    "M=M+D",  # *SP = *SP + *addr
+                    # ---------------------------
+                    "@SP",
+                    "A=M",
+                    "D=M",  # D = *SP
+                    f"@{inst.value}",
+                    "D=A",
+                    f"@{HACK_MEM_SYMBOL_MAP[inst.segment]}",
+                    "A=D+A",
+                    "M=D-M",  # *addr = *SP - *addr
+                    # --------------------------
+                    f"@{inst.value}",
+                    "D=A",
+                    f"@{HACK_MEM_SYMBOL_MAP[inst.segment]}",
+                    "A=D+A",
+                    "D=M",  # D = *addr
+                    "@SP",
+                    "A=M",
+                    "M=M-D",  # *SP = *SP - *addr
+                ]
+            )
+        elif inst.segment == 'static':
+            return "\n".join([])
 
     @staticmethod
     def write_add(inst: InstAdd) -> str:
