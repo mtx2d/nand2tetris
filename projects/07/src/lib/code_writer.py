@@ -26,6 +26,10 @@ HACK_MEM_SYMBOL_MAP = {
 class CodeWriter:
     label_id = itertools.count()
 
+    @staticmethod
+    def get_next_label_id():
+        return next(CodeWriter.label_id)
+
     def __init__(self, input_file):
         self.filename = Path(input_file).stem
         self.inst_asm_map = {
@@ -36,10 +40,6 @@ class CodeWriter:
             "eq": CodeWriter.write_eq,
             "lt": CodeWriter.write_lt,
         }
-
-    @staticmethod
-    def get_next_label_id():
-        return next(CodeWriter.label_id)
 
     def write_lt(self, inst: InstLt) -> str:
         if_id = CodeWriter.get_next_label_id()
