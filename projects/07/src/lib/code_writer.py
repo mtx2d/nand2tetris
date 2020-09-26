@@ -14,6 +14,7 @@ from .instruction import (
     InstNeg,
     InstOr,
     InstNot,
+    InstAnd,
 )
 
 HACK_MEM_SYMBOL_MAP = {

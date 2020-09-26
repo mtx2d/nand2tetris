@@ -381,3 +381,35 @@ A=M
 M=D+M
 @SP
 M=M+1
+// neg
+@SP
+A=M-1
+M=-M
+// and
+@SP
+A=M-1
+D=M
+@SP
+M=M-1
+A=M-1
+M=D&M
+// push constant 82
+@82
+D=A
+@SP
+A=M
+M=D
+@SP
+M=M+1
+// or
+@SP
+A=M-1
+D=M
+@SP
+M=M-1
+A=M-1
+M=D|M
+// not
+@SP
+A=M-1
+M=!M

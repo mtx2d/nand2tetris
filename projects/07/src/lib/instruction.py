@@ -19,6 +19,12 @@ class Instruction:
             return InstGt()
         elif line.startswith("neg"):
             return InstNeg()
+        elif line.startswith("and"):
+            return InstAnd()
+        elif line.startswith("or"):
+            return InstOr()
+        elif line.startswith("not"):
+            return InstNot()
         else:
             raise ValueError("cannot parse line:", line)
 
@@ -136,6 +142,17 @@ class InstNot(Instruction):
 
 class InstNeg(Instruction):
     def __init__(self, name: str = "neg"):
+        self.name = name
+
+    def __eq__(self, other) -> bool:
+        return self.name == other.name
+
+    def __repr__(self) -> str:
+        return self.name
+
+
+class InstAnd(Instruction):
+    def __init__(self, name: str = "and"):
         self.name = name
 
     def __eq__(self, other) -> bool:
