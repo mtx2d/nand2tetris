@@ -19,6 +19,12 @@ HACK_MEM_SYMBOL_MAP = {
 class CodeWriter:
     def __init__(self, input_file):
         self.filename = os.path.basename(input_file)
+        self.inst_asm_map = {
+            "push": self.write_push,
+            "pop": self.write_pop,
+            "add": CodeWriter.write_add,
+            "sub": CodeWriter.write_sub,
+        }
 
     def write_push(self, inst: InstPush) -> str:
         """
@@ -43,7 +49,7 @@ class CodeWriter:
         elif inst.segment == "constant":
             return "\n".join(
                 [
-                    "// " + inst.__repr__,
+                    "// " + inst.__repr__(),
                     "@SP",
                     "A=M",
                     f"M={str(inst.value)}",
@@ -54,7 +60,7 @@ class CodeWriter:
         elif inst.segment == "static":
             return "\n".join(
                 [
-                    "// " + inst.__repr__,
+                    "// " + inst.__repr__(),
                     f"@{self.filename}.{str(inst.value)}",
                     "D=M",
                     "@SP",
@@ -107,7 +113,7 @@ class CodeWriter:
         elif inst.segment == "static":
             return "\n".join(
                 [
-                    "// " + inst.__repr__,
+                    "// " + inst.__repr__(),
                     "@SP",
                     "A=M",
                     "D=M",
@@ -158,12 +164,6 @@ class CodeWriter:
         )
 
     def write(self, inst: Instruction) -> str:
-        return INST_ASM_MAP[inst.name](inst)
+        return self.inst_asm_map[inst.name](inst)
 
 
-INST_ASM_MAP = {
-    "push": CodeWriter.write_push,
-    "pop": CodeWriter.write_pop,
-    "add": CodeWriter.write_add,
-    "sub": CodeWriter.write_sub,
-}
