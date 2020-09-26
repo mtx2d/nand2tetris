@@ -64,7 +64,8 @@ class CodeWriter:
                 f"({IF_BRANCH})",
                 "@SP",
                 "A=M-1",
-                "M=-1" "(END)",  # set to true
+                "M=-1",
+                "(END)",  # set to true
             ]
         )
 
