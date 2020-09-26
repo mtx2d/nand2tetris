@@ -11,6 +11,7 @@ from .instruction import (
     InstEq,
     InstLt,
     InstGt,
+    InstNeg,
     InstOr,
     InstNot,
 )
@@ -40,9 +41,61 @@ class CodeWriter:
             "eq": CodeWriter.write_eq,
             "lt": CodeWriter.write_lt,
             "gt": CodeWriter.write_gt,
+            "neg": CodeWriter.write_neg,
+            "or": CodeWriter.write_or,
+            "and": CodeWriter.write_and,
+            "not": CodeWriter.write_not,
         }
+    
+    @staticmethod
+    def write_neg(inst: InstNeg) -> str:
+        return "\n".join([ 
+            "// " + inst.__repr__(),
+            "@SP",
+            "A=M-1",
+            "M=-M",
+        ])
 
-    def write_lt(self, inst: InstLt) -> str:
+    @staticmethod
+    def write_not(inst: InstNot) -> str:
+        return "\n".join([ 
+            "// " + inst.__repr__(),
+            "@SP",
+            "A=M-1",
+            "M=!M",
+        ])
+    
+    @staticmethod
+    def write_or(inst: InstOr) -> str:
+        return "\n".join([
+            "// " + inst.__repr__(),
+            "@SP",
+            "A=M-1",
+            "D=M",
+
+            "@SP",
+            "M=M-1",
+            "A=M-1",
+            "M=D|M"
+        ])
+
+    
+    @staticmethod
+    def write_and(inst: InstAnd) -> str:
+        return "\n".join([
+            "// " + inst.__repr__(),
+            "@SP",
+            "A=M-1",
+            "D=M",
+
+            "@SP",
+            "M=M-1",
+            "A=M-1",
+            "M=D&M"
+        ])
+
+    @staticmethod
+    def write_lt(inst: InstLt) -> str:
         block_id = CodeWriter.get_next_label_id()
         IF = f"IF_{block_id}"
         END = f"END_{block_id}"
@@ -71,7 +124,8 @@ class CodeWriter:
             ]
         )
 
-    def write_gt(self, inst: InstGt) -> str:
+    @staticmethod
+    def write_gt(inst: InstGt) -> str:
         block_id = CodeWriter.get_next_label_id()
         IF = f"IF_{block_id}"
         END = f"END_{block_id}"
@@ -100,7 +154,8 @@ class CodeWriter:
             ]
         )
 
-    def write_eq(self, inst: InstEq) -> str:
+    @staticmethod
+    def write_eq(inst: InstEq) -> str:
         block_id = CodeWriter.get_next_label_id()
         IF = f"IF_{block_id}"
         END = f"END_{block_id}"
