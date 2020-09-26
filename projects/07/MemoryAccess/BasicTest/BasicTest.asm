@@ -216,7 +216,13 @@ A=M
 M=D
 @SP
 M=M+1
-None
+// pop temp 6
+@SP
+M=M-1
+A=M
+D=M
+R@11
+M=D
 // push local 0
 @0
 D=A
@@ -326,7 +332,14 @@ A=M
 M=D+M
 @SP
 M=M+1
-None
+// push temp 6
+@R11
+D=M
+@SP
+A=M
+M=D
+@SP
+M=M+1
 // add
 @SP
 M=M-1

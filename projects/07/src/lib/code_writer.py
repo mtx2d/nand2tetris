@@ -162,7 +162,7 @@ class CodeWriter:
                     "M=M-1",
                     "A=M",
                     "D=M",
-                    f"R@{5 + inst.value}",
+                    f"@R{5 + inst.value}",
                     "M=D",
                 ]
             )
