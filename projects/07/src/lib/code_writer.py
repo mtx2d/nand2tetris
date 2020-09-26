@@ -121,7 +121,9 @@ class CodeWriter:
                     "A=M",
                     "D=D+M", # D = addr + stack_top_val
                     "A=D-M",
-                    "M=D-A",
+                    "D=D-A",
+                    "A=M",
+                    "M=D",
                 ]
             )
         elif inst.segment == "static":
