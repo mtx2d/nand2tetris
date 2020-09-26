@@ -50,9 +50,11 @@ class CodeWriter:
             return "\n".join(
                 [
                     "// " + inst.__repr__(),
+                    "@{str(inst.value)}",
+                    "D=A"
                     "@SP",
                     "A=M",
-                    f"M={str(inst.value)}",
+                    "M=D",
                     "@SP",
                     "M=M+1",
                 ]
