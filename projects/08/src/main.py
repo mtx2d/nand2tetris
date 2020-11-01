@@ -18,8 +18,8 @@ def main(argv: List[str]) -> int:
     parser = Parser(args.input)
     code_writer = CodeWriter(args.input)
     with open(args.output, "w") as of:
-        for inst in parser(args.input).parse():
-            print(code_writer.wirte(inst))
+        for inst in parser.parse():
+            print(code_writer.write(inst), file=of)
 
     return 0
 
