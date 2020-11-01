@@ -2,7 +2,8 @@ import argparse
 import sys
 from typing import List
 
-from lib.translator import Translator
+from lib.parser import Parser
+from lib.code_writer import CodeWriter
 
 
 def parse_args(argv: List[str]) -> argparse.Namespace:
@@ -14,9 +15,11 @@ def parse_args(argv: List[str]) -> argparse.Namespace:
 
 def main(argv: List[str]) -> int:
     args = parse_args(argv)
+    parser = Parser(args.input)
+    code_writer = CodeWriter(args.input)
     with open(args.output, "w") as of:
-        for line in Translator(args.input).translate():
-            print(line, file=of)
+        for inst in parser(args.input).parse():
+            print(code_writer.wirte(inst))
 
     return 0
 
