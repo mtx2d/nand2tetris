@@ -26,10 +26,25 @@ class Instruction:
         elif line.startswith("not"):
             return InstNot()
         elif line.startswith("label"):
-            _, value = line.split()
-            return InstLabel(value)
+            _, label_name = line.split()
+            return InstLabel(label_name)
+        elif line.startswith("if-goto"):
+            _, label_name = line.split()
+            return InstIfGoto(label_name)
         else:
             raise ValueError("cannot parse line:", line)
+
+
+class InstIfGoto(Instruction):
+    def __init__(self, value: str, name: str = "if-goto"):
+        self.name = name
+        self.value = value
+
+    def __eq__(self, other) -> bool:
+        return self.name == other.name and self.value == other.value
+
+    def __repr__(self) -> str:
+        return " ".join([self.name, self.value])
 
 
 class InstLabel(Instruction):
