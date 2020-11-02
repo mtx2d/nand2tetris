@@ -15,6 +15,7 @@ from .instruction import (
     InstOr,
     InstNot,
     InstAnd,
+    InstLabel,
 )
 
 HACK_MEM_SYMBOL_MAP = {
@@ -46,7 +47,17 @@ class CodeWriter:
             "or": CodeWriter.write_or,
             "and": CodeWriter.write_and,
             "not": CodeWriter.write_not,
+            "label": CodeWriter.write_label,
         }
+
+    @staticmethod
+    def write_label(inst: InstLabel) -> str:
+        return "\n".join(
+            [
+                "// " + inst.__repr__(),
+                f"({inst.name})",
+            ]
+        )
 
     @staticmethod
     def write_neg(inst: InstNeg) -> str:
