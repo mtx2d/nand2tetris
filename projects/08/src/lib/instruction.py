@@ -31,8 +31,23 @@ class Instruction:
         elif line.startswith("if-goto"):
             _, label_name = line.split()
             return InstIfGoto(label_name)
+        elif line.startswith("goto"):
+            _, label_name = line.split()
+            return InstGoto(label_name)
         else:
             raise ValueError("cannot parse line:", line)
+
+
+class InstGoto(Instruction):
+    def __init__(self, value: str, name: str = "goto"):
+        self.name = name
+        self.value = value
+
+    def __eq__(self, other) -> bool:
+        return self.name == other.name and self.value == other.value
+
+    def __repr__(self) -> str:
+        return " ".join([self.name, self.value])
 
 
 class InstIfGoto(Instruction):
