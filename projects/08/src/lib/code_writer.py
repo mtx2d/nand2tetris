@@ -55,7 +55,7 @@ class CodeWriter:
         return "\n".join(
             [
                 "// " + inst.__repr__(),
-                f"({inst.name})",
+                f"({inst.value})",
             ]
         )
 

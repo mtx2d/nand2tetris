@@ -26,20 +26,22 @@ class Instruction:
         elif line.startswith("not"):
             return InstNot()
         elif line.startswith("label"):
-            return InstLabel()
+            _, value = line.split()
+            return InstLabel(value)
         else:
             raise ValueError("cannot parse line:", line)
 
 
 class InstLabel(Instruction):
-    def __init__(self, name: str):
+    def __init__(self, value: str, name: str = "label"):
         self.name = name
+        self.value = value
 
     def __eq__(self, other) -> bool:
-        return self.name == other.name
+        return self.name == other.name and self.value == other.value
 
     def __repr__(self) -> str:
-        return self.name
+        return " ".join([self.name, self.value])
 
 
 class InstPush(Instruction):
