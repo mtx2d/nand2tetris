@@ -17,6 +17,7 @@ from .instruction import (
     InstAnd,
     InstLabel,
     InstIfGoto,
+    InstFunction,
 )
 
 HACK_MEM_SYMBOL_MAP = {
@@ -51,7 +52,31 @@ class CodeWriter:
             "label": CodeWriter.write_label,
             "if-goto": CodeWriter.write_if_goto,
             "goto": CodeWriter.write_goto,
+            "function": CodeWriter.write_function,
         }
+
+    @staticmethod
+    def write_function(inst: InstFunction) -> str:
+        return "\n".join(
+            [
+                "// " + inst.__repr__(),
+                f"({inst.function_name})",
+                "@{inst.n_local}",
+                "D=A",
+                f"({inst.function_name}.LOOP_INIT_LCL)",
+                f"  @{inst.function_name}.DONE_INIT_LCL",
+                "   D;JEQ",
+                "   @SP",
+                "   A=M",
+                "   M=0",
+                "   @SP",
+                "   M=M+1",
+                "   D=D-1",
+                f"  @{inst.function_name}.LOOP_INIT_LCL",
+                "   0;JMP"
+                f"({inst.function_name}.DONE_INIT_LCL)"
+            ]
+        )
 
     @staticmethod
     def write_goto(inst: InstLabel) -> str:

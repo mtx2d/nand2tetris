@@ -34,9 +34,25 @@ class Instruction:
         elif line.startswith("goto"):
             _, label_name = line.split()
             return InstGoto(label_name)
+        elif line.startswith("function"):
+            _, function_name, n_local = line.split()
+            return InstFunction(function_name, n_local)
         else:
             raise ValueError("cannot parse line:", line)
 
+class InstFunction(Instruction):
+    def __init__(self, function_name, n_local):
+        self.name = "function"
+        self.function_name = function_name
+        self.n_local = n_local
+    
+    def __eq__(self, other) -> bool:
+        return self.name == other.name and \
+            self.function_name == other.function_name and \
+            self.n_local == other.n_local
+
+    def __repr__(self) -> str:
+        return " ".join([self.name, self.function_name, self.n_local])
 
 class InstGoto(Instruction):
     def __init__(self, value: str, name: str = "goto"):
