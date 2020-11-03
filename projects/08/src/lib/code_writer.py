@@ -65,8 +65,10 @@ class CodeWriter:
         def get_random_string(length=64):
             import string
 
-            letters = string.ascii_letters
-            result_str = "".join(random.sample(letters, length))
+            letters_and_digits = string.ascii_letters + string.digits
+            result_str = "".join(
+                (random.choice(letters_and_digits) for i in range(length))
+            )
             return result_str
 
         mangle_salt = get_random_string()
