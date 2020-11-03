@@ -11,8 +11,8 @@ D=A
    @SP
    M=M+1
    D=D-1
-   @SimpleFunction.test.LOOP_INIT_LCL
-   0;JMP
+@SimpleFunction.test.LOOP_INIT_LCL
+0;JMP
 (SimpleFunction.test.DONE_INIT_LCL)
 // push local 0
 @0
@@ -117,7 +117,8 @@ M=D
 @SP
 M=M-1
 @SP
-A=MD=M
+A=M
+D=M
 @ARG
 A=M
 M=D

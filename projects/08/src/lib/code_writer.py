@@ -143,8 +143,8 @@ class CodeWriter:
                 "   @SP",
                 "   M=M+1",
                 "   D=D-1",
-                f"   @{inst.function_name}.LOOP_INIT_LCL",
-                "   0;JMP",
+                f"@{inst.function_name}.LOOP_INIT_LCL",
+                "0;JMP",
                 f"({inst.function_name}.DONE_INIT_LCL)",
             ]
         )
