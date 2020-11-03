@@ -1,5 +1,6 @@
 import os
 import itertools
+import random
 from pathlib import Path
 
 from .instruction import (
@@ -19,6 +20,7 @@ from .instruction import (
     InstIfGoto,
     InstFunction,
     InstReturn,
+    InstCall,
 )
 
 HACK_MEM_SYMBOL_MAP = {
@@ -55,7 +57,78 @@ class CodeWriter:
             "goto": CodeWriter.write_goto,
             "function": CodeWriter.write_function,
             "return": CodeWriter.write_return,
+            "call": CodeWriter.write_call,
         }
+
+    @staticmethod
+    def write_call(inst: InstCall) -> str:
+        def get_random_string(length = 64):
+            import string
+            letters = string.ascii_letters
+            result_str = ''.join(random.sample(letters, length))
+            return result_str
+        
+        mangle_salt = get_random_string()
+        return "\n".join(
+            [
+                "// " + inst.__repr__(),
+                # push return address
+                f"@{inst.function_name}.RET.{mangle_salt}",
+                "D=A",
+                "@SP",
+                "M=D",
+                "@SP",
+                "M=M+1",
+                #push LCL
+                "@LCL",
+                "A=M",
+                "D=M",
+                "@SP",
+                "M=D",
+                "@SP",
+                "M=M+1",
+                #push ARG
+                "@ARG",
+                "A=M",
+                "D=M",
+                "@SP",
+                "M=D",
+                "@SP",
+                "M=M+1",
+                #push THIS
+                "@THIS",
+                "A=M",
+                "D=M",
+                "@SP",
+                "M=D",
+                "@SP",
+                "M=M+1",
+                #push THAT
+                "@THAT",
+                "A=M",
+                "D=M",
+                "@SP",
+                "M=D",
+                "@SP",
+                "M=M+1",
+                #ARG = SP - n - 5
+                f"@{inst.n_args - 5}",
+                "D=A",
+                "@SP",
+                "D=M-D",
+                "@ARG",
+                "A=M",
+                "M=D",
+                # LCL = SP
+                "@SP",
+                "D=M",
+                "@LCL",
+                "M=D",
+                # goto f
+                f"@{inst.function_name}",
+                "0;JMP",
+                f"({inst.function_name}.RET.{mangle_salt})",
+            ])
 
     @staticmethod
     def write_return(inst: InstReturn) -> str:

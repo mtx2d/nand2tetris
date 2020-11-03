@@ -39,8 +39,25 @@ class Instruction:
             return InstFunction(function_name, n_local)
         elif line.startswith("return"):
             return InstReturn()
+        elif line.startswith("call"):
+            _, function_name, n_args = line.split()
+            return InstReturn(function_name, n_args)
         else:
             raise ValueError("cannot parse line:", line)
+
+class InstCall(Instruction):
+    def __init__(self, function_name, n_args):
+        self.name = "call"
+        self.function_name = function_name
+        self.n_args = n_args
+    
+    def __eq__(self, other) -> bool:
+        return self.name == other.name and \
+            self.function_name == other.function_name and \
+            self.n_args == other.n_args
+
+    def __repr__(self) -> str:
+        return " ".join([self.name, self.function_name, self.n_args])
 
 class InstReturn(Instruction):
     def __init__(self):
