@@ -50,7 +50,18 @@ class CodeWriter:
             "not": CodeWriter.write_not,
             "label": CodeWriter.write_label,
             "if-goto": CodeWriter.write_if_goto,
+            "goto": CodeWriter.write_goto,
         }
+
+    @staticmethod
+    def write_goto(inst: InstLabel) -> str:
+        return "\n".join(
+            [
+                "// " + inst.__repr__(),
+                f"@{inst.value}",
+                "0;JMP",
+            ]
+        )
 
     @staticmethod
     def write_if_goto(inst: InstIfGoto) -> str:
