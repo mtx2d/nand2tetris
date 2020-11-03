@@ -62,12 +62,13 @@ class CodeWriter:
 
     @staticmethod
     def write_call(inst: InstCall) -> str:
-        def get_random_string(length = 64):
+        def get_random_string(length=64):
             import string
+
             letters = string.ascii_letters
-            result_str = ''.join(random.sample(letters, length))
+            result_str = "".join(random.sample(letters, length))
             return result_str
-        
+
         mangle_salt = get_random_string()
         return "\n".join(
             [
@@ -79,7 +80,7 @@ class CodeWriter:
                 "M=D",
                 "@SP",
                 "M=M+1",
-                #push LCL
+                # push LCL
                 "@LCL",
                 "A=M",
                 "D=M",
@@ -87,7 +88,7 @@ class CodeWriter:
                 "M=D",
                 "@SP",
                 "M=M+1",
-                #push ARG
+                # push ARG
                 "@ARG",
                 "A=M",
                 "D=M",
@@ -95,7 +96,7 @@ class CodeWriter:
                 "M=D",
                 "@SP",
                 "M=M+1",
-                #push THIS
+                # push THIS
                 "@THIS",
                 "A=M",
                 "D=M",
@@ -103,7 +104,7 @@ class CodeWriter:
                 "M=D",
                 "@SP",
                 "M=M+1",
-                #push THAT
+                # push THAT
                 "@THAT",
                 "A=M",
                 "D=M",
@@ -111,7 +112,7 @@ class CodeWriter:
                 "M=D",
                 "@SP",
                 "M=M+1",
-                #ARG = SP - n - 5
+                # ARG = SP - n - 5
                 f"@{inst.n_args - 5}",
                 "D=A",
                 "@SP",
@@ -128,7 +129,8 @@ class CodeWriter:
                 f"@{inst.function_name}",
                 "0;JMP",
                 f"({inst.function_name}.RET.{mangle_salt})",
-            ])
+            ]
+        )
 
     @staticmethod
     def write_return(inst: InstReturn) -> str:
@@ -148,7 +150,7 @@ class CodeWriter:
                 "D=M",
                 "@RET",
                 "M=D",
-                #*ARG = pop()
+                # *ARG = pop()
                 "@SP",
                 "M=M-1",
                 "@SP",
@@ -157,7 +159,7 @@ class CodeWriter:
                 "@ARG",
                 "A=M",
                 "M=D",
-                #SP=ARG + 1
+                # SP=ARG + 1
                 "@ARG",
                 "D=M",
                 "@SP",
