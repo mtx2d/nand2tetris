@@ -129,3 +129,22 @@ A=M
 M=D
 @SP
 M=M+1
+// if-goto LOOP_START
+@SP
+A=M-1
+D=M
+@SP
+M=M-1
+@LOOP_START
+D;JGT
+// push local 0
+@0
+D=A
+@LCL
+A=D+M
+D=M
+@SP
+A=M
+M=D
+@SP
+M=M+1
