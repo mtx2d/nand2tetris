@@ -124,7 +124,6 @@ D=M
 A=M
 M=D
 @ARG
-A=M
 D=M
 @SP
 M=D+1

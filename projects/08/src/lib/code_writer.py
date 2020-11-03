@@ -86,7 +86,6 @@ class CodeWriter:
                 "M=D",
                 #SP=ARG + 1
                 "@ARG",
-                "A=M",
                 "D=M",
                 "@SP",
                 "M=D+1",
