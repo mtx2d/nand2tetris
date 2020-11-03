@@ -18,6 +18,7 @@ from .instruction import (
     InstLabel,
     InstIfGoto,
     InstFunction,
+    InstReturn,
 )
 
 HACK_MEM_SYMBOL_MAP = {
@@ -53,7 +54,77 @@ class CodeWriter:
             "if-goto": CodeWriter.write_if_goto,
             "goto": CodeWriter.write_goto,
             "function": CodeWriter.write_function,
+            "return": CodeWriter.write_return,
         }
+
+    @staticmethod
+    def write_return(inst: InstReturn) -> str:
+        return "\n".join(
+            [
+                "// " + inst.__repr__(),
+                "@LCL",
+                "D=A",
+                "@FRAME",
+                "M=D",
+                # RET = *(FRAME - 5)
+                "@5",
+                "D=A",
+                "@FRAME",
+                "A=M-D",
+                "D=M",
+                "@RET",
+                "M=D",
+                #*ARG = pop()
+                "@SP",
+                "M=M-1",
+                "@SP",
+                "A=M",
+                "D=M",
+                "@ARG",
+                "A=M",
+                "M=D",
+                #SP=ARG + 1
+                "@ARG",
+                "D=A",
+                "@SP",
+                "M=D+1",
+                # THAT = *(FRAME - 1)
+                "@1",
+                "D=A",
+                "@FRAME",
+                "A=M-D",
+                "D=M",
+                "@THAT",
+                "M=D",
+                # THIS = *(FRAME - 2)
+                "@2",
+                "D=A",
+                "@FRAME",
+                "A=M-D",
+                "D=M",
+                "@THIS",
+                "M=D",
+                # ARG = *(FRAME - 3)
+                "@3",
+                "D=A",
+                "@FRAME",
+                "A=M-D",
+                "D=M",
+                "@ARG",
+                "M=D",
+                # LCL = *(FRAME - 4)
+                "@4",
+                "D=A",
+                "@FRAME",
+                "A=M-D",
+                "D=M",
+                "@LCL",
+                "M=D",
+                # goto RET
+                "@RET",
+                "0;JMP",
+            ]
+        )
 
     @staticmethod
     def write_function(inst: InstFunction) -> str:
@@ -61,10 +132,10 @@ class CodeWriter:
             [
                 "// " + inst.__repr__(),
                 f"({inst.function_name})",
-                "@{inst.n_local}",
+                f"@{inst.n_local}",
                 "D=A",
                 f"({inst.function_name}.LOOP_INIT_LCL)",
-                f"  @{inst.function_name}.DONE_INIT_LCL",
+                f"   @{inst.function_name}.DONE_INIT_LCL",
                 "   D;JEQ",
                 "   @SP",
                 "   A=M",
@@ -72,9 +143,9 @@ class CodeWriter:
                 "   @SP",
                 "   M=M+1",
                 "   D=D-1",
-                f"  @{inst.function_name}.LOOP_INIT_LCL",
-                "   0;JMP"
-                f"({inst.function_name}.DONE_INIT_LCL)"
+                f"   @{inst.function_name}.LOOP_INIT_LCL",
+                "   0;JMP",
+                f"({inst.function_name}.DONE_INIT_LCL)",
             ]
         )
 

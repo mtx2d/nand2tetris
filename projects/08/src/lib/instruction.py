@@ -37,8 +37,20 @@ class Instruction:
         elif line.startswith("function"):
             _, function_name, n_local = line.split()
             return InstFunction(function_name, n_local)
+        elif line.startswith("return"):
+            return InstReturn()
         else:
             raise ValueError("cannot parse line:", line)
+
+class InstReturn(Instruction):
+    def __init__(self):
+        self.name = "return"
+    
+    def __eq__(self, other) -> bool:
+        return self.name == other.name
+
+    def __repr__(self) -> str:
+        return "return"
 
 class InstFunction(Instruction):
     def __init__(self, function_name, n_local):
