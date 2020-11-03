@@ -160,4 +160,5 @@ D=M
 @LCL
 M=D
 @RET
+A=M
 0;JMP
