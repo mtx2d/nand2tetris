@@ -110,8 +110,8 @@ class CodeWriter:
                 "M=D",
                 "@SP",
                 "M=M+1",
-                # ARG = SP - n - 5
-                f"@{inst.n_args - 5}",
+                # ARG = SP - (n + 5)
+                f"@{inst.n_args + 5}",
                 "D=A",
                 "@SP",
                 "D=M-D",
