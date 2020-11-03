@@ -110,6 +110,7 @@ M=D
 @5
 D=A
 @FRAME
+A=M
 A=M-D
 D=M
 @RET
@@ -123,12 +124,14 @@ D=M
 A=M
 M=D
 @ARG
-D=A
+A=M
+D=M
 @SP
 M=D+1
 @1
 D=A
 @FRAME
+A=M
 A=M-D
 D=M
 @THAT
@@ -136,6 +139,7 @@ M=D
 @2
 D=A
 @FRAME
+A=M
 A=M-D
 D=M
 @THIS
@@ -143,6 +147,7 @@ M=D
 @3
 D=A
 @FRAME
+A=M
 A=M-D
 D=M
 @ARG
@@ -150,6 +155,7 @@ M=D
 @4
 D=A
 @FRAME
+A=M
 A=M-D
 D=M
 @LCL
