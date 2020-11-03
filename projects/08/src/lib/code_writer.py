@@ -84,7 +84,6 @@ class CodeWriter:
                 "M=M+1",
                 # push LCL
                 "@LCL",
-                "A=M",
                 "D=M",
                 "@SP",
                 "M=D",
@@ -92,7 +91,6 @@ class CodeWriter:
                 "M=M+1",
                 # push ARG
                 "@ARG",
-                "A=M",
                 "D=M",
                 "@SP",
                 "M=D",
@@ -100,7 +98,6 @@ class CodeWriter:
                 "M=M+1",
                 # push THIS
                 "@THIS",
-                "A=M",
                 "D=M",
                 "@SP",
                 "M=D",
@@ -108,7 +105,6 @@ class CodeWriter:
                 "M=M+1",
                 # push THAT
                 "@THAT",
-                "A=M",
                 "D=M",
                 "@SP",
                 "M=D",
