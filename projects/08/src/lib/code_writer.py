@@ -86,6 +86,7 @@ class CodeWriter:
                 "@SP",
                 "A=M",
                 "M=D",
+                "@SP",
                 "M=M+1",
                 # push LCL
                 "@LCL",
@@ -93,6 +94,7 @@ class CodeWriter:
                 "@SP",
                 "A=M",
                 "M=D",
+                "@SP",
                 "M=M+1",
                 # push ARG
                 "@ARG",
@@ -100,6 +102,7 @@ class CodeWriter:
                 "@SP",
                 "A=M",
                 "M=D",
+                "@SP",
                 "M=M+1",
                 # push THIS
                 "@THIS",
@@ -107,6 +110,7 @@ class CodeWriter:
                 "@SP",
                 "A=M",
                 "M=D",
+                "@SP",
                 "M=M+1",
                 # push THAT
                 "@THAT",
@@ -114,6 +118,7 @@ class CodeWriter:
                 "@SP",
                 "A=M",
                 "M=D",
+                "@SP",
                 "M=M+1",
                 # ARG = SP - (n + 5)
                 f"@{inst.n_args + 5}",
