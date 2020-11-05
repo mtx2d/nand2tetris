@@ -540,7 +540,8 @@ class CodeWriter:
                 [
                     "// " + inst.__repr__(),
                     "@SP",
-                    "A=M-1",
+                    "M=M-1",
+                    "A=M",
                     "D=M",
                     f"@{POINTER}",
                     "M=D",
