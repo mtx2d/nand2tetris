@@ -21,6 +21,7 @@ def main(argv: List[str]) -> int:
         args.input_path
     )  # need input filename for static variables
     with open(args.output, "w") as of:
+        print(code_writer.write_init(), file=of)
         for inst in parser.parse():
             print(code_writer.write(inst), file=of)
 

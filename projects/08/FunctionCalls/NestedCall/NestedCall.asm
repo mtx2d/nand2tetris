@@ -43,7 +43,7 @@ D=M
 @THAT
 M=D
 // call Sys.main 0
-@Sys.main.RET.LrX1zah2ZYJzgXJEus06KgAea4geaXRxhSAszGtWORck9MPpeuvu6EhTt5EJjkqC
+@Sys.main.RET.99wTwZCR2bn1BT4tTxNo3qM6PTKiMtYWutK8JryhBSQw2mzW8LfhGfyu9k5pHBi7
 D=A
 @SP
 M=D
@@ -78,7 +78,6 @@ D=A
 @SP
 D=M-D
 @ARG
-A=M
 M=D
 @SP
 D=M
@@ -86,7 +85,7 @@ D=M
 M=D
 @Sys.main
 0;JMP
-(Sys.main.RET.LrX1zah2ZYJzgXJEus06KgAea4geaXRxhSAszGtWORck9MPpeuvu6EhTt5EJjkqC)
+(Sys.main.RET.99wTwZCR2bn1BT4tTxNo3qM6PTKiMtYWutK8JryhBSQw2mzW8LfhGfyu9k5pHBi7)
 // pop temp 1
 @SP
 M=M-1
@@ -218,7 +217,7 @@ M=D
 @SP
 M=M+1
 // call Sys.add12 1
-@Sys.add12.RET.xI3HvMqaW7nGlQf9pHG743UkToLwi7HQ24TPXJPyAx7xmjXATp8uTvmnj6XXkUHY
+@Sys.add12.RET.sDpcAMqg42d6PlppP8uE5zIxgukSWmK1MYWeAnpAJIot2eS8mi5J5JEGZlreB8EA
 D=A
 @SP
 M=D
@@ -253,7 +252,6 @@ D=A
 @SP
 D=M-D
 @ARG
-A=M
 M=D
 @SP
 D=M
@@ -261,7 +259,7 @@ D=M
 M=D
 @Sys.add12
 0;JMP
-(Sys.add12.RET.xI3HvMqaW7nGlQf9pHG743UkToLwi7HQ24TPXJPyAx7xmjXATp8uTvmnj6XXkUHY)
+(Sys.add12.RET.sDpcAMqg42d6PlppP8uE5zIxgukSWmK1MYWeAnpAJIot2eS8mi5J5JEGZlreB8EA)
 // pop temp 0
 @SP
 M=M-1

@@ -61,6 +61,11 @@ class CodeWriter:
         }
 
     @staticmethod
+    def write_init() -> str:
+        # init VM state
+        return "\n".join(["@THIS", "M=-1"])
+
+    @staticmethod
     def write_call(inst: InstCall) -> str:
         def get_random_string(length=64):
             import string
@@ -116,7 +121,6 @@ class CodeWriter:
                 "@SP",
                 "D=M-D",
                 "@ARG",
-                "A=M",
                 "M=D",
                 # LCL = SP
                 "@SP",
