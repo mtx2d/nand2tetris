@@ -269,7 +269,7 @@ class CodeWriter:
                 "@SP",
                 "M=M-1",
                 f"@{inst.value}",
-                "D;JGT",
+                "D+1;JEQ", # JUPM when this is boolean TRUE(-1)
             ]
         )
 
