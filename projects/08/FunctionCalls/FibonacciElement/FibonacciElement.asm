@@ -1,5 +1,10 @@
-@THIS
-M=-1
+// init
+@261
+D=A
+@SP
+M=D
+@Sys.init
+0;JMP
 // function Main.fibonacci 0
 (Main.fibonacci)
 @0
@@ -165,17 +170,15 @@ M=M+1
 M=M-1
 @SP
 A=M
-M=-M
 D=M
 @SP
 M=M-1
-@SP
 A=M
-M=D+M
+M=M-D
 @SP
 M=M+1
 // call Main.fibonacci 1
-@Main.fibonacci.RET.2TRoqONarpxZEGlPDmL2YevoDEC91W0pJOOueBZQWTAlriEUU7GUEr2AXxhxgfVs
+@Main.fibonacci.RET.ZIWZVyKw2fqpEsdkKsEE8vxNUxW6FsnaTJDSjVH0tW9tG7eleq408DFRQwp4w4E3
 D=A
 @SP
 A=M
@@ -222,7 +225,7 @@ D=M
 M=D
 @Main.fibonacci
 0;JMP
-(Main.fibonacci.RET.2TRoqONarpxZEGlPDmL2YevoDEC91W0pJOOueBZQWTAlriEUU7GUEr2AXxhxgfVs)
+(Main.fibonacci.RET.ZIWZVyKw2fqpEsdkKsEE8vxNUxW6FsnaTJDSjVH0tW9tG7eleq408DFRQwp4w4E3)
 // push argument 0
 @0
 D=A
@@ -247,17 +250,15 @@ M=M+1
 M=M-1
 @SP
 A=M
-M=-M
 D=M
 @SP
 M=M-1
-@SP
 A=M
-M=D+M
+M=M-D
 @SP
 M=M+1
 // call Main.fibonacci 1
-@Main.fibonacci.RET.CrGWs41spOcLKcXb7rkM3HVGGE2LRlNCvq0RWRrUOC4GclgbvyY6hQ16mtEgrLXH
+@Main.fibonacci.RET.ydxJ8RREL0yqiXs80ns8D8lxm363qayttKKM1EPxuHDQpOLW2kwGZLQJ4TKhhMh1
 D=A
 @SP
 A=M
@@ -304,7 +305,7 @@ D=M
 M=D
 @Main.fibonacci
 0;JMP
-(Main.fibonacci.RET.CrGWs41spOcLKcXb7rkM3HVGGE2LRlNCvq0RWRrUOC4GclgbvyY6hQ16mtEgrLXH)
+(Main.fibonacci.RET.ydxJ8RREL0yqiXs80ns8D8lxm363qayttKKM1EPxuHDQpOLW2kwGZLQJ4TKhhMh1)
 // add
 @SP
 M=M-1
@@ -378,8 +379,6 @@ M=D
 @RET
 A=M
 0;JMP
-@THIS
-M=-1
 // function Sys.init 0
 (Sys.init)
 @0
@@ -405,7 +404,7 @@ M=D
 @SP
 M=M+1
 // call Main.fibonacci 1
-@Main.fibonacci.RET.Wyax1lLyGi0ozc7BEndSk9uai14EWAFKYnEd2VV8jw2X8VUyB12xt5cWENeaBHc3
+@Main.fibonacci.RET.T1DZOjuA14R4hL7U0OfobiftP0CV2NuZt2cG9TjfzljulmRgfp4QZVQpn1gwc843
 D=A
 @SP
 A=M
@@ -452,7 +451,7 @@ D=M
 M=D
 @Main.fibonacci
 0;JMP
-(Main.fibonacci.RET.Wyax1lLyGi0ozc7BEndSk9uai14EWAFKYnEd2VV8jw2X8VUyB12xt5cWENeaBHc3)
+(Main.fibonacci.RET.T1DZOjuA14R4hL7U0OfobiftP0CV2NuZt2cG9TjfzljulmRgfp4QZVQpn1gwc843)
 // label WHILE
 (WHILE)
 // goto WHILE

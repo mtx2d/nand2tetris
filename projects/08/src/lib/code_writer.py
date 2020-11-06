@@ -63,7 +63,18 @@ class CodeWriter:
     @staticmethod
     def write_init() -> str:
         # init VM state
-        return "\n".join(["@THIS", "M=-1"])
+        return "\n".join(
+            [
+                "// init",
+                #SP
+                "@261",
+                "D=A",
+                "@SP",
+                "M=D",
+                "@Sys.init",
+                "0;JMP",
+            ]
+        )
 
     @staticmethod
     def write_call(inst: InstCall) -> str:
@@ -584,13 +595,11 @@ class CodeWriter:
                 "M=M-1",  # SP--
                 "@SP",
                 "A=M",
-                "M=-M",  # -y
                 "D=M",
                 "@SP",
                 "M=M-1",  # SP--
-                "@SP",
                 "A=M",
-                "M=D+M",
+                "M=M-D",
                 "@SP",  # x - y
                 "M=M+1",  # SP++
             ]

@@ -30,12 +30,11 @@ def get_files(input_path):
 
 def main(argv: List[str]) -> int:
     args = parse_args(argv)
-
-    for file_path in get_files(args.input_path):
-        parser = Parser(file_path)
-        code_writer = CodeWriter(file_path)  # need input filename for static variables
-        with open(args.output, "a") as of:
-            print(code_writer.write_init(), file=of)
+    with open(args.output, "w") as of:
+        code_writer = CodeWriter(args.output)  # need input filename for static variables
+        print(code_writer.write_init(), file=of)
+        for file_path in get_files(args.input_path):
+            parser = Parser(file_path)
             for inst in parser.parse():
                 print(code_writer.write(inst), file=of)
 
