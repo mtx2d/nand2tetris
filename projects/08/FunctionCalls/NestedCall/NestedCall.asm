@@ -1,3 +1,5 @@
+@THIS
+M=-1
 // function Sys.init 0
 (Sys.init)
 @0
@@ -24,7 +26,8 @@ M=D
 M=M+1
 // pop pointer 0
 @SP
-A=M-1
+M=M-1
+A=M
 D=M
 @THIS
 M=D
@@ -38,38 +41,44 @@ M=D
 M=M+1
 // pop pointer 1
 @SP
-A=M-1
+M=M-1
+A=M
 D=M
 @THAT
 M=D
 // call Sys.main 0
-@Sys.main.RET.99wTwZCR2bn1BT4tTxNo3qM6PTKiMtYWutK8JryhBSQw2mzW8LfhGfyu9k5pHBi7
+@Sys.main.RET.75MUuffxKmFP2bIX4mrTRv6GBJqWksu1cHAnayEBiCmuvlxhH0n9c1yNcfNsAldy
 D=A
 @SP
+A=M
 M=D
 @SP
 M=M+1
 @LCL
 D=M
 @SP
+A=M
 M=D
 @SP
 M=M+1
 @ARG
 D=M
 @SP
+A=M
 M=D
 @SP
 M=M+1
 @THIS
 D=M
 @SP
+A=M
 M=D
 @SP
 M=M+1
 @THAT
 D=M
 @SP
+A=M
 M=D
 @SP
 M=M+1
@@ -85,7 +94,7 @@ D=M
 M=D
 @Sys.main
 0;JMP
-(Sys.main.RET.99wTwZCR2bn1BT4tTxNo3qM6PTKiMtYWutK8JryhBSQw2mzW8LfhGfyu9k5pHBi7)
+(Sys.main.RET.75MUuffxKmFP2bIX4mrTRv6GBJqWksu1cHAnayEBiCmuvlxhH0n9c1yNcfNsAldy)
 // pop temp 1
 @SP
 M=M-1
@@ -124,7 +133,8 @@ M=D
 M=M+1
 // pop pointer 0
 @SP
-A=M-1
+M=M-1
+A=M
 D=M
 @THIS
 M=D
@@ -138,7 +148,8 @@ M=D
 M=M+1
 // pop pointer 1
 @SP
-A=M-1
+M=M-1
+A=M
 D=M
 @THAT
 M=D
@@ -217,33 +228,38 @@ M=D
 @SP
 M=M+1
 // call Sys.add12 1
-@Sys.add12.RET.sDpcAMqg42d6PlppP8uE5zIxgukSWmK1MYWeAnpAJIot2eS8mi5J5JEGZlreB8EA
+@Sys.add12.RET.DD5PyVHV9NbsM9XUfbE4MvoiDCJJ0VGKaQRVBo5AnD4tNQWwMg0I1hegO4bkjXNU
 D=A
 @SP
+A=M
 M=D
 @SP
 M=M+1
 @LCL
 D=M
 @SP
+A=M
 M=D
 @SP
 M=M+1
 @ARG
 D=M
 @SP
+A=M
 M=D
 @SP
 M=M+1
 @THIS
 D=M
 @SP
+A=M
 M=D
 @SP
 M=M+1
 @THAT
 D=M
 @SP
+A=M
 M=D
 @SP
 M=M+1
@@ -259,7 +275,7 @@ D=M
 M=D
 @Sys.add12
 0;JMP
-(Sys.add12.RET.sDpcAMqg42d6PlppP8uE5zIxgukSWmK1MYWeAnpAJIot2eS8mi5J5JEGZlreB8EA)
+(Sys.add12.RET.DD5PyVHV9NbsM9XUfbE4MvoiDCJJ0VGKaQRVBo5AnD4tNQWwMg0I1hegO4bkjXNU)
 // pop temp 0
 @SP
 M=M-1
@@ -460,7 +476,8 @@ M=D
 M=M+1
 // pop pointer 0
 @SP
-A=M-1
+M=M-1
+A=M
 D=M
 @THIS
 M=D
@@ -474,7 +491,8 @@ M=D
 M=M+1
 // pop pointer 1
 @SP
-A=M-1
+M=M-1
+A=M
 D=M
 @THAT
 M=D
