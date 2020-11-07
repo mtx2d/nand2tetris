@@ -1,0 +1,722 @@
+// init
+@261
+D=A
+@SP
+M=D
+@Sys.init
+0;JMP
+// function Class1.set 0
+(Class1.set)
+@0
+D=A
+(Class1.set.LOOP_INIT_LCL)
+   @Class1.set.DONE_INIT_LCL
+   D;JEQ
+   @SP
+   A=M
+   M=0
+   @SP
+   M=M+1
+   D=D-1
+@Class1.set.LOOP_INIT_LCL
+0;JMP
+(Class1.set.DONE_INIT_LCL)
+// push argument 0
+@0
+D=A
+@ARG
+A=D+M
+D=M
+@SP
+A=M
+M=D
+@SP
+M=M+1
+// pop static 0
+@SP
+M=M-1
+@SP
+A=M
+D=M
+@Class1.0
+M=D
+// push argument 1
+@1
+D=A
+@ARG
+A=D+M
+D=M
+@SP
+A=M
+M=D
+@SP
+M=M+1
+// pop static 1
+@SP
+M=M-1
+@SP
+A=M
+D=M
+@Class1.1
+M=D
+// push constant 0
+@0
+D=A
+@SP
+A=M
+M=D
+@SP
+M=M+1
+// return
+@LCL
+D=A
+@FRAME
+M=D
+@5
+D=A
+@FRAME
+A=M
+A=M-D
+D=M
+@RET
+M=D
+@SP
+M=M-1
+@SP
+A=M
+D=M
+@ARG
+A=M
+M=D
+@ARG
+D=M
+@SP
+M=D+1
+@1
+D=A
+@FRAME
+A=M
+A=M-D
+D=M
+@THAT
+M=D
+@2
+D=A
+@FRAME
+A=M
+A=M-D
+D=M
+@THIS
+M=D
+@3
+D=A
+@FRAME
+A=M
+A=M-D
+D=M
+@ARG
+M=D
+@4
+D=A
+@FRAME
+A=M
+A=M-D
+D=M
+@LCL
+M=D
+@RET
+A=M
+0;JMP
+// function Class1.get 0
+(Class1.get)
+@0
+D=A
+(Class1.get.LOOP_INIT_LCL)
+   @Class1.get.DONE_INIT_LCL
+   D;JEQ
+   @SP
+   A=M
+   M=0
+   @SP
+   M=M+1
+   D=D-1
+@Class1.get.LOOP_INIT_LCL
+0;JMP
+(Class1.get.DONE_INIT_LCL)
+// push static 0
+@Class1.0
+D=M
+@SP
+A=M
+M=D
+@SP
+M=M+1
+// push static 1
+@Class1.1
+D=M
+@SP
+A=M
+M=D
+@SP
+M=M+1
+// sub
+@SP
+M=M-1
+@SP
+A=M
+D=M
+@SP
+M=M-1
+A=M
+M=M-D
+@SP
+M=M+1
+// return
+@LCL
+D=A
+@FRAME
+M=D
+@5
+D=A
+@FRAME
+A=M
+A=M-D
+D=M
+@RET
+M=D
+@SP
+M=M-1
+@SP
+A=M
+D=M
+@ARG
+A=M
+M=D
+@ARG
+D=M
+@SP
+M=D+1
+@1
+D=A
+@FRAME
+A=M
+A=M-D
+D=M
+@THAT
+M=D
+@2
+D=A
+@FRAME
+A=M
+A=M-D
+D=M
+@THIS
+M=D
+@3
+D=A
+@FRAME
+A=M
+A=M-D
+D=M
+@ARG
+M=D
+@4
+D=A
+@FRAME
+A=M
+A=M-D
+D=M
+@LCL
+M=D
+@RET
+A=M
+0;JMP
+// function Class2.set 0
+(Class2.set)
+@0
+D=A
+(Class2.set.LOOP_INIT_LCL)
+   @Class2.set.DONE_INIT_LCL
+   D;JEQ
+   @SP
+   A=M
+   M=0
+   @SP
+   M=M+1
+   D=D-1
+@Class2.set.LOOP_INIT_LCL
+0;JMP
+(Class2.set.DONE_INIT_LCL)
+// push argument 0
+@0
+D=A
+@ARG
+A=D+M
+D=M
+@SP
+A=M
+M=D
+@SP
+M=M+1
+// pop static 0
+@SP
+M=M-1
+@SP
+A=M
+D=M
+@Class2.0
+M=D
+// push argument 1
+@1
+D=A
+@ARG
+A=D+M
+D=M
+@SP
+A=M
+M=D
+@SP
+M=M+1
+// pop static 1
+@SP
+M=M-1
+@SP
+A=M
+D=M
+@Class2.1
+M=D
+// push constant 0
+@0
+D=A
+@SP
+A=M
+M=D
+@SP
+M=M+1
+// return
+@LCL
+D=A
+@FRAME
+M=D
+@5
+D=A
+@FRAME
+A=M
+A=M-D
+D=M
+@RET
+M=D
+@SP
+M=M-1
+@SP
+A=M
+D=M
+@ARG
+A=M
+M=D
+@ARG
+D=M
+@SP
+M=D+1
+@1
+D=A
+@FRAME
+A=M
+A=M-D
+D=M
+@THAT
+M=D
+@2
+D=A
+@FRAME
+A=M
+A=M-D
+D=M
+@THIS
+M=D
+@3
+D=A
+@FRAME
+A=M
+A=M-D
+D=M
+@ARG
+M=D
+@4
+D=A
+@FRAME
+A=M
+A=M-D
+D=M
+@LCL
+M=D
+@RET
+A=M
+0;JMP
+// function Class2.get 0
+(Class2.get)
+@0
+D=A
+(Class2.get.LOOP_INIT_LCL)
+   @Class2.get.DONE_INIT_LCL
+   D;JEQ
+   @SP
+   A=M
+   M=0
+   @SP
+   M=M+1
+   D=D-1
+@Class2.get.LOOP_INIT_LCL
+0;JMP
+(Class2.get.DONE_INIT_LCL)
+// push static 0
+@Class2.0
+D=M
+@SP
+A=M
+M=D
+@SP
+M=M+1
+// push static 1
+@Class2.1
+D=M
+@SP
+A=M
+M=D
+@SP
+M=M+1
+// sub
+@SP
+M=M-1
+@SP
+A=M
+D=M
+@SP
+M=M-1
+A=M
+M=M-D
+@SP
+M=M+1
+// return
+@LCL
+D=A
+@FRAME
+M=D
+@5
+D=A
+@FRAME
+A=M
+A=M-D
+D=M
+@RET
+M=D
+@SP
+M=M-1
+@SP
+A=M
+D=M
+@ARG
+A=M
+M=D
+@ARG
+D=M
+@SP
+M=D+1
+@1
+D=A
+@FRAME
+A=M
+A=M-D
+D=M
+@THAT
+M=D
+@2
+D=A
+@FRAME
+A=M
+A=M-D
+D=M
+@THIS
+M=D
+@3
+D=A
+@FRAME
+A=M
+A=M-D
+D=M
+@ARG
+M=D
+@4
+D=A
+@FRAME
+A=M
+A=M-D
+D=M
+@LCL
+M=D
+@RET
+A=M
+0;JMP
+// function Sys.init 0
+(Sys.init)
+@0
+D=A
+(Sys.init.LOOP_INIT_LCL)
+   @Sys.init.DONE_INIT_LCL
+   D;JEQ
+   @SP
+   A=M
+   M=0
+   @SP
+   M=M+1
+   D=D-1
+@Sys.init.LOOP_INIT_LCL
+0;JMP
+(Sys.init.DONE_INIT_LCL)
+// push constant 6
+@6
+D=A
+@SP
+A=M
+M=D
+@SP
+M=M+1
+// push constant 8
+@8
+D=A
+@SP
+A=M
+M=D
+@SP
+M=M+1
+// call Class1.set 2
+@Class1.set.RET.WS2rOKRRvbJild3qWkUGzpVpZz2UoE5M4ENQdqMUh9dTG9wgtfPuvwFMW1lZPPGq
+D=A
+@SP
+A=M
+M=D
+@SP
+M=M+1
+@LCL
+D=M
+@SP
+A=M
+M=D
+@SP
+M=M+1
+@ARG
+D=M
+@SP
+A=M
+M=D
+@SP
+M=M+1
+@THIS
+D=M
+@SP
+A=M
+M=D
+@SP
+M=M+1
+@THAT
+D=M
+@SP
+A=M
+M=D
+@SP
+M=M+1
+@7
+D=A
+@SP
+D=M-D
+@ARG
+M=D
+@SP
+D=M
+@LCL
+M=D
+@Class1.set
+0;JMP
+(Class1.set.RET.WS2rOKRRvbJild3qWkUGzpVpZz2UoE5M4ENQdqMUh9dTG9wgtfPuvwFMW1lZPPGq)
+// pop temp 0
+@SP
+M=M-1
+A=M
+D=M
+@R5
+M=D
+// push constant 23
+@23
+D=A
+@SP
+A=M
+M=D
+@SP
+M=M+1
+// push constant 15
+@15
+D=A
+@SP
+A=M
+M=D
+@SP
+M=M+1
+// call Class2.set 2
+@Class2.set.RET.sGoxHGPiwFxGLeEMWs2saA5LYIvk9hERN2QbiIzHort4qouzyDyiQsquMwI6ig0m
+D=A
+@SP
+A=M
+M=D
+@SP
+M=M+1
+@LCL
+D=M
+@SP
+A=M
+M=D
+@SP
+M=M+1
+@ARG
+D=M
+@SP
+A=M
+M=D
+@SP
+M=M+1
+@THIS
+D=M
+@SP
+A=M
+M=D
+@SP
+M=M+1
+@THAT
+D=M
+@SP
+A=M
+M=D
+@SP
+M=M+1
+@7
+D=A
+@SP
+D=M-D
+@ARG
+M=D
+@SP
+D=M
+@LCL
+M=D
+@Class2.set
+0;JMP
+(Class2.set.RET.sGoxHGPiwFxGLeEMWs2saA5LYIvk9hERN2QbiIzHort4qouzyDyiQsquMwI6ig0m)
+// pop temp 0
+@SP
+M=M-1
+A=M
+D=M
+@R5
+M=D
+// call Class1.get 0
+@Class1.get.RET.vOCVqDvHjhFjdY6ZWSCcTqiKvJlpFjxKHXOWHoTFYT7dAF5BSqnEdFJEePIFuujR
+D=A
+@SP
+A=M
+M=D
+@SP
+M=M+1
+@LCL
+D=M
+@SP
+A=M
+M=D
+@SP
+M=M+1
+@ARG
+D=M
+@SP
+A=M
+M=D
+@SP
+M=M+1
+@THIS
+D=M
+@SP
+A=M
+M=D
+@SP
+M=M+1
+@THAT
+D=M
+@SP
+A=M
+M=D
+@SP
+M=M+1
+@5
+D=A
+@SP
+D=M-D
+@ARG
+M=D
+@SP
+D=M
+@LCL
+M=D
+@Class1.get
+0;JMP
+(Class1.get.RET.vOCVqDvHjhFjdY6ZWSCcTqiKvJlpFjxKHXOWHoTFYT7dAF5BSqnEdFJEePIFuujR)
+// call Class2.get 0
+@Class2.get.RET.ju5m64LJavYFEzSCsJcGocsp6MeO0rtPcVRgbFV0YYcndSFxWILbwXt9YasvFWrj
+D=A
+@SP
+A=M
+M=D
+@SP
+M=M+1
+@LCL
+D=M
+@SP
+A=M
+M=D
+@SP
+M=M+1
+@ARG
+D=M
+@SP
+A=M
+M=D
+@SP
+M=M+1
+@THIS
+D=M
+@SP
+A=M
+M=D
+@SP
+M=M+1
+@THAT
+D=M
+@SP
+A=M
+M=D
+@SP
+M=M+1
+@5
+D=A
+@SP
+D=M-D
+@ARG
+M=D
+@SP
+D=M
+@LCL
+M=D
+@Class2.get
+0;JMP
+(Class2.get.RET.ju5m64LJavYFEzSCsJcGocsp6MeO0rtPcVRgbFV0YYcndSFxWILbwXt9YasvFWrj)
+// label WHILE
+(WHILE)
+// goto WHILE
+@WHILE
+0;JMP
