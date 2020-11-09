@@ -2,7 +2,7 @@ import os
 import sys
 import argparse
 from pathlib import Path
-from exception import FileExistsException
+from tokenizer import Tokenizer
 
 
 def parse_args(argv):
@@ -23,16 +23,22 @@ def get_output_path(source_path):
     return os.path.join(path.stem, ".jack")
 
 
+def parse(tokenizer, output_file):
+    pass
+
+
 def main(argv):
     args = parse_args(argv)
     output_path = get_output_path(args.source_path)
     if Path(output_path).exists():
-        raise FileExistsException(f"{output_path} already exists")
+        raise FileExistsError(f"{output_path} already exists")
 
-    analyser = Analyser(output_path)
+    tokenizer = Tokenizer(Path(args.source_path).absolute())
     with open(output_path, "w") as of:
-        for out in analyser.process():
-            print(out, file=of)
+        parse(tokenizer, of)
+
+    return 0
+
 
 if __name__ == "__main__":
     sys.exit(main(sys.argv))
