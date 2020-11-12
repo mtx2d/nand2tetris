@@ -65,6 +65,9 @@ class Token:
         else:
             return Identifier(token_str)
 
+    def __repr__(self):
+        return f"{self.name}({self.val})"
+
 
 class Keyword(Token):
     def __init__(self, val):
@@ -94,6 +97,7 @@ class IntegerConstant(Token):
     def __eq__(self, other) -> bool:
         if isinstance(other, IntegerConstant):
             return self.val == other.val
+
 
 class StringConstant(Token):
     def __init__(self, val):
