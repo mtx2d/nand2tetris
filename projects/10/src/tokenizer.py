@@ -1,57 +1,9 @@
 import re
 import string
+from jack_token import Token
 
 
 class Tokenizer:
-    SYMBOLS = set(
-        [
-            "{",
-            "}",
-            "(",
-            ")",
-            "[",
-            "]",
-            ".",
-            ",",
-            ";",
-            "+",
-            "-",
-            "*",
-            "/",
-            "&",
-            "|",
-            "<",
-            ">",
-            "=",
-            "~",
-        ]
-    )
-    KEYWORDS = set(
-        [
-            "class",
-            "constructor",
-            "function",
-            "method",
-            "field",
-            "static",
-            "var",
-            "int",
-            "char",
-            "boolean",
-            "void",
-            "true",
-            "false",
-            "null",
-            "this",
-            "let",
-            "do",
-            "if",
-            "else",
-            "while",
-            "return",
-        ]
-    )
-
     @staticmethod
     def strip_comments(line):
         return re.sub(
@@ -62,7 +14,7 @@ class Tokenizer:
         ).strip()
 
     @staticmethod
-    def parse(input_file):
+    def parse(input_file) -> Token:
         with open(input_file, "r") as f:
             for line in f:
                 line = line.strip()
@@ -78,13 +30,13 @@ class Tokenizer:
                 while i < len(line):
                     if line[i] in string.ascii_letters + string.digits + "_":
                         token += line[i]
-                    elif line[i] in Tokenizer.SYMBOLS:
+                    elif line[i] in Token.SYMBOLS:
                         if token:
-                            yield token
-                            token=""
-                        yield line[i]
+                            yield Token.create(token)
+                            token = ""
+                        yield Token.create(line[i])
                     elif line[i] in string.whitespace:
                         if token:
-                            yield token
+                            yield Token.create(token)
                             token = ""
                     i += 1
