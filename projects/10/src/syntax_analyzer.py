@@ -20,11 +20,7 @@ def get_output_path(source_path):
     path = Path(source_path)
     if not path.exists():
         raise FileNotFoundError(f"{source_path} does not exist.")
-    return os.path.join(path.stem, ".xml")
-
-
-def parse(tokenizer, output_file):
-    pass
+    return f"{path.stem}.xml"
 
 
 def main(argv):
@@ -33,7 +29,7 @@ def main(argv):
     if Path(output_path).exists():
         raise FileExistsError(f"{output_path} already exists")
 
-    tokens = Tokenizer.parse(Path(args.source_path).absolute())
+    tokens = Tokenizer.parse(Path(output_path).absolute())
     with open(output_path, "w") as of:
         for token in tokens:
             print(token, file=of)
