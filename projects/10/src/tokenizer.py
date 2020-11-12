@@ -22,7 +22,6 @@ class Tokenizer:
                 line = Tokenizer.strip_comments(line)
                 if not line:
                     continue
-                print(line)
 
                 token = ""
                 i = 0
@@ -32,7 +31,9 @@ class Tokenizer:
                         while i < len(line) and line[i] != '"':
                             token += line[i]
                             i += 1
-                        yield Token.create(f'"{token}"')
+                        if token:
+                            yield Token.create(f'"{token}"')
+                            token = ""
                         is_parsing_quoted_string = not is_parsing_quoted_string
                     else:
                         if line[i] == '"':

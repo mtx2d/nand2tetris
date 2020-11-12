@@ -1,7 +1,7 @@
 import pathlib
 import unittest
 from tokenizer import Tokenizer
-from jack_token import Token, Keyword, Symbol, Identifier, StringConstant
+from jack_token import Token, Keyword, Symbol, Identifier, IntegerConstant, StringConstant
 
 TEST_FILE = pathlib.Path(__file__).parent.joinpath("TestTokenMain.jack")
 
@@ -85,3 +85,20 @@ class TestTokenizer(unittest.TestCase):
         self.assertEqual(Identifier("s"), next(file_without_comments))
         self.assertEqual(Symbol("="), next(file_without_comments))
         self.assertEqual(StringConstant('"string constant"'), next(file_without_comments))
+        self.assertEqual(Symbol(";"), next(file_without_comments))
+        self.assertEqual(Keyword("let"), next(file_without_comments))
+        self.assertEqual(Identifier("s"), next(file_without_comments))
+        self.assertEqual(Symbol("="), next(file_without_comments))
+        self.assertEqual(Keyword('null'), next(file_without_comments))
+        self.assertEqual(Symbol(";"), next(file_without_comments))
+        self.assertEqual(Keyword("let"), next(file_without_comments))
+        self.assertEqual(Identifier("a"), next(file_without_comments))
+        self.assertEqual(Symbol("["), next(file_without_comments))
+        self.assertEqual(IntegerConstant(1), next(file_without_comments))
+        self.assertEqual(Symbol("]"), next(file_without_comments))
+        self.assertEqual(Symbol("="), next(file_without_comments))
+        self.assertEqual(Identifier("a"), next(file_without_comments))
+        self.assertEqual(Symbol("["), next(file_without_comments))
+        self.assertEqual(IntegerConstant(2), next(file_without_comments))
+        self.assertEqual(Symbol("]"), next(file_without_comments))
+        self.assertEqual(Symbol(";"), next(file_without_comments))
