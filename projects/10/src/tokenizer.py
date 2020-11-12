@@ -27,11 +27,10 @@ class Tokenizer:
                 is_parsing_quoted_string = False
                 while i < len(line):
                     if is_parsing_quoted_string:
-                            #line[i] == '"':
                         while i < len(line) and line[i] != '"':
                             token += line[i]
                             i += 1
-                        yield token
+                        yield Token.create(f'"{token}"')
                         is_parsing_quoted_string = not is_parsing_quoted_string
                     else:
                         if line[i] == '"':
