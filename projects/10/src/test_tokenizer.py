@@ -17,5 +17,10 @@ class TestTokenizer(unittest.TestCase):
         self.assertEqual("boolean", next(file_without_comments))
         self.assertEqual("test", next(file_without_comments))
         self.assertEqual(";", next(file_without_comments))
+        self.assertEqual("function", next(file_without_comments))
+        self.assertEqual("void", next(file_without_comments))
+        self.assertEqual("main", next(file_without_comments))
+        self.assertEqual("(", next(file_without_comments))
+        self.assertEqual(")", next(file_without_comments))
 
         self.assertTrue(False)

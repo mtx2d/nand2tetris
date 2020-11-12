@@ -1,4 +1,5 @@
 import re
+import string
 
 
 class Tokenizer:
@@ -75,11 +76,16 @@ class Tokenizer:
                 token = ""
                 i = 0
                 while i < len(line):
-                    if i + 1 == len(line) or line[i + 1] in " \n\t":
-                        token += line[i]
-                        i += 2
-                        yield token
-                        token = ""
-                    else:
+                    if line[i] in string.ascii_letters + string.digits + "_":
                         token += line[i]
                         i += 1
+                    elif line[i] in Tokenizer.SYMBOLS:
+                        if token:
+                            yield token
+                            token=""
+                        yield line[i]
+                        i += 1
+                    elif line[i] in string.whitespace:
+                        yield token
+                        i += 1
+                        token = ""
