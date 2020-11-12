@@ -1,7 +1,7 @@
 import pathlib
 import unittest
 from tokenizer import Tokenizer
-from jack_token import Token, Keyword, Symbol, Identifier
+from jack_token import Token, Keyword, Symbol, Identifier, StringConstant
 
 TEST_FILE = pathlib.Path(__file__).parent.joinpath("TestTokenMain.jack")
 
@@ -71,3 +71,17 @@ class TestTokenizer(unittest.TestCase):
         self.assertEqual(Identifier("String"), next(file_without_comments))
         self.assertEqual(Identifier("s"), next(file_without_comments))
         self.assertEqual(Symbol(";"), next(file_without_comments))
+        self.assertEqual(Keyword("var"), next(file_without_comments))
+        self.assertEqual(Identifier("Array"), next(file_without_comments))
+        self.assertEqual(Identifier("a"), next(file_without_comments))
+        self.assertEqual(Symbol(";"), next(file_without_comments))
+
+        self.assertEqual(Keyword("if"), next(file_without_comments))
+        self.assertEqual(Symbol("("), next(file_without_comments))
+        self.assertEqual(Keyword("false"), next(file_without_comments))
+        self.assertEqual(Symbol(")"), next(file_without_comments))
+        self.assertEqual(Symbol("{"), next(file_without_comments))
+        self.assertEqual(Keyword("let"), next(file_without_comments))
+        self.assertEqual(Identifier("s"), next(file_without_comments))
+        self.assertEqual(Symbol("="), next(file_without_comments))
+        self.assertEqual(StringConstant('"string constant"'), next(file_without_comments))

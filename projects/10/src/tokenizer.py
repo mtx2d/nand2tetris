@@ -1,5 +1,6 @@
 import re
 import string
+import sys
 from jack_token import Token
 
 
@@ -7,7 +8,7 @@ class Tokenizer:
     @staticmethod
     def strip_comments(line):
         return re.sub(
-            "//.*?$|/\*.*?\*/|'(?:\\.|[^\\'])*'|\"(?:\\.|[^\\\"])*\"",
+            "//.*?$|/\*.*?\*/|'(?:\\.|[^\\'])*'",
             "",
             line,
             flags=re.S,
@@ -21,6 +22,7 @@ class Tokenizer:
                 line = Tokenizer.strip_comments(line)
                 if not line:
                     continue
+                print(line)
 
                 token = ""
                 i = 0
@@ -34,8 +36,6 @@ class Tokenizer:
                         is_parsing_quoted_string = not is_parsing_quoted_string
                     else:
                         if line[i] == '"':
-                            if token:
-                                yield Token.create(token)
                             is_parsing_quoted_string = not is_parsing_quoted_string
                         elif line[i] in string.ascii_letters + string.digits + "_":
                             token += line[i]
@@ -48,5 +48,4 @@ class Tokenizer:
                             if token:
                                 yield Token.create(token)
                                 token = ""
-                       
                     i += 1
