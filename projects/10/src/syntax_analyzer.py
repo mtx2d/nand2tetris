@@ -8,7 +8,7 @@ from tokenizer import Tokenizer
 def parse_args(argv):
     parser = argparse.ArgumentParser()
     parser.add_argument(
-        "--source_path",
+        "--source-path",
         required=True,
         help="source file or directory, can be relative or absolute",
     )
