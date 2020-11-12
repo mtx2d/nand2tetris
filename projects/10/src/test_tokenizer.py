@@ -9,7 +9,6 @@ class TestTokenizer(unittest.TestCase):
     def test_parse(self):
         file_without_comments = Tokenizer.parse(TEST_FILE)
 
-
         self.assertEqual("class", next(file_without_comments))
         self.assertEqual("Main", next(file_without_comments))
         self.assertEqual("{", next(file_without_comments))
@@ -33,5 +32,3 @@ class TestTokenizer(unittest.TestCase):
         self.assertEqual("SquareGame", next(file_without_comments))
         self.assertEqual(".", next(file_without_comments))
         self.assertEqual("new", next(file_without_comments))
-
-        self.assertTrue(False)
