@@ -135,3 +135,9 @@ class TestTokenizer(unittest.TestCase):
         self.assertEqual(Symbol("|"), next(file_without_comments))
         self.assertEqual(Identifier("j"), next(file_without_comments))
         self.assertEqual(Symbol(";"), next(file_without_comments))
+
+        self.assertEqual(Symbol("}"), next(file_without_comments))
+        self.assertEqual(Keyword("return"), next(file_without_comments))
+        self.assertEqual(Symbol(";"), next(file_without_comments))
+        self.assertEqual(Symbol("}"), next(file_without_comments))
+        self.assertEqual(Symbol("}"), next(file_without_comments))
