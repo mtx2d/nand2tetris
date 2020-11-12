@@ -66,11 +66,20 @@ class Tokenizer:
             for line in f:
                 line = line.strip()
                 line = Tokenizer.strip_comments(line)
+                line = " ".join(
+                    line.split()
+                )  # make sure only one space between each word
                 if not line:
                     continue
-                token = None
+
+                token = ""
                 i = 0
                 while i < len(line):
-
-                    pass
-                yield token
+                    if i + 1 == len(line) or line[i + 1] in " \n\t":
+                        token += line[i]
+                        i += 2
+                        yield token
+                        token = ""
+                    else:
+                        token += line[i]
+                        i += 1
