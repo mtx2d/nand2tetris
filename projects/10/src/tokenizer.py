@@ -78,14 +78,13 @@ class Tokenizer:
                 while i < len(line):
                     if line[i] in string.ascii_letters + string.digits + "_":
                         token += line[i]
-                        i += 1
                     elif line[i] in Tokenizer.SYMBOLS:
                         if token:
                             yield token
                             token=""
                         yield line[i]
-                        i += 1
                     elif line[i] in string.whitespace:
-                        yield token
-                        i += 1
-                        token = ""
+                        if token:
+                            yield token
+                            token = ""
+                    i += 1
