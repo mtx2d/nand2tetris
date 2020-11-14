@@ -61,7 +61,7 @@ class Token:
         elif all([d in string.digits for d in token_str]):
             return IntegerConstant(int(token_str))
         elif token_str[0] == '"' and token_str[-1] == '"':
-            return StringConstant(token_str)
+            return StringConstant(token_str[1:-1])
         else:
             return Identifier(token_str)
 
@@ -121,6 +121,8 @@ class StringConstant(Token):
         if isinstance(other, StringConstant):
             return self.val == other.val
 
+    def to_xml(self, lvl=0):
+        return f"{' ' * lvl}<identifier> {self.val} </identifier>"
 
 class Identifier(Token):
     def __init__(self, val):
@@ -132,4 +134,4 @@ class Identifier(Token):
             return self.val == other.val
 
     def to_xml(self, lvl=0):
-        return f"{' ' * lvl}<identifier>{self.val}</identifier>"
+        return f"{' ' * lvl}<identifier> {self.val} </identifier>"
