@@ -1,7 +1,7 @@
 import re
 import string
 import sys
-from src.jack_token import Token
+from .jack_token import Token
 
 
 class Tokenizer:
