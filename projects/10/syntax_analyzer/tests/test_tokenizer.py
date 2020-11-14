@@ -1,7 +1,7 @@
 import pathlib
 import unittest
-from tokenizer import Tokenizer
-from jack_token import (
+from src.tokenizer import Tokenizer
+from src.jack_token import (
     Token,
     Keyword,
     Symbol,
