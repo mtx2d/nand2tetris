@@ -2,7 +2,7 @@ import os
 import sys
 import argparse
 from pathlib import Path
-from .tokenizer import Tokenizer
+from lib.tokenizer import Tokenizer
 
 
 def parse_args(argv):
