@@ -24,11 +24,7 @@ def get_files(path):
             raise Exception(f"{path} is not a jack file.")
         return [path.absolute()]
     elif path.is_dir():
-        return [
-            Path(Path(p.absolute().parent).joinpath(f"{p.stem}.xml"))
-            for p in path.iterdir()
-            if p.suffix == ".jack"
-        ]
+        return [p for p in path.iterdir() if p.suffix == ".jack"]
     else:
         raise Exception(f"{path} is neither a dir or a file.")
 
@@ -38,13 +34,11 @@ def main(argv):
 
     source_path = Path(args.source_path).absolute()
     for file in get_files(source_path):
-        tokens = Tokenizer.parse(Path(file).absolute())
-        with open(
-            Path(file).absolute().parent.joinpath(Path(file).stem + ".xml"), "w"
-        ) as of:
+        tokens = Tokenizer.parse(file)
+        with open(file.parent.joinpath(f"{file.stem}.xml"), "w") as of:
             for token in tokens:
-                print(token.name, token.value)
-                print(token, file=of)
+                print(token)
+                # print(token, file=of)
 
     return 0
 

@@ -24,8 +24,8 @@ class TestSyntaxAnalyzer(unittest.TestCase):
         DIR_PATH = "../tests/ExpressionLessSquare"
         abs_dir_path = Path(__file__).joinpath(DIR_PATH)
         expected = [
-            abs_dir_path.joinpath("Main.xml"),
-            abs_dir_path.joinpath("Square.xml"),
-            abs_dir_path.joinpath("SquareGame.xml"),
+            abs_dir_path.joinpath("Main.jack"),
+            abs_dir_path.joinpath("Square.jack"),
+            abs_dir_path.joinpath("SquareGame.jack"),
         ]
         self.assertListEqual(sorted(expected), sorted(get_files(abs_dir_path)))
