@@ -79,7 +79,7 @@ class Keyword(Token):
             return self.val == other.val
 
     def to_xml(self, lvl=0):
-        return f"{' ' * lvl}<keyword>{self.val}</keyword>"
+        return f"{' ' * lvl}<keyword> {self.val} </keyword>"
 
 
 class Symbol(Token):
@@ -111,6 +111,8 @@ class IntegerConstant(Token):
         if isinstance(other, IntegerConstant):
             return self.val == other.val
 
+    def to_xml(self, lvl=0):
+        return f"{' ' * lvl}<integerConstant> {self.val} </integerConstant>"
 
 class StringConstant(Token):
     def __init__(self, val):
@@ -122,7 +124,7 @@ class StringConstant(Token):
             return self.val == other.val
 
     def to_xml(self, lvl=0):
-        return f"{' ' * lvl}<identifier> {self.val} </identifier>"
+        return f"{' ' * lvl}<stringConstant> {self.val} </stringConstant>"
 
 class Identifier(Token):
     def __init__(self, val):
