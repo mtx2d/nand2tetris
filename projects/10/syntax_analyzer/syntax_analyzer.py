@@ -46,7 +46,7 @@ def main(argv):
             for token in tokens:
                 print(token)
 
-            CompilationEngine.parse(tokens, of) 
+            CompilationEngine.parse(tokens, of)
 
     return 0
 
