@@ -2,7 +2,7 @@ import os
 import sys
 import argparse
 from pathlib import Path
-from tokenizer import Tokenizer
+from src.tokenizer import Tokenizer
 
 
 def parse_args(argv):
@@ -16,23 +16,35 @@ def parse_args(argv):
     return parser.parse_args(argv[1:])
 
 
-def get_output_path(source_path):
-    path = Path(source_path)
+def get_files(path):
     if not path.exists():
-        raise FileNotFoundError(f"{source_path} does not exist.")
-    return f"{path.stem}.xml"
+        raise FileNotFoundError(f"{path} does not exist.")
+    if path.is_file():
+        if not path.suffix == ".jack":
+            raise Exception(f"{path} is not a jack file.")
+        return [path.absolute()]
+    elif path.is_dir():
+        return [
+            Path(Path(p.absolute().parent).joinpath(f"{p.stem}.xml"))
+            for p in path.iterdir()
+            if p.suffix == ".jack"
+        ]
+    else:
+        raise Exception(f"{path} is neither a dir or a file.")
 
 
 def main(argv):
     args = parse_args(argv)
-    output_path = get_output_path(args.source_path)
-    if Path(output_path).exists():
-        raise FileExistsError(f"{output_path} already exists")
 
-    tokens = Tokenizer.parse(Path(output_path).absolute())
-    with open(output_path, "w") as of:
-        for token in tokens:
-            print(token, file=of)
+    source_path = Path(args.source_path).absolute()
+    for file in get_files(source_path):
+        tokens = Tokenizer.parse(Path(file).absolute())
+        with open(
+            Path(file).absolute().parent.joinpath(Path(file).stem + ".xml"), "w"
+        ) as of:
+            for token in tokens:
+                print(token.name, token.value)
+                print(token, file=of)
 
     return 0
 
