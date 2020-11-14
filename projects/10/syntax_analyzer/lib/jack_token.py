@@ -78,6 +78,9 @@ class Keyword(Token):
         if isinstance(other, Keyword):
             return self.val == other.val
 
+    def to_xml(self, lvl=0):
+        return f"{' ' * lvl}<keyword>{self.val}</keyword>"
+
 
 class Symbol(Token):
     def __init__(self, val):
@@ -87,6 +90,16 @@ class Symbol(Token):
     def __eq__(self, other) -> bool:
         if isinstance(other, Symbol):
             return self.val == other.val
+
+    def to_xml(self, lvl=0):
+        if self.val == '<':
+            return f"{' ' * lvl}<symbol>&lt;</symbol>"
+        elif self.val == '>':
+            return f"{' ' * lvl}<symbol>&gt;</symbol>"
+        elif self.val == '&':
+            return f"{' ' * lvl}<symbol>&amp;</symbol>"
+        else:
+            return f"{' ' * lvl}<symbol> {self.val} </symbol>"
 
 
 class IntegerConstant(Token):
@@ -117,3 +130,6 @@ class Identifier(Token):
     def __eq__(self, other) -> bool:
         if isinstance(other, Identifier):
             return self.val == other.val
+
+    def to_xml(self, lvl=0):
+        return f"{' ' * lvl}<identifier>{self.val}</identifier>"

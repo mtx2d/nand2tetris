@@ -2,4 +2,7 @@ import unittest
 
 
 class TestCompilationEngine(unittest.TestCase):
-    pass
+
+    def test_compile_class(self):
+        pass
+    
