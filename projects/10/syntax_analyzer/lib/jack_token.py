@@ -59,7 +59,7 @@ class Token:
         elif token_str in Token.SYMBOLS:
             return Symbol(token_str)
         elif all([d in string.digits for d in token_str]):
-            return IntegerConstant(int(token_str))
+            return IntegerConstant(token_str)
         elif token_str[0] == '"' and token_str[-1] == '"':
             return StringConstant(token_str[1:-1])
         else:
@@ -103,7 +103,7 @@ class Symbol(Token):
 
 
 class IntegerConstant(Token):
-    def __init__(self, val):
+    def __init__(self, val: str):
         self.name = "IntegerConstant"
         self.val = val
 
