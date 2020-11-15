@@ -4,16 +4,16 @@ from jack_token import Keyword, Identifier, Symbol
 class CompilationEngine:
     @staticmethod
     def compile_class_var_dec(tokens, output_file, lvl=0):
-        output_file.write(next(tokens).to_xml(lvl=lvl + 1))  # 'static|field'
+        print(next(tokens).to_xml(lvl=lvl + 1), file=output_file)  # 'static|field'
         CompilationEngine.compile_type(tokens, output_file, lvl + 1)  # type
-        output_file.write(next(tokens).to_xml(lvl=lvl + 1))  # varName
+        print(next(tokens).to_xml(lvl=lvl + 1), file=output_file)  # varName
 
         while token := next(tokens):
             if token == Symbol(","):
-                output_file.write(tokens.to_xml(lvl + 1))  # ,
-                output_file.write(next(tokens).to_xml(lvl + 1))  # varName
+                print(tokens.to_xml(lvl + 1), file=output_file)  # ,
+                print(next(tokens).to_xml(lvl + 1), file=output_file)  # varName
             elif token == Symbol(";"):
-                output_file.write(token.to_xml(lvl + 1))  # ;
+                print(token.to_xml(lvl + 1), file=output_file)  # ;
                 break
             else:
                 raise Exception(f"invalid token: {token}")
@@ -22,12 +22,12 @@ class CompilationEngine:
     def compile_type(tokens, output_file, lvl=0):
         token = next(tokens)
         print(token)
-        output_file.write(token.to_xml(lvl + 1))
+        print(token.to_xml(lvl + 1), file=output_file)
 
     @staticmethod
     def compile_parameter_list(tokens, output_file, lvl=0):
         CompilationEngine.compile_type(tokens, output_file, lvl + 1)
-        output_file.write(next(tokens).to_xml(lvl + 1))
+        print(next(tokens).to_xml(lvl + 1), file=output_file)
         while token := next(tokens):
             if token == Symbol(","):
                 pass
@@ -36,16 +36,16 @@ class CompilationEngine:
 
     @staticmethod
     def compile_var_dec(tokens, output_file, lvl=0):
-        output_file.write(next(tokens).to_xml(lvl=lvl + 1))  # 'var'
+        print(next(tokens).to_xml(lvl=lvl + 1), file=output_file)  # 'var'
         CompilationEngine.compile_type(tokens, output_file, lvl + 1)  # type
-        output_file.write(next(tokens).to_xml(lvl=lvl + 1))  # varName
+        print(next(tokens).to_xml(lvl=lvl + 1), file=output_file)  # varName
 
         while token := next(tokens):
             if token == Symbol(","):
-                output_file.write(tokens.to_xml(lvl + 1))  # ,
-                output_file.write(next(tokens).to_xml(lvl + 1))  # varName
+                print(tokens.to_xml(lvl + 1), file=output_file)  # ,
+                print(next(tokens).to_xml(lvl + 1), file=output_file)  # varName
             elif token == Symbol(";"):
-                output_file.write(token.to_xml(lvl + 1))  # ;
+                print(token.to_xml(lvl + 1), file=output_file) # ;
                 break
             else:
                 raise Exception(f"invalid token: {token}")
@@ -56,52 +56,52 @@ class CompilationEngine:
 
     @staticmethod
     def compile_subroutine_body(tokens, output_file, lvl=0):
-        output_file.write(next(tokens).to_xml(lvl + 1))
+        print(next(tokens).to_xml(lvl + 1), file=output_file)
         CompilationEngine.compile_var_dec(tokens, output_file, lvl + 1)
         CompilationEngine.compile_statements(tokens, output_file, lvl + 1)
-        output_file.write(next(tokens).to_xml(lvl + 1))
+        print(next(tokens).to_xml(lvl + 1), file=output_file)
 
     @staticmethod
     def compile_subroutine_dec(tokens, output_file, lvl=0):
         subroutine_type = next(tokens)
-        output_file.write(subroutine_type.to_xml(lvl + 1))
+        print(subroutine_type.to_xml(lvl + 1), file=output_file)
         CompilationEngine.compile_type(tokens, output_file)
         subroutine_name = next(tokens)
-        output_file.write(subroutine_name.to_xml(lvl + 1))
+        print(subroutine_name.to_xml(lvl + 1), file=output_file)
         left_bracket = next(tokens)
-        output_file.write(left_bracket.to_xml(lvl + 1))
+        print(left_bracket.to_xml(lvl + 1), file=output_file)
 
         if (t := next(tokens)) == Symbol(")"):
-            # t is right bracket 
-            output_file.write(t.to_xml(lvl + 1))
+            # t is right bracket
+            print(t.to_xml(lvl + 1), file=output_file)
         else:
             # parameter list
             CompilationEngine.compile_subroutine_type(t, output_file, lvl + 1)  # type
-            output_file.write(next(tokens).to_xml(lvl + 1)) # varName
+            print(next(tokens).to_xml(lvl + 1))  # varNam, file=output_filee
             while t := next(tokens):
                 if t == Symbol(","):
-                    output_file.write(t.to_xml(lvl + 1))
-                    output_file.write(next(tokens).to_xml(lvl + 1))
+                    print(t.to_xml(lvl + 1), file=output_file)
+                    print(next(tokens).to_xml(lvl + 1), file=output_file)
                 elif t == Symbol(";"):
-                    output_file.write(t.to_xml(lvl + 1))
+                    print(t.to_xml(lvl + 1), file=output_file)
                     break
                 else:
                     raise ValueError(f"invalid token: {t}")
-            output_file.write(t.to_xml(lvl + 1))
+            print(t.to_xml(lvl + 1), file=output_file)
         CompilationEngine.compile_subroutine_body(tokens, output_file, lvl + 1)
 
     @staticmethod
     def compile_class(tokens, output_file, lvl=0):
         kls = next(tokens)
-        output_file.write(kls.to_xml(lvl + 1))
+        print(kls.to_xml(lvl + 1), file=output_file)
         class_name = next(tokens)
-        output_file.write(class_name.to_xml(lvl + 1))
+        print(class_name.to_xml(lvl + 1), file=output_file)
         left = next(tokens)
-        output_file.write(left.to_xml(lvl + 1))
+        print(left.to_xml(lvl + 1), file=output_file)
         CompilationEngine.compile_class_var_dec(tokens, output_file)
         CompilationEngine.compile_subroutine_dec(tokens, output_file)
         right = next(tokens)
-        output_file.write(right.to_xml(lvl + 1))
+        print(right.to_xml(lvl + 1), file=output_file)
 
     @staticmethod
     def parse(tokens, output_file):
