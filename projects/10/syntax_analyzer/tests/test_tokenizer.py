@@ -90,9 +90,7 @@ class TestTokenizer(unittest.TestCase):
         self.assertEqual(Keyword("let"), next(file_without_comments))
         self.assertEqual(Identifier("s"), next(file_without_comments))
         self.assertEqual(Symbol("="), next(file_without_comments))
-        self.assertEqual(
-            StringConstant('"string constant"'), next(file_without_comments)
-        )
+        self.assertEqual(StringConstant("string constant"), next(file_without_comments))
         self.assertEqual(Symbol(";"), next(file_without_comments))
         self.assertEqual(Keyword("let"), next(file_without_comments))
         self.assertEqual(Identifier("s"), next(file_without_comments))
