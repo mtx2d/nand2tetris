@@ -40,37 +40,39 @@ class CompilationEngine:
         CompilationEngine.compile_type(tokens, output_file, lvl + 1)  # type
         print(next(tokens).to_xml(lvl=lvl + 1), file=output_file)  # varName
 
-        while token := next(tokens):
-            if token == Symbol(","):
-                print(tokens.to_xml(lvl + 1), file=output_file)  # ,
+        if tokens.peek() == Symbol(";"):
+            print(next(tokens).to_xml(), file=output_file)
+        elif tokens.peek() == Symbol(","):
+            while tokens.peek() != Symbol(";"):
+                print(next(tokens).to_xml(lvl + 1), file=output_file)  # ,
                 print(next(tokens).to_xml(lvl + 1), file=output_file)  # varName
-            elif token == Symbol(";"):
-                print(token.to_xml(lvl + 1), file=output_file)  # ;
-                break
-            else:
-                raise Exception(f"invalid token: {token}")
+            print(next(tokens).to_xml(lvl + 1), file=output_file)
+        else:
+            raise ValueError(f"invalid token: {tokens.peek()}")
+
+    @staticmethod
+    def compile_expression(tokens, output_file, lvl=0):
+        pass
 
     @staticmethod
     def compile_statements(tokens, output_file, lvl=0):
-        token = next(tokens)
-        if token == Keyword("let"):
-            print(token.to_xml(lvl + 1), file=output_file)  # let
+        if tokens.peek() == Keyword("let"):
+            print(next(tokens).to_xml(lvl + 1), file=output_file)  # let
             print(next(tokens).to_xml(lvl + 1), file=output_file)  # varName
-            token2 = next(tokens)
-            if token2 == Symbol("="):
+            
+            if tokens.peek() == Symbol("="):
                 CompilationEngine.compile_expression(
-                    token, output_file, lvl + 1
+                    tokens, output_file, lvl + 1
                 )  # expression
                 print(next(tokens).to_xml(lvl + 1), file=output_file)  # ";"
-            elif token2 == Symbol("["):
-                # how can I have the token stream to roll back one item?
-                print(token2.to_xml(lvl + 1), file=output_file)
+            elif tokens.peek() == Symbol("["):
+                print(next(tokens).to_xml(lvl + 1), file=output_file) # [
                 CompilationEngine.compile_expression(
-                    token, output_file, lvl + 1
+                    tokens, output_file, lvl + 1
                 )  # expression
                 print(next(tokens).to_xml(lvl + 1), file=output_file)  # "]"
             else:
-                raise ValueError(f"{token2} invalid.")
+                raise ValueError(f"{tokens.peek()} invalid.")
 
     @staticmethod
     def compile_subroutine_body(tokens, output_file, lvl=0):
