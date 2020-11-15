@@ -57,7 +57,9 @@ class CompilationEngine:
 
     @staticmethod
     def compile_subroutine_call(tokens, output_file, lvl=0):
-        pass
+        print(next(tokens).to_xml(lvl + 1), file=output_file) # subroutine name
+        print(next(tokens).to_xml(lvl + 1), file=output_file) # (
+
 
     @staticmethod
     def compile_statements(tokens, output_file, lvl=0):
