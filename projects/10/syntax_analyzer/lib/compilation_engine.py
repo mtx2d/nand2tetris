@@ -26,13 +26,14 @@ class CompilationEngine:
 
     @staticmethod
     def compile_parameter_list(tokens, output_file, lvl=0):
+        if tokens.peek() == ')':
+            return
         CompilationEngine.compile_type(tokens, output_file, lvl + 1)
         print(next(tokens).to_xml(lvl + 1), file=output_file)
-        while token := next(tokens):
-            if token == Symbol(","):
-                pass
-            elif token == Symbol(";"):
-                pass
+        while tokens.peek() == Symbol(","):
+            CompilationEngine.compile_type(tokens, output_file, lvl + 1)
+            print(next(tokens).to_xml(lvl + 1), file=output_file)
+        
 
     @staticmethod
     def compile_var_dec(tokens, output_file, lvl=0):
