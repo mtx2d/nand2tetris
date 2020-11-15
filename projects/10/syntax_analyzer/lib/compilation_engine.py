@@ -26,14 +26,13 @@ class CompilationEngine:
 
     @staticmethod
     def compile_parameter_list(tokens, output_file, lvl=0):
-        if tokens.peek() == ')':
+        if tokens.peek() == ")":
             return
         CompilationEngine.compile_type(tokens, output_file, lvl + 1)
         print(next(tokens).to_xml(lvl + 1), file=output_file)
         while tokens.peek() == Symbol(","):
             CompilationEngine.compile_type(tokens, output_file, lvl + 1)
             print(next(tokens).to_xml(lvl + 1), file=output_file)
-        
 
     @staticmethod
     def compile_var_dec(tokens, output_file, lvl=0):
@@ -62,29 +61,30 @@ class CompilationEngine:
         elif isinstance(tokens.peek(), Identifier):
             print(next(tokens).to_xml(lvl + 1), file=output_file)
             if tokens.peek() == Symbol("["):
-                print(next(tokens).to_xml(lvl + 1), file=output_file) # [
+                print(next(tokens).to_xml(lvl + 1), file=output_file)  # [
                 CompilationEngine.compile_expression(tokens, output_file, lvl + 1)
-                print(next(tokens).to_xml(lvl + 1), file=output_file) # ]
+                print(next(tokens).to_xml(lvl + 1), file=output_file)  # ]
             if tokens.peek() == Symbol("("):
-                print(next(tokens).to_xml(lvl + 1), file=output_file) # (
+                print(next(tokens).to_xml(lvl + 1), file=output_file)  # (
                 CompilationEngine.compile_subroutine_call(tokens, output_file, lvl + 1)
-                print(next(tokens).to_xml(lvl + 1), file=output_file) # )
+                print(next(tokens).to_xml(lvl + 1), file=output_file)  # )
         elif tokens.peek() == Symbol("("):
-            print(next(tokens).to_xml(lvl + 1), file=output_file) # (
+            print(next(tokens).to_xml(lvl + 1), file=output_file)  # (
             CompilationEngine.compile_expression(tokens, output_file, lvl + 1)
-            print(next(tokens).to_xml(lvl + 1), file=output_file) # )
+            print(next(tokens).to_xml(lvl + 1), file=output_file)  # )
         elif tokens.peek() in [Symbol("-"), Symbol("~")]:
             print(next(tokens).to_xml(lvl + 1), file=output_file)
             CompilationEngine.compile_term(tokens, output_file, lvl + 1)
         else:
             raise ValueError(f"invalid token {tokens.peek()}")
 
-
     @staticmethod
     def compile_expression(tokens, output_file, lvl=0):
         # caller handles the starting([) and enclosing(]) brackets.
         CompilationEngine.compile_term(tokens, output_file, lvl + 1)
-        while tokens.peek() in [Symbol(x) for x in ['+', '-', '*','/','&','|','<','>', '=']:
+        while tokens.peek() in [
+            Symbol(x) for x in ["+", "-", "*", "/", "&", "|", "<", ">", "="]
+        ]:
             pass
 
     @staticmethod
@@ -96,34 +96,35 @@ class CompilationEngine:
 
     @staticmethod
     def compile_subroutine_call(tokens, output_file, lvl=0):
-        print(next(tokens).to_xml(lvl + 1), file=output_file) # subroutine name | (className | varName)
+        print(
+            next(tokens).to_xml(lvl + 1), file=output_file
+        )  # subroutine name | (className | varName)
         if tokens.peek() == Symbol("("):
-            print(next(tokens).to_xml(lvl + 1), file=output_file) # (
+            print(next(tokens).to_xml(lvl + 1), file=output_file)  # (
             CompilationEngine.compile_expression_list(tokens, output_file)
-            print(next(tokens).to_xml(lvl + 1), file=output_file) # )
+            print(next(tokens).to_xml(lvl + 1), file=output_file)  # )
         elif tokens.peek() == Symbol("."):
-            print(next(tokens).to_xml(lvl + 1), file=output_file) # .
-            print(next(tokens).to_xml(lvl + 1), file=output_file) # subroutineName
-            print(next(tokens).to_xml(lvl + 1), file=output_file) # (
+            print(next(tokens).to_xml(lvl + 1), file=output_file)  # .
+            print(next(tokens).to_xml(lvl + 1), file=output_file)  # subroutineName
+            print(next(tokens).to_xml(lvl + 1), file=output_file)  # (
             CompilationEngine.compile_expression_list(tokens, output_file)
-            print(next(tokens).to_xml(lvl + 1), file=output_file) # )
+            print(next(tokens).to_xml(lvl + 1), file=output_file)  # )
         else:
             raise ValueError(f"invalid token: {tokens.peek()}")
-
 
     @staticmethod
     def compile_statements(tokens, output_file, lvl=0):
         if tokens.peek() == Keyword("let"):
             print(next(tokens).to_xml(lvl + 1), file=output_file)  # let
             print(next(tokens).to_xml(lvl + 1), file=output_file)  # varName
-            
+
             if tokens.peek() == Symbol("="):
                 CompilationEngine.compile_expression(
                     tokens, output_file, lvl + 1
                 )  # expression
                 print(next(tokens).to_xml(lvl + 1), file=output_file)  # ";"
             elif tokens.peek() == Symbol("["):
-                print(next(tokens).to_xml(lvl + 1), file=output_file) # [
+                print(next(tokens).to_xml(lvl + 1), file=output_file)  # [
                 CompilationEngine.compile_expression(
                     tokens, output_file, lvl + 1
                 )  # expression
@@ -131,40 +132,39 @@ class CompilationEngine:
             else:
                 raise ValueError(f"{tokens.peek()} invalid.")
         elif tokens.peek() == Keyword("if"):
-            print(next(tokens).to_xml(lvl + 1), file=output_file) # if
-            print(next(tokens).to_xml(lvl + 1), file=output_file) # (
+            print(next(tokens).to_xml(lvl + 1), file=output_file)  # if
+            print(next(tokens).to_xml(lvl + 1), file=output_file)  # (
             CompilationEngine.compile_expression(tokens, output_file, lvl + 1)
-            print(next(tokens).to_xml(lvl + 1), file=output_file) # )
-            
-            print(next(tokens).to_xml(lvl + 1), file=output_file) # {
+            print(next(tokens).to_xml(lvl + 1), file=output_file)  # )
+
+            print(next(tokens).to_xml(lvl + 1), file=output_file)  # {
             CompilationEngine.compile_statements(tokens, output_file, lvl + 1)
-            print(next(tokens).to_xml(lvl + 1), file=output_file) # }
+            print(next(tokens).to_xml(lvl + 1), file=output_file)  # }
 
             if tokens.peek() == Keyword("else"):
-                print(next(tokens).to_xml(lvl + 1), file=output_file) # {
+                print(next(tokens).to_xml(lvl + 1), file=output_file)  # {
                 CompilationEngine.compile_statements(tokens, output_file, lvl + 1)
-                print(next(tokens).to_xml(lvl + 1), file=output_file) # }
+                print(next(tokens).to_xml(lvl + 1), file=output_file)  # }
         elif tokens.peek() == Keyword("while"):
-            print(next(tokens).to_xml(lvl + 1), file=output_file) # while
-            print(next(tokens).to_xml(lvl + 1), file=output_file) # (
+            print(next(tokens).to_xml(lvl + 1), file=output_file)  # while
+            print(next(tokens).to_xml(lvl + 1), file=output_file)  # (
             CompilationEngine.compile_expression(tokens, output_file, lvl + 1)
-            print(next(tokens).to_xml(lvl + 1), file=output_file) # )
+            print(next(tokens).to_xml(lvl + 1), file=output_file)  # )
 
-            print(next(tokens).to_xml(lvl + 1), file=output_file) # {
+            print(next(tokens).to_xml(lvl + 1), file=output_file)  # {
             CompilationEngine.compile_statements(tokens, output_file, lvl + 1)
-            print(next(tokens).to_xml(lvl + 1), file=output_file) # }
+            print(next(tokens).to_xml(lvl + 1), file=output_file)  # }
         elif tokens.peek() == Keyword("do"):
-            print(next(tokens).to_xml(lvl + 1), file=output_file) # do 
+            print(next(tokens).to_xml(lvl + 1), file=output_file)  # do
             CompilationEngine.compile_subroutine_call(tokens, output_file, lvl + 1)
-            print(next(tokens).to_xml(lvl + 1), file=output_file) # ;
+            print(next(tokens).to_xml(lvl + 1), file=output_file)  # ;
         elif tokens.peek() == Keyword("return"):
-            print(next(tokens).to_xml(lvl + 1), file=output_file) # return
+            print(next(tokens).to_xml(lvl + 1), file=output_file)  # return
             if tokens.peek() != Symbol(";"):
                 CompilationEngine.compile_expression(tokens, output_file, lvl + 1)
-            print(next(tokens).to_xml(lvl + 1), file=output_file) # ;
+            print(next(tokens).to_xml(lvl + 1), file=output_file)  # ;
         else:
             raise ValueError(f"invalid token: {tokens.peek()}")
-
 
     @staticmethod
     def compile_subroutine_body(tokens, output_file, lvl=0):
