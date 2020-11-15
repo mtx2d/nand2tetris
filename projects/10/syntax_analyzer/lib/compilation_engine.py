@@ -85,7 +85,8 @@ class CompilationEngine:
         while tokens.peek() in [
             Symbol(x) for x in ["+", "-", "*", "/", "&", "|", "<", ">", "="]
         ]:
-            pass
+            print(next(tokens).to_xml(lvl + 1), file=output_file)
+            CompilationEngine.compile_term(tokens, output_file, lvl + 1)
 
     @staticmethod
     def compile_expression_list(tokens, output_file, lvl=0):
