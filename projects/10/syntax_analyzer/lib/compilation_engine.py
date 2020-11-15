@@ -1,34 +1,65 @@
-from jack_token import Keyword, Identifier
+from jack_token import Keyword, Identifier, Symbol
 
 
 class CompilationEngine:
     @staticmethod
-    def compile_class_var_dec(tokens, output_file):
+    def compile_class_var_dec(tokens, output_file, lvl=0):
+        output_file.write(next(tokens).to_xml(lvl=lvl + 1))  # 'static|field'
+        CompilationEngine.compile_type(tokens, output_file, lvl + 1)  # type
+        output_file.write(next(tokens).to_xml(lvl=lvl + 1))  # varName
+
+        while token := next(tokens):
+            if token == Symbol(","):
+                output_file.write(tokens.to_xml(lvl + 1))  # ,
+                output_file.write(next(tokens).to_xml(lvl + 1))  # varName
+            elif token == Symbol(";"):
+                output_file.write(token.to_xml(lvl + 1))  # ;
+                break
+            else:
+                raise Exception(f"invalid token: {token}")
+
+    @staticmethod
+    def compile_type(tokens, output_file, lvl=0):
+        token = next(tokens)
+        print(token)
+        output_file.write(token.to_xml(lvl + 1))
+
+    @staticmethod
+    def compile_parameter_list(tokens, output_file, lvl=0):
+        CompilationEngine.compile_type(tokens, output_file, lvl + 1)
+        output_file.write(next(tokens).to_xml(lvl + 1))
+        while token := next(tokens):
+            if token == Symbol(","):
+                pass
+            elif token == Symbol(";"):
+                pass
+
+    @staticmethod
+    def compile_var_dec(tokens, output_file, lvl=0):
+        output_file.write(next(tokens).to_xml(lvl=lvl + 1))  # 'var'
+        CompilationEngine.compile_type(tokens, output_file, lvl + 1)  # type
+        output_file.write(next(tokens).to_xml(lvl=lvl + 1))  # varName
+
+        while token := next(tokens):
+            if token == Symbol(","):
+                output_file.write(tokens.to_xml(lvl + 1))  # ,
+                output_file.write(next(tokens).to_xml(lvl + 1))  # varName
+            elif token == Symbol(";"):
+                output_file.write(token.to_xml(lvl + 1))  # ;
+                break
+            else:
+                raise Exception(f"invalid token: {token}")
+
+    @staticmethod
+    def compile_statements(tokens, output_file, lvl=0):
         pass
 
     @staticmethod
-    def compile_type(tokens, output_file):
-        token = next(tokens)
-        print(token)
-        if isinstance(token, Keyword):
-            output_file.write(f"<keyword> {token.val} </keyword>\n")
-        elif isinstance(token, Identifier):
-            output_file.write(f"<identifier> {token.val} </identifier>\n")
-        else:
-            raise TypeError(f"{token} should be either a Keyword or an Identifier.")
-
-    @staticmethod
-    def compile_parameter_list(tokens, output_file, lvl = 0):
-       CompilationEngine.compile_type(tokens, output_file, lvl + 1) 
-       CompilationEngine.compile_var_name(tokens, output_file, lvl + 1)
-
-    @staticmethod
-    def compile_subroutine_body(tokens, output_file, lvl = 0):
+    def compile_subroutine_body(tokens, output_file, lvl=0):
         output_file.write(next(tokens).to_xml(lvl + 1))
         CompilationEngine.compile_var_dec(tokens, output_file, lvl + 1)
         CompilationEngine.compile_statements(tokens, output_file, lvl + 1)
         output_file.write(next(tokens).to_xml(lvl + 1))
-        
 
     @staticmethod
     def compile_subroutine_dec(tokens, output_file, lvl=0):
@@ -39,9 +70,24 @@ class CompilationEngine:
         output_file.write(subroutine_name.to_xml(lvl + 1))
         left_bracket = next(tokens)
         output_file.write(left_bracket.to_xml(lvl + 1))
-        CompilationEngine.compile_parameter_list(tokens, output_file, lvl+ 1)
-        right_bracket = next(tokens)
-        output_file.write(right_bracket.to_xml(lvl + 1))
+
+        if (t := next(tokens)) == Symbol(")"):
+            # t is right bracket 
+            output_file.write(t.to_xml(lvl + 1))
+        else:
+            # parameter list
+            CompilationEngine.compile_subroutine_type(t, output_file, lvl + 1)  # type
+            output_file.write(next(tokens).to_xml(lvl + 1)) # varName
+            while t := next(tokens):
+                if t == Symbol(","):
+                    output_file.write(t.to_xml(lvl + 1))
+                    output_file.write(next(tokens).to_xml(lvl + 1))
+                elif t == Symbol(";"):
+                    output_file.write(t.to_xml(lvl + 1))
+                    break
+                else:
+                    raise ValueError(f"invalid token: {t}")
+            output_file.write(t.to_xml(lvl + 1))
         CompilationEngine.compile_subroutine_body(tokens, output_file, lvl + 1)
 
     @staticmethod
