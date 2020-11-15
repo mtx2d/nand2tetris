@@ -2,6 +2,7 @@ import os
 import sys
 import argparse
 from pathlib import Path
+from more_itertools import peekable
 from lib.tokenizer import Tokenizer
 from lib.compilation_engine import CompilationEngine
 
@@ -35,7 +36,7 @@ def main(argv):
 
     source_path = Path(args.source_path).absolute()
     for file in get_files(source_path):
-        tokens = Tokenizer.parse(file)
+        tokens = peekable(Tokenizer.parse(file))
         output_xml = file.parent.joinpath(f"{file.stem}.xml")
 
         if output_xml.exists():

@@ -92,11 +92,11 @@ class Symbol(Token):
             return self.val == other.val
 
     def to_xml(self, lvl=0):
-        if self.val == '<':
+        if self.val == "<":
             return f"{' ' * lvl}<symbol>&lt;</symbol>"
-        elif self.val == '>':
+        elif self.val == ">":
             return f"{' ' * lvl}<symbol>&gt;</symbol>"
-        elif self.val == '&':
+        elif self.val == "&":
             return f"{' ' * lvl}<symbol>&amp;</symbol>"
         else:
             return f"{' ' * lvl}<symbol> {self.val} </symbol>"
@@ -114,6 +114,7 @@ class IntegerConstant(Token):
     def to_xml(self, lvl=0):
         return f"{' ' * lvl}<integerConstant> {self.val} </integerConstant>"
 
+
 class StringConstant(Token):
     def __init__(self, val):
         self.name = "StringConstant"
@@ -125,6 +126,7 @@ class StringConstant(Token):
 
     def to_xml(self, lvl=0):
         return f"{' ' * lvl}<stringConstant> {self.val} </stringConstant>"
+
 
 class Identifier(Token):
     def __init__(self, val):

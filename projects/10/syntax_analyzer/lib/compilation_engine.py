@@ -1,4 +1,4 @@
-from jack_token import Keyword, Identifier, Symbol
+from .jack_token import Keyword, Identifier, Symbol
 
 
 class CompilationEngine:
@@ -45,14 +45,32 @@ class CompilationEngine:
                 print(tokens.to_xml(lvl + 1), file=output_file)  # ,
                 print(next(tokens).to_xml(lvl + 1), file=output_file)  # varName
             elif token == Symbol(";"):
-                print(token.to_xml(lvl + 1), file=output_file) # ;
+                print(token.to_xml(lvl + 1), file=output_file)  # ;
                 break
             else:
                 raise Exception(f"invalid token: {token}")
 
     @staticmethod
     def compile_statements(tokens, output_file, lvl=0):
-        pass
+        token = next(tokens)
+        if token == Keyword("let"):
+            print(token.to_xml(lvl + 1), file=output_file)  # let
+            print(next(tokens).to_xml(lvl + 1), file=output_file)  # varName
+            token2 = next(tokens)
+            if token2 == Symbol("="):
+                CompilationEngine.compile_expression(
+                    token, output_file, lvl + 1
+                )  # expression
+                print(next(tokens).to_xml(lvl + 1), file=output_file)  # ";"
+            elif token2 == Symbol("["):
+                # how can I have the token stream to roll back one item?
+                print(token2.to_xml(lvl + 1), file=output_file)
+                CompilationEngine.compile_expression(
+                    token, output_file, lvl + 1
+                )  # expression
+                print(next(tokens).to_xml(lvl + 1), file=output_file)  # "]"
+            else:
+                raise ValueError(f"{token2} invalid.")
 
     @staticmethod
     def compile_subroutine_body(tokens, output_file, lvl=0):
