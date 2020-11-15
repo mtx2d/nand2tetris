@@ -7,17 +7,16 @@ class CompilationEngine:
         print(next(tokens).to_xml(lvl + 1), file=output_file)  # 'static|field'
         CompilationEngine.compile_type(tokens, output_file, lvl + 1)  # type
         print(next(tokens).to_xml(lvl + 1), file=output_file)  # varName
-        
-        if tokens.peek() == Symbol(';'):
+
+        if tokens.peek() == Symbol(";"):
             print(next(tokens).to_xml(lvl + 1), file=output_file)
-        elif tokens.peek() == Symbol(','):
-            while tokens.peek() != Symbol(';'):
-                print(next(tokens).to_xml(lvl + 1), file=output_file) # ,
-                print(next(tokens).to_xml(lvl + 1), file=output_file) # varName
+        elif tokens.peek() == Symbol(","):
+            while tokens.peek() != Symbol(";"):
+                print(next(tokens).to_xml(lvl + 1), file=output_file)  # ,
+                print(next(tokens).to_xml(lvl + 1), file=output_file)  # varName
             print(next(tokens).to_xml(lvl + 1), file=output_file)
         else:
             raise ValueError(f"invalid token: {tokens.peek()}")
-
 
     @staticmethod
     def compile_type(tokens, output_file, lvl=0):
