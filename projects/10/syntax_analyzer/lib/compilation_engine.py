@@ -1,10 +1,10 @@
-from .jack_token import Keyword, Identifier, Symbol
+from .jack_token import Keyword, Identifier, Symbol, IntegerConstant, StringConstant
 
 
 class CompilationEngine:
     @staticmethod
     def compile_class_var_dec(tokens, output_file, lvl=0):
-        print(next(tokens).to_xml(lvl + 1), file=output_file)  # 'static|field'
+        print(next(tokens).to_xml(lvl + 1), file=output_file)  # static|field
         CompilationEngine.compile_type(tokens, output_file, lvl + 1)  # type
         print(next(tokens).to_xml(lvl + 1), file=output_file)  # varName
 
@@ -51,14 +51,63 @@ class CompilationEngine:
             raise ValueError(f"invalid token: {tokens.peek()}")
 
     @staticmethod
+    def compile_term(tokens, output_file, lvl=0):
+        if isinstance(tokens.peek(), IntegerConstant):
+            print(next(tokens).to_xml(lvl + 1), file=output_file)
+        elif isinstance(tokens.peek(), StringConstant):
+            print(next(tokens).to_xml(lvl + 1), file=output_file)
+        elif isinstance(tokens.peek(), Keyword):
+            print(next(tokens).to_xml(lvl + 1), file=output_file)
+        elif isinstance(tokens.peek(), Identifier):
+            print(next(tokens).to_xml(lvl + 1), file=output_file)
+            if tokens.peek() == Symbol("["):
+                print(next(tokens).to_xml(lvl + 1), file=output_file) # [
+                CompilationEngine.compile_expression(tokens, output_file, lvl + 1)
+                print(next(tokens).to_xml(lvl + 1), file=output_file) # ]
+            if tokens.peek() == Symbol("("):
+                print(next(tokens).to_xml(lvl + 1), file=output_file) # (
+                CompilationEngine.compile_subroutine_call(tokens, output_file, lvl + 1)
+                print(next(tokens).to_xml(lvl + 1), file=output_file) # )
+        elif tokens.peek() == Symbol("("):
+            print(next(tokens).to_xml(lvl + 1), file=output_file) # (
+            CompilationEngine.compile_expression(tokens, output_file, lvl + 1)
+            print(next(tokens).to_xml(lvl + 1), file=output_file) # )
+        elif tokens.peek() in [Symbol("-"), Symbol("~")]:
+            print(next(tokens).to_xml(lvl + 1), file=output_file)
+            CompilationEngine.compile_term(tokens, output_file, lvl + 1)
+        else:
+            raise ValueError(f"invalid token {tokens.peek()}")
+
+
+    @staticmethod
     def compile_expression(tokens, output_file, lvl=0):
         # caller handles the starting([) and enclosing(]) brackets.
-        pass
+        CompilationEngine.compile_term(tokens, output_file, lvl + 1)
+        while tokens.peek() in [Symbol(x) for x in ['+', '-', '*','/','&','|','<','>', '=']:
+            pass
+
+    @staticmethod
+    def compile_expression_list(tokens, output_file, lvl=0):
+        CompilationEngine.compile_expression(tokens, output_file, lvl + 1)
+        while tokens.peek() == Symbol(","):
+            print(next(tokens).to_xml(lvl + 1), file=output_file)
+            CompilationEngine.compile_expression(tokens, output_file, lvl + 1)
 
     @staticmethod
     def compile_subroutine_call(tokens, output_file, lvl=0):
-        print(next(tokens).to_xml(lvl + 1), file=output_file) # subroutine name
-        print(next(tokens).to_xml(lvl + 1), file=output_file) # (
+        print(next(tokens).to_xml(lvl + 1), file=output_file) # subroutine name | (className | varName)
+        if tokens.peek() == Symbol("("):
+            print(next(tokens).to_xml(lvl + 1), file=output_file) # (
+            CompilationEngine.compile_expression_list(tokens, output_file)
+            print(next(tokens).to_xml(lvl + 1), file=output_file) # )
+        elif tokens.peek() == Symbol("."):
+            print(next(tokens).to_xml(lvl + 1), file=output_file) # .
+            print(next(tokens).to_xml(lvl + 1), file=output_file) # subroutineName
+            print(next(tokens).to_xml(lvl + 1), file=output_file) # (
+            CompilationEngine.compile_expression_list(tokens, output_file)
+            print(next(tokens).to_xml(lvl + 1), file=output_file) # )
+        else:
+            raise ValueError(f"invalid token: {tokens.peek()}")
 
 
     @staticmethod
