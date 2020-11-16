@@ -56,6 +56,10 @@ class CompilationEngine:
 
     @staticmethod
     def compile_term(tokens, output_file, lvl=0):
+        print(
+            f"{' ' * CompilationEngine.TAB_SIZE * lvl}<term>",
+            file=output_file,
+        )
         if isinstance(tokens.peek(), IntegerConstant):
             print(next(tokens).to_xml(lvl + 1), file=output_file)
         elif isinstance(tokens.peek(), StringConstant):
@@ -83,11 +87,18 @@ class CompilationEngine:
             CompilationEngine.compile_term(tokens, output_file, lvl + 1)
         else:
             raise ValueError(f"invalid token {tokens.peek()}")
+        print(
+            f"{' ' * CompilationEngine.TAB_SIZE * lvl}</term>",
+            file=output_file,
+        )
 
     @staticmethod
     def compile_expression(tokens, output_file, lvl=0):
+        print(
+            f"{' ' * CompilationEngine.TAB_SIZE * lvl}<expression>",
+            file=output_file,
+        )
         # caller handles the starting([) and enclosing(]) brackets.
-        print(" " * 2 * lvl, "compile_expression")
         if tokens.peek() in [Symbol("="), Symbol(")"), Symbol("]"), Symbol(";")]:
             return
         CompilationEngine.compile_term(tokens, output_file, lvl + 1)
@@ -96,6 +107,10 @@ class CompilationEngine:
         ]:
             print(next(tokens).to_xml(lvl + 1), file=output_file)
             CompilationEngine.compile_term(tokens, output_file, lvl + 1)
+        print(
+            f"{' ' * CompilationEngine.TAB_SIZE * lvl}</expression>",
+            file=output_file,
+        )
 
     @staticmethod
     def compile_expression_list(tokens, output_file, lvl=0):
