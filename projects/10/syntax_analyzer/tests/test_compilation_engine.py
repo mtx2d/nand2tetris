@@ -24,6 +24,7 @@ class TestCompilationEngine(unittest.TestCase):
                     StringConstant("Paris"),
                     Symbol(";"),
                     Symbol("}"),
+                    None
                 ]
             )
         )
@@ -51,9 +52,9 @@ class TestCompilationEngine(unittest.TestCase):
                 mock.call.write("\n"),
                 mock.call.write(Symbol("=").to_xml(2)),
                 mock.call.write("\n"),
-                mock.call.write(StringConstant("Paris").to_xml(1)),
+                mock.call.write(StringConstant("Paris").to_xml(4)),
                 mock.call.write("\n"),
-                mock.call.write(Symbol(";").to_xml(1)),
+                mock.call.write(Symbol(";").to_xml(2)),
                 mock.call.write("\n"),
                 mock.call.write(Symbol("}").to_xml(1)),
                 mock.call.write("\n"),
