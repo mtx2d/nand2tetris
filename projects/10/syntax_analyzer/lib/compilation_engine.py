@@ -15,6 +15,8 @@ class CompilationEngine:
                 print(next(tokens).to_xml(lvl + 1), file=output_file)  # ,
                 print(next(tokens).to_xml(lvl + 1), file=output_file)  # varName
             print(next(tokens).to_xml(lvl + 1), file=output_file)
+        elif tokens.peek() in [Keyword("static"), Keyword("field")]:
+            CompilationEngine.compile_class_var_dec(tokens, output_file, lvl + 1)
         else:
             raise ValueError(f"invalid token: {tokens.peek()}")
 
@@ -171,9 +173,17 @@ class CompilationEngine:
 
     @staticmethod
     def compile_subroutine_body(tokens, output_file, lvl=0):
-        print(next(tokens).to_xml(lvl + 1), file=output_file)
-        CompilationEngine.compile_var_dec(tokens, output_file, lvl + 1)
-        CompilationEngine.compile_statements(tokens, output_file, lvl + 1)
+        print(next(tokens).to_xml(lvl + 1), file=output_file)  # {
+        while tokens.peek() == Keyword("var"):
+            CompilationEngine.compile_var_dec(tokens, output_file, lvl + 1)
+        while tokens.peek() in [
+            Keyword("let"),
+            Keyword("if"),
+            Keyword("while"),
+            Keyword("do"),
+            Keyword("return"),
+        ]:
+            CompilationEngine.compile_statements(tokens, output_file, lvl + 1)
         print(next(tokens).to_xml(lvl + 1), file=output_file)
 
     @staticmethod
@@ -186,12 +196,14 @@ class CompilationEngine:
         left_bracket = next(tokens)
         print(left_bracket.to_xml(lvl + 1), file=output_file)
 
-        if (t := next(tokens)) == Symbol(")"):
+        if tokens.peek() == Symbol(")"):
             # t is right bracket
-            print(t.to_xml(lvl + 1), file=output_file)
+            print(next(tokens).to_xml(lvl + 1), file=output_file)
+        elif tokens.peek() in [Keyword("static"), Keyword("field")]:
+            CompilationEngine.compile_subroutine_dec(tokens, output_file, lvl + 1)
         else:
             # parameter list
-            CompilationEngine.compile_type(t, output_file, lvl + 1)  # type
+            CompilationEngine.compile_type(next(tokens), output_file, lvl + 1)  # type
             print(next(tokens).to_xml(lvl + 1))  # varNam, file=output_filee
             while t := next(tokens):
                 if t == Symbol(","):
@@ -207,6 +219,9 @@ class CompilationEngine:
 
     @staticmethod
     def compile_class(tokens, output_file, lvl=0):
+        import pdb
+
+        pdb.set_trace()
         kls = next(tokens)
         print(kls.to_xml(lvl + 1), file=output_file)
         class_name = next(tokens)

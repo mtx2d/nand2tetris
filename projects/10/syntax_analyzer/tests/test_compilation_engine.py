@@ -193,17 +193,19 @@ class TestCompilationEngine(unittest.TestCase):
         )
 
         mock_output_file = mock.Mock()
-        CompilationEngine.compile_statements(mock_tokens, mock_output_file)
-        mock_output_file.assert_has_calls(
-            [
-                mock.call.write(Keyword("class").to_xml(1)),
-                mock.call.write("\n"),
-                mock.call.write(Identifier("Main").to_xml(3)),
-                mock.call.write("\n"),
-                mock.call.write(Symbol("{").to_xml(2)),
-                mock.call.write("\n"),
-                mock.call.write(Keyword("static").to_xml(1)),
-                mock.call.write("\n"),
-                mock.call.write(StringConstant("Paris").to_xml(4)),
-            ]
-        )
+        CompilationEngine.compile_class(mock_tokens, sys.stdout)
+        # mock_output_file.assert_has_calls(
+        #     [
+        #         mock.call.write(Keyword("class").to_xml(1)),
+        #         mock.call.write("\n"),
+        #         mock.call.write(Identifier("Main").to_xml(3)),
+        #         mock.call.write("\n"),
+        #         mock.call.write(Symbol("{").to_xml(2)),
+        #         mock.call.write("\n"),
+        #         mock.call.write(Keyword("static").to_xml(1)),
+        #         mock.call.write("\n"),
+        #         mock.call.write(StringConstant("Paris").to_xml(4)),
+        #     ]
+        # )
+
+        self.assertFalse(True)
