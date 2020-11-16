@@ -21,7 +21,6 @@ class CompilationEngine:
     @staticmethod
     def compile_type(tokens, output_file, lvl=0):
         token = next(tokens)
-        print(token)
         print(token.to_xml(lvl + 1), file=output_file)
 
     @staticmethod
