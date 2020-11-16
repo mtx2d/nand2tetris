@@ -59,6 +59,7 @@ class CompilationEngine:
         elif isinstance(tokens.peek(), StringConstant):
             print(next(tokens).to_xml(lvl + 1), file=output_file)
         elif isinstance(tokens.peek(), Keyword):
+            # how to handle keyword constant?
             print(next(tokens).to_xml(lvl + 1), file=output_file)
         elif isinstance(tokens.peek(), Identifier):
             if tokens[1] == Symbol("["):
@@ -84,6 +85,7 @@ class CompilationEngine:
     @staticmethod
     def compile_expression(tokens, output_file, lvl=0):
         # caller handles the starting([) and enclosing(]) brackets.
+        print(" " * 2 * lvl, "compile_expression")
         if tokens.peek() in [Symbol("="), Symbol(")"), Symbol("]"), Symbol(";")]:
             return
         CompilationEngine.compile_term(tokens, output_file, lvl + 1)
@@ -99,7 +101,7 @@ class CompilationEngine:
             return
         CompilationEngine.compile_expression(tokens, output_file, lvl + 1)
         while tokens.peek() == Symbol(","):
-            print(next(tokens).to_xml(lvl + 1), file=output_file) # ,
+            print(next(tokens).to_xml(lvl + 1), file=output_file)  # ,
             CompilationEngine.compile_expression(tokens, output_file, lvl + 1)
 
     @staticmethod
@@ -122,6 +124,18 @@ class CompilationEngine:
 
     @staticmethod
     def compile_statements(tokens, output_file, lvl=0):
+        while tokens and tokens.peek() in [
+            Keyword("let"),
+            Keyword("do"),
+            Keyword("if"),
+            Keyword("while"),
+            Keyword("return"),
+        ]:
+            CompilationEngine.compile_statement(tokens, output_file)
+
+    @staticmethod
+    def compile_statement(tokens, output_file, lvl=0):
+        print(" " * 2 * lvl, "compile_statement")
         if tokens.peek() == Keyword("let"):
             print(next(tokens).to_xml(lvl + 1), file=output_file)  # let
             print(next(tokens).to_xml(lvl + 1), file=output_file)  # varName
@@ -138,6 +152,10 @@ class CompilationEngine:
                     tokens, output_file, lvl + 1
                 )  # expression
                 print(next(tokens).to_xml(lvl + 1), file=output_file)  # "]"
+                print(next(tokens).to_xml(lvl + 1), file=output_file)  # =
+                CompilationEngine.compile_expression(tokens, output_file, lvl + 1)
+                print(next(tokens).to_xml(lvl + 1), file=output_file)  # ;
+
             else:
                 raise ValueError(f"{tokens.peek()} invalid.")
         elif tokens.peek() == Keyword("if"):
@@ -177,6 +195,7 @@ class CompilationEngine:
 
     @staticmethod
     def compile_subroutine_body(tokens, output_file, lvl=0):
+        print(" " * 2 * lvl, "subroutine_body")
         print(next(tokens).to_xml(lvl + 1), file=output_file)  # {
         while tokens.peek() == Keyword("var"):
             CompilationEngine.compile_var_dec(tokens, output_file, lvl + 1)
