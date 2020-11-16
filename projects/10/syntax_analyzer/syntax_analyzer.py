@@ -44,9 +44,6 @@ def main(argv):
             continue
 
         with open(output_xml, "w") as of:
-            for token in tokens:
-                print(token)
-
             CompilationEngine.parse(tokens, of)
 
     return 0
