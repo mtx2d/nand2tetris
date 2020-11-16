@@ -69,6 +69,7 @@ class Token:
     def __init__(self):
         self.name = "Token"
         self.val = "TokenValue"
+        self.tab_size = 4
 
     @abc.abstractmethod
     def __repr__(self):
@@ -77,6 +78,7 @@ class Token:
 
 class Keyword(Token):
     def __init__(self, val):
+        super(Keyword, self).__init__()
         self.name = "Keyword"
         self.val = val
 
@@ -85,11 +87,12 @@ class Keyword(Token):
             return self.val == other.val
 
     def to_xml(self, lvl=0):
-        return f"{' ' * lvl}<keyword> {self.val} </keyword>"
+        return f"{' ' * self.tab_size * lvl}<keyword> {self.val} </keyword>"
 
 
 class Symbol(Token):
     def __init__(self, val):
+        super(Symbol, self).__init__()
         self.name = "Symbol"
         self.val = val
 
@@ -99,17 +102,18 @@ class Symbol(Token):
 
     def to_xml(self, lvl=0):
         if self.val == "<":
-            return f"{' ' * lvl}<symbol> &lt; </symbol>"
+            return f"{' ' * self.tab_size * lvl}<symbol> &lt; </symbol>"
         elif self.val == ">":
-            return f"{' ' * lvl}<symbol> &gt; </symbol>"
+            return f"{' ' * self.tab_size * lvl}<symbol> &gt; </symbol>"
         elif self.val == "&":
-            return f"{' ' * lvl}<symbol> &amp; </symbol>"
+            return f"{' ' * self.tab_size * lvl}<symbol> &amp; </symbol>"
         else:
-            return f"{' ' * lvl}<symbol> {self.val} </symbol>"
+            return f"{' ' * self.tab_size * lvl}<symbol> {self.val} </symbol>"
 
 
 class IntegerConstant(Token):
     def __init__(self, val: str):
+        super(IntegerConstant, self).__init__()
         self.name = "IntegerConstant"
         self.val = val
 
@@ -118,11 +122,12 @@ class IntegerConstant(Token):
             return self.val == other.val
 
     def to_xml(self, lvl=0):
-        return f"{' ' * lvl}<integerConstant> {self.val} </integerConstant>"
+        return f"{' ' * self.tab_size * lvl}<integerConstant> {self.val} </integerConstant>"
 
 
 class StringConstant(Token):
     def __init__(self, val):
+        super(StringConstant, self).__init__()
         self.name = "StringConstant"
         self.val = val
 
@@ -131,11 +136,12 @@ class StringConstant(Token):
             return self.val == other.val
 
     def to_xml(self, lvl=0):
-        return f"{' ' * lvl}<stringConstant> {self.val} </stringConstant>"
+        return f"{' ' * self.tab_size * lvl}<stringConstant> {self.val} </stringConstant>"
 
 
 class Identifier(Token):
     def __init__(self, val):
+        super(Identifier, self).__init__()
         self.name = "Identifier"
         self.val = val
 
@@ -144,4 +150,4 @@ class Identifier(Token):
             return self.val == other.val
 
     def to_xml(self, lvl=0):
-        return f"{' ' * lvl}<identifier> {self.val} </identifier>"
+        return f"{' ' * self.tab_size * lvl}<identifier> {self.val} </identifier>"

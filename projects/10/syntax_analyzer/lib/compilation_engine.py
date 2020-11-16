@@ -54,6 +54,7 @@ class CompilationEngine:
         if isinstance(tokens.peek(), IntegerConstant):
             print(next(tokens).to_xml(lvl + 1), file=output_file)
         elif isinstance(tokens.peek(), StringConstant):
+            import pdb; pdb.set_trace()
             print(next(tokens).to_xml(lvl + 1), file=output_file)
         elif isinstance(tokens.peek(), Keyword):
             print(next(tokens).to_xml(lvl + 1), file=output_file)
