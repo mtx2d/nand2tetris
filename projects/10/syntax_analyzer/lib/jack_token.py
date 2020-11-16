@@ -69,7 +69,7 @@ class Token:
     def __init__(self):
         self.name = "Token"
         self.val = "TokenValue"
-        self.tab_size = 4
+        self.tab_size = 2
 
     @abc.abstractmethod
     def __repr__(self):
