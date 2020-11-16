@@ -61,15 +61,14 @@ class CompilationEngine:
         elif isinstance(tokens.peek(), Keyword):
             print(next(tokens).to_xml(lvl + 1), file=output_file)
         elif isinstance(tokens.peek(), Identifier):
-            print(next(tokens).to_xml(lvl + 1), file=output_file)
-            if tokens.peek() == Symbol("["):
+            if tokens[1] == Symbol("["):
+                print(next(tokens).to_xml(lvl + 1), file=output_file)  # varName
                 print(next(tokens).to_xml(lvl + 1), file=output_file)  # [
                 CompilationEngine.compile_expression(tokens, output_file, lvl + 1)
                 print(next(tokens).to_xml(lvl + 1), file=output_file)  # ]
-            if tokens.peek() == Symbol("("):
-                print(next(tokens).to_xml(lvl + 1), file=output_file)  # (
+            if tokens[1] == Symbol("("):
+                # subRoutineCall
                 CompilationEngine.compile_subroutine_call(tokens, output_file, lvl + 1)
-                print(next(tokens).to_xml(lvl + 1), file=output_file)  # )
         elif tokens.peek() == Symbol("("):
             print(next(tokens).to_xml(lvl + 1), file=output_file)  # (
             CompilationEngine.compile_expression(tokens, output_file, lvl + 1)
@@ -174,6 +173,7 @@ class CompilationEngine:
 
     @staticmethod
     def compile_subroutine_body(tokens, output_file, lvl=0):
+        pdb.set_trace()
         print(next(tokens).to_xml(lvl + 1), file=output_file)  # {
         while tokens.peek() == Keyword("var"):
             CompilationEngine.compile_var_dec(tokens, output_file, lvl + 1)
@@ -220,7 +220,6 @@ class CompilationEngine:
 
     @staticmethod
     def compile_class(tokens, output_file, lvl=0):
-        pdb.set_trace()
         kls = next(tokens)
         print(kls.to_xml(lvl + 1), file=output_file)
         class_name = next(tokens)
@@ -228,7 +227,11 @@ class CompilationEngine:
         left = next(tokens)
         print(left.to_xml(lvl + 1), file=output_file)
         CompilationEngine.compile_class_var_dec(tokens, output_file)
-        while tokens.peek() in [Keyword("constructor"), Keyword("function"), Keyword("method")]:
+        while tokens.peek() in [
+            Keyword("constructor"),
+            Keyword("function"),
+            Keyword("method"),
+        ]:
             CompilationEngine.compile_subroutine_dec(tokens, output_file)
         right = next(tokens)
         print(right.to_xml(lvl + 1), file=output_file)
