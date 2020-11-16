@@ -65,7 +65,7 @@ class Token:
             return StringConstant(token_str[1:-1])
         else:
             return Identifier(token_str)
-    
+
     def __init__(self):
         self.name = "Token"
         self.val = "TokenValue"
@@ -136,7 +136,9 @@ class StringConstant(Token):
             return self.val == other.val
 
     def to_xml(self, lvl=0):
-        return f"{' ' * self.tab_size * lvl}<stringConstant> {self.val} </stringConstant>"
+        return (
+            f"{' ' * self.tab_size * lvl}<stringConstant> {self.val} </stringConstant>"
+        )
 
 
 class Identifier(Token):

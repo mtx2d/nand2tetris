@@ -54,7 +54,9 @@ class CompilationEngine:
         if isinstance(tokens.peek(), IntegerConstant):
             print(next(tokens).to_xml(lvl + 1), file=output_file)
         elif isinstance(tokens.peek(), StringConstant):
-            import pdb; pdb.set_trace()
+            import pdb
+
+            pdb.set_trace()
             print(next(tokens).to_xml(lvl + 1), file=output_file)
         elif isinstance(tokens.peek(), Keyword):
             print(next(tokens).to_xml(lvl + 1), file=output_file)
@@ -221,5 +223,5 @@ class CompilationEngine:
     @staticmethod
     def parse(tokens, output_file):
         print("<tokens>", file=output_file)
-        CompilationEngine.compile_class(tokens, output_file, lvl = 1)
+        CompilationEngine.compile_class(tokens, output_file, lvl=1)
         print("</tokens>", file=output_file)
