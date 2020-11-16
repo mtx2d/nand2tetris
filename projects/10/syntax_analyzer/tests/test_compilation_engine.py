@@ -7,7 +7,7 @@ from lib.compilation_engine import CompilationEngine
 
 
 class TestCompilationEngine(unittest.TestCase):
-    def test_compile_statments(self):
+    def test_compile_statements(self):
         mock_tokens = peekable(
             iter(
                 [

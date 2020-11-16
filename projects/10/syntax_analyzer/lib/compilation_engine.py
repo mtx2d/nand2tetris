@@ -66,9 +66,11 @@ class CompilationEngine:
                 print(next(tokens).to_xml(lvl + 1), file=output_file)  # [
                 CompilationEngine.compile_expression(tokens, output_file, lvl + 1)
                 print(next(tokens).to_xml(lvl + 1), file=output_file)  # ]
-            if tokens[1] == Symbol("("):
+            elif tokens[1] == Symbol("("):
                 # subRoutineCall
                 CompilationEngine.compile_subroutine_call(tokens, output_file, lvl + 1)
+            else:
+                print(next(tokens).to_xml(lvl + 1), file=output_file)  # varName
         elif tokens.peek() == Symbol("("):
             print(next(tokens).to_xml(lvl + 1), file=output_file)  # (
             CompilationEngine.compile_expression(tokens, output_file, lvl + 1)
