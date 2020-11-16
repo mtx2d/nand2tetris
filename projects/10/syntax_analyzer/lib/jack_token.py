@@ -99,11 +99,11 @@ class Symbol(Token):
 
     def to_xml(self, lvl=0):
         if self.val == "<":
-            return f"{' ' * lvl}<symbol>&lt;</symbol>"
+            return f"{' ' * lvl}<symbol> &lt; </symbol>"
         elif self.val == ">":
-            return f"{' ' * lvl}<symbol>&gt;</symbol>"
+            return f"{' ' * lvl}<symbol> &gt; </symbol>"
         elif self.val == "&":
-            return f"{' ' * lvl}<symbol>&amp;</symbol>"
+            return f"{' ' * lvl}<symbol> &amp; </symbol>"
         else:
             return f"{' ' * lvl}<symbol> {self.val} </symbol>"
 
