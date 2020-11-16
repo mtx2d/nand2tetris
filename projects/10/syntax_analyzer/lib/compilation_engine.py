@@ -66,7 +66,7 @@ class CompilationEngine:
                 print(next(tokens).to_xml(lvl + 1), file=output_file)  # [
                 CompilationEngine.compile_expression(tokens, output_file, lvl + 1)
                 print(next(tokens).to_xml(lvl + 1), file=output_file)  # ]
-            elif tokens[1] == Symbol("("):
+            elif tokens[1] in [Symbol("("), Symbol(".")]:
                 # subRoutineCall
                 CompilationEngine.compile_subroutine_call(tokens, output_file, lvl + 1)
             else:
@@ -95,9 +95,11 @@ class CompilationEngine:
 
     @staticmethod
     def compile_expression_list(tokens, output_file, lvl=0):
+        if tokens.peek() == Symbol(")"):
+            return
         CompilationEngine.compile_expression(tokens, output_file, lvl + 1)
         while tokens.peek() == Symbol(","):
-            print(next(tokens).to_xml(lvl + 1), file=output_file)
+            print(next(tokens).to_xml(lvl + 1), file=output_file) # ,
             CompilationEngine.compile_expression(tokens, output_file, lvl + 1)
 
     @staticmethod
@@ -175,7 +177,6 @@ class CompilationEngine:
 
     @staticmethod
     def compile_subroutine_body(tokens, output_file, lvl=0):
-        pdb.set_trace()
         print(next(tokens).to_xml(lvl + 1), file=output_file)  # {
         while tokens.peek() == Keyword("var"):
             CompilationEngine.compile_var_dec(tokens, output_file, lvl + 1)
