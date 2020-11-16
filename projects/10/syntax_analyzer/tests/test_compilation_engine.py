@@ -24,7 +24,6 @@ class TestCompilationEngine(unittest.TestCase):
                     StringConstant("Paris"),
                     Symbol(";"),
                     Symbol("}"),
-                    None
                 ]
             )
         )

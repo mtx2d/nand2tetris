@@ -144,7 +144,7 @@ class CompilationEngine:
             CompilationEngine.compile_statements(tokens, output_file, lvl + 1)
             print(next(tokens).to_xml(lvl + 1), file=output_file)  # }
 
-            if tokens.peek() == Keyword("else"):
+            if tokens and tokens.peek() == Keyword("else"):
                 print(next(tokens).to_xml(lvl + 1), file=output_file)  # {
                 CompilationEngine.compile_statements(tokens, output_file, lvl + 1)
                 print(next(tokens).to_xml(lvl + 1), file=output_file)  # }
