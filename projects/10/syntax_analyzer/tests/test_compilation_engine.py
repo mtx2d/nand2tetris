@@ -6,7 +6,7 @@ from lib.compilation_engine import CompilationEngine
 
 
 class TestCompilationEngine(unittest.TestCase):
-    def test_compile_class(self):
+    def test_compile_statments(self):
         mock_tokens = peekable(
             iter(
                 [
@@ -27,5 +27,5 @@ class TestCompilationEngine(unittest.TestCase):
             )
         )
         mock_output_file = mock.Mock()
-        CompilationEngine.compile_class(mock_tokens, mock_output_file)
+        CompilationEngine.compile_statements(mock_tokens, mock_output_file)
         self.assertTrue(False)
