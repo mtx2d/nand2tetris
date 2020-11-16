@@ -80,7 +80,7 @@ class CompilationEngine:
     @staticmethod
     def compile_expression(tokens, output_file, lvl=0):
         # caller handles the starting([) and enclosing(]) brackets.
-        if tokens.peek() in [Symbol("="), Symbol(")"), Symbol("]")]:
+        if tokens.peek() in [Symbol("="), Symbol(")"), Symbol("]"), Symbol(";")]:
             return
         CompilationEngine.compile_term(tokens, output_file, lvl + 1)
         while tokens.peek() in [
@@ -121,6 +121,7 @@ class CompilationEngine:
             print(next(tokens).to_xml(lvl + 1), file=output_file)  # varName
 
             if tokens.peek() == Symbol("="):
+                print(next(tokens).to_xml(lvl + 1), file=output_file)  # "="
                 CompilationEngine.compile_expression(
                     tokens, output_file, lvl + 1
                 )  # expression
