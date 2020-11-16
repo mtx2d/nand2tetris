@@ -1,4 +1,5 @@
 import string
+import abc
 
 
 class Token:
@@ -64,7 +65,12 @@ class Token:
             return StringConstant(token_str[1:-1])
         else:
             return Identifier(token_str)
+    
+    def __init__(self):
+        self.name = "Token"
+        self.val = "TokenValue"
 
+    @abc.abstractmethod
     def __repr__(self):
         return f"{self.name}({self.val})"
 
