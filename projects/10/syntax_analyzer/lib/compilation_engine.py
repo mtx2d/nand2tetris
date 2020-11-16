@@ -1,3 +1,4 @@
+import pdb
 from .jack_token import Keyword, Identifier, Symbol, IntegerConstant, StringConstant
 
 
@@ -42,7 +43,7 @@ class CompilationEngine:
         print(next(tokens).to_xml(lvl=lvl + 1), file=output_file)  # varName
 
         if tokens.peek() == Symbol(";"):
-            print(next(tokens).to_xml(), file=output_file)
+            print(next(tokens).to_xml(lvl + 1), file=output_file)
         elif tokens.peek() == Symbol(","):
             while tokens.peek() != Symbol(";"):
                 print(next(tokens).to_xml(lvl + 1), file=output_file)  # ,
@@ -219,8 +220,6 @@ class CompilationEngine:
 
     @staticmethod
     def compile_class(tokens, output_file, lvl=0):
-        import pdb
-
         pdb.set_trace()
         kls = next(tokens)
         print(kls.to_xml(lvl + 1), file=output_file)
@@ -229,7 +228,8 @@ class CompilationEngine:
         left = next(tokens)
         print(left.to_xml(lvl + 1), file=output_file)
         CompilationEngine.compile_class_var_dec(tokens, output_file)
-        CompilationEngine.compile_subroutine_dec(tokens, output_file)
+        while tokens.peek() in [Keyword("constructor"), Keyword("function"), Keyword("method")]:
+            CompilationEngine.compile_subroutine_dec(tokens, output_file)
         right = next(tokens)
         print(right.to_xml(lvl + 1), file=output_file)
 
