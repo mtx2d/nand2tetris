@@ -5,7 +5,6 @@ from .jack_token import Keyword, Identifier, Symbol, IntegerConstant, StringCons
 class CompilationEngine:
     TAB_SIZE = 2
 
-
     @staticmethod
     def compile_var_dec(tokens, output_file, lvl=0):
         print(
