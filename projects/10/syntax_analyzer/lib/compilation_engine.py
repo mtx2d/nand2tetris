@@ -345,12 +345,9 @@ class CompilationEngine:
     @staticmethod
     def compile_class(tokens, output_file, lvl=0):
         print(f"{' ' * CompilationEngine.TAB_SIZE * lvl}<class>", file=output_file)
-        kls = next(tokens)
-        print(kls.to_xml(lvl + 1), file=output_file)
-        class_name = next(tokens)
-        print(class_name.to_xml(lvl + 1), file=output_file)
-        left = next(tokens)
-        print(left.to_xml(lvl + 1), file=output_file)
+        print(next(tokens).to_xml(lvl + 1), file=output_file)  # class
+        print(next(tokens).to_xml(lvl + 1), file=output_file)  # className
+        print(next(tokens).to_xml(lvl + 1), file=output_file)  # (
         CompilationEngine.compile_class_var_dec(tokens, output_file)
         while tokens.peek() in [
             Keyword("constructor"),
@@ -358,8 +355,7 @@ class CompilationEngine:
             Keyword("method"),
         ]:
             CompilationEngine.compile_subroutine_dec(tokens, output_file)
-        right = next(tokens)
-        print(right.to_xml(lvl + 1), file=output_file)
+        print(next(tokens).to_xml(lvl + 1), file=output_file)  # )
         print(f"{' ' * CompilationEngine.TAB_SIZE * lvl}</class>", file=output_file)
 
     @staticmethod
