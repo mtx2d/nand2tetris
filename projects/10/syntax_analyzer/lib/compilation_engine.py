@@ -150,8 +150,6 @@ class CompilationEngine:
             f"{' ' * CompilationEngine.TAB_SIZE * lvl}<expression_list>",
             file=output_file,
         )
-        if tokens.peek() == Symbol(")"):
-            return
         CompilationEngine.compile_expression(tokens, output_file, lvl + 1)
         while tokens.peek() == Symbol(","):
             print(next(tokens).to_xml(lvl + 1), file=output_file)  # ,
