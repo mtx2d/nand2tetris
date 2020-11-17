@@ -326,22 +326,17 @@ class CompilationEngine:
             f"{' ' * CompilationEngine.TAB_SIZE * (lvl + 1)}<subroutineDec>",
             file=output_file,
         )
+
         print(
             next(tokens).to_xml(lvl + 2), file=output_file
         )  # (constructor | function | method)
         CompilationEngine.compile_type(tokens, output_file)  # type
         print(next(tokens).to_xml(lvl + 2), file=output_file)  # subroutine_name
         print(next(tokens).to_xml(lvl + 2), file=output_file)  # (
-
-        if tokens.peek() == Symbol(")"):
-            # t is right bracket
-            print(next(tokens).to_xml(lvl + 2), file=output_file)
-        elif tokens.peek() in [Keyword("static"), Keyword("field")]:
-            CompilationEngine.compile_subroutine_dec(tokens, output_file, lvl + 2)
-        else:
-            # parameter list
-            CompilationEngine.compile_parameter_list(tokens, output_file, lvl + 2)
+        CompilationEngine.compile_parameter_list(tokens, output_file, lvl + 2)
+        print(next(tokens).to_xml(lvl + 2), file=output_file)  # )
         CompilationEngine.compile_subroutine_body(tokens, output_file, lvl + 2)
+
         print(
             f"{' ' * CompilationEngine.TAB_SIZE * (lvl + 1)}</subroutineDec>",
             file=output_file,
