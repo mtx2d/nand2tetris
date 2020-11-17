@@ -11,6 +11,7 @@ from lib.jack_token import (
 )
 
 TEST_FILE = pathlib.Path(__file__).parent.joinpath("TestTokenMain.jack")
+TEST_FILE_1 = pathlib.Path(__file__).parent.joinpath("Square/SquareGame.jack")
 
 
 class TestTokenizer(unittest.TestCase):
@@ -147,3 +148,10 @@ class TestTokenizer(unittest.TestCase):
         self.assertEqual(Symbol(";"), next(file_without_comments))
         self.assertEqual(Symbol("}"), next(file_without_comments))
         self.assertEqual(Symbol("}"), next(file_without_comments))
+
+    def test_parse_1(self):
+        file_without_comments = Tokenizer.parse(TEST_FILE_1)
+
+        self.assertEqual(Keyword("class"), next(file_without_comments))
+        self.assertEqual(Identifier("Main"), next(file_without_comments))
+        self.assertEqual(Symbol("{"), next(file_without_comments))
