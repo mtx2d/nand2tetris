@@ -146,8 +146,6 @@ class CompilationEngine:
 
     @staticmethod
     def compile_expression_list(tokens, output_file, lvl=0):
-        if tokens.peek() == Symbol(")"):
-            return
         print(
             f"{' ' * CompilationEngine.TAB_SIZE * lvl}<expression_list>",
             file=output_file,
