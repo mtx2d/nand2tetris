@@ -293,8 +293,9 @@ class CompilationEngine:
         CompilationEngine.compile_type(tokens, output_file, lvl + 2)
         print(next(tokens).to_xml(lvl + 2), file=output_file)
         while tokens.peek() == Symbol(","):
-            CompilationEngine.compile_type(tokens, output_file, lvl + 2)
-            print(next(tokens).to_xml(lvl + 2), file=output_file)
+            print(next(tokens).to_xml(lvl + 2), file=output_file) # ,
+            CompilationEngine.compile_type(tokens, output_file, lvl + 2) # type
+            print(next(tokens).to_xml(lvl + 2), file=output_file) # varName
         print(
             f"{' ' * CompilationEngine.TAB_SIZE * (lvl + 1)}</parameterList>",
             file=output_file,
