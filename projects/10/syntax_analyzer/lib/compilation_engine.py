@@ -124,7 +124,7 @@ class CompilationEngine:
     @staticmethod
     def compile_expression_list(tokens, output_file, lvl=0):
         print(
-            f"{' ' * CompilationEngine.TAB_SIZE * lvl}<expression_list>",
+            f"{' ' * CompilationEngine.TAB_SIZE * lvl}<expressionList>",
             file=output_file,
         )
         CompilationEngine.compile_expression(tokens, output_file, lvl + 1)
@@ -132,7 +132,7 @@ class CompilationEngine:
             print(next(tokens).to_xml(lvl + 1), file=output_file)  # ,
             CompilationEngine.compile_expression(tokens, output_file, lvl + 1)
         print(
-            f"{' ' * CompilationEngine.TAB_SIZE * lvl}</expression_list>",
+            f"{' ' * CompilationEngine.TAB_SIZE * lvl}</expressionList>",
             file=output_file,
         )
 
@@ -310,6 +310,13 @@ class CompilationEngine:
             f"{' ' * CompilationEngine.TAB_SIZE * (lvl + 1)}<parameterList>",
             file=output_file,
         )
+        if tokens.peek() == Symbol(")"):
+            print(
+                f"{' ' * CompilationEngine.TAB_SIZE * (lvl + 1)}</parameterList>",
+                file=output_file,
+            )
+            return
+
         CompilationEngine.compile_type(tokens, output_file, lvl + 2)
         print(next(tokens).to_xml(lvl + 2), file=output_file)
         while tokens.peek() == Symbol(","):
