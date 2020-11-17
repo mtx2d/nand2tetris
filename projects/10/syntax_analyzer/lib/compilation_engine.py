@@ -94,13 +94,19 @@ class CompilationEngine:
 
     @staticmethod
     def compile_expression(tokens, output_file, lvl=0):
+        if tokens.peek() in [
+            Symbol("="),
+            Symbol(")"),
+            Symbol("]"),
+            Symbol(";"),
+            Symbol("}"),
+        ]:
+            return
         print(
             f"{' ' * CompilationEngine.TAB_SIZE * lvl}<expression>",
             file=output_file,
         )
         # caller handles the starting([) and enclosing(]) brackets.
-        if tokens.peek() in [Symbol("="), Symbol(")"), Symbol("]"), Symbol(";")]:
-            return
         CompilationEngine.compile_term(tokens, output_file, lvl + 1)
         while tokens.peek() in [
             Symbol(x) for x in ["+", "-", "*", "/", "&", "|", "<", ">", "="]
