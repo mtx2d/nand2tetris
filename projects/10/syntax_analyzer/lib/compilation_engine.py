@@ -43,8 +43,6 @@ class CompilationEngine:
             f"{' ' * CompilationEngine.TAB_SIZE * (lvl + 1)}<parameterList>",
             file=output_file,
         )
-        if tokens.peek() == ")":
-            return
         CompilationEngine.compile_type(tokens, output_file, lvl + 2)
         print(next(tokens).to_xml(lvl + 2), file=output_file)
         while tokens.peek() == Symbol(","):
@@ -343,18 +341,7 @@ class CompilationEngine:
             CompilationEngine.compile_subroutine_dec(tokens, output_file, lvl + 2)
         else:
             # parameter list
-            CompilationEngine.compile_type(next(tokens), output_file, lvl + 2)  # type
-            print(next(tokens).to_xml(lvl + 2))  # varNam, file=output_filee
-            while t := next(tokens):
-                if t == Symbol(","):
-                    print(t.to_xml(lvl + 2), file=output_file)
-                    print(next(tokens).to_xml(lvl + 2), file=output_file)
-                elif t == Symbol(";"):
-                    print(t.to_xml(lvl + 2), file=output_file)
-                    break
-                else:
-                    raise ValueError(f"invalid token: {t}")
-            print(t.to_xml(lvl + 2), file=output_file)
+            CompilationEngine.compile_parameter_list(tokens, output_file, lvl + 2)
         CompilationEngine.compile_subroutine_body(tokens, output_file, lvl + 2)
         print(
             f"{' ' * CompilationEngine.TAB_SIZE * (lvl + 1)}</subroutineDec>",
@@ -383,6 +370,6 @@ class CompilationEngine:
 
     @staticmethod
     def parse(tokens, output_file):
-        print("<tokens>", file=output_file)
+        #print("<tokens>", file=output_file)
         CompilationEngine.compile_class(tokens, output_file, lvl=1)
-        print("</tokens>", file=output_file)
+        #print("</tokens>", file=output_file)
