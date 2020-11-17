@@ -8,10 +8,10 @@ class Tokenizer:
     @staticmethod
     def strip_comments(line):
         return re.sub(
-            "//.*?$|/\*.*?\*/|'(?:\\.|[^\\'])*'",
+            r"//.*?$|/\*\*.*?\*/|'(?:\\.|[^\\'])*'",
             "",
             line,
-            flags=re.S,
+            flags=re.S | re.M,
         ).strip()
 
     @staticmethod
