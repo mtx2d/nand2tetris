@@ -7,21 +7,30 @@ class CompilationEngine:
 
     @staticmethod
     def compile_class_var_dec(tokens, output_file, lvl=0):
-        print(next(tokens).to_xml(lvl + 1), file=output_file)  # static|field
-        CompilationEngine.compile_type(tokens, output_file, lvl + 1)  # type
-        print(next(tokens).to_xml(lvl + 1), file=output_file)  # varName
+
+        print(
+            f"{' ' * CompilationEngine.TAB_SIZE * (lvl + 1)}<classVarDec>",
+            file=output_file,
+        )
+        print(next(tokens).to_xml(lvl + 2), file=output_file)  # static|field
+        CompilationEngine.compile_type(tokens, output_file, lvl + 2)  # type
+        print(next(tokens).to_xml(lvl + 2), file=output_file)  # varName
 
         if tokens.peek() == Symbol(";"):
-            print(next(tokens).to_xml(lvl + 1), file=output_file)
+            print(next(tokens).to_xml(lvl + 2), file=output_file)
         elif tokens.peek() == Symbol(","):
             while tokens.peek() != Symbol(";"):
-                print(next(tokens).to_xml(lvl + 1), file=output_file)  # ,
-                print(next(tokens).to_xml(lvl + 1), file=output_file)  # varName
-            print(next(tokens).to_xml(lvl + 1), file=output_file)
+                print(next(tokens).to_xml(lvl + 2), file=output_file)  # ,
+                print(next(tokens).to_xml(lvl + 2), file=output_file)  # varName
+            print(next(tokens).to_xml(lvl + 2), file=output_file)
         elif tokens.peek() in [Keyword("static"), Keyword("field")]:
-            CompilationEngine.compile_class_var_dec(tokens, output_file, lvl + 1)
+            CompilationEngine.compile_class_var_dec(tokens, output_file, lvl + 2)
         else:
             raise ValueError(f"invalid token: {tokens.peek()}")
+        print(
+            f"{' ' * CompilationEngine.TAB_SIZE * (lvl + 1)}</classVarDec>",
+            file=output_file,
+        )
 
     @staticmethod
     def compile_type(tokens, output_file, lvl=0):
@@ -30,29 +39,46 @@ class CompilationEngine:
 
     @staticmethod
     def compile_parameter_list(tokens, output_file, lvl=0):
+        print(
+            f"{' ' * CompilationEngine.TAB_SIZE * (lvl + 1)}<parameterList>",
+            file=output_file,
+        )
         if tokens.peek() == ")":
             return
-        CompilationEngine.compile_type(tokens, output_file, lvl + 1)
-        print(next(tokens).to_xml(lvl + 1), file=output_file)
+        CompilationEngine.compile_type(tokens, output_file, lvl + 2)
+        print(next(tokens).to_xml(lvl + 2), file=output_file)
         while tokens.peek() == Symbol(","):
-            CompilationEngine.compile_type(tokens, output_file, lvl + 1)
-            print(next(tokens).to_xml(lvl + 1), file=output_file)
+            CompilationEngine.compile_type(tokens, output_file, lvl + 2)
+            print(next(tokens).to_xml(lvl + 2), file=output_file)
+        print(
+            f"{' ' * CompilationEngine.TAB_SIZE * (lvl + 1)}</parameterList>",
+            file=output_file,
+        )
 
     @staticmethod
     def compile_var_dec(tokens, output_file, lvl=0):
-        print(next(tokens).to_xml(lvl=lvl + 1), file=output_file)  # 'var'
-        CompilationEngine.compile_type(tokens, output_file, lvl + 1)  # type
-        print(next(tokens).to_xml(lvl=lvl + 1), file=output_file)  # varName
+        print(
+            f"{' ' * CompilationEngine.TAB_SIZE * (lvl + 1)}<varDec>",
+            file=output_file,
+        )
+
+        print(next(tokens).to_xml(lvl=lvl + 2), file=output_file)  # 'var'
+        CompilationEngine.compile_type(tokens, output_file, lvl + 2)  # type
+        print(next(tokens).to_xml(lvl=lvl + 2), file=output_file)  # varName
 
         if tokens.peek() == Symbol(";"):
-            print(next(tokens).to_xml(lvl + 1), file=output_file)
+            print(next(tokens).to_xml(lvl + 2), file=output_file)
         elif tokens.peek() == Symbol(","):
             while tokens.peek() != Symbol(";"):
-                print(next(tokens).to_xml(lvl + 1), file=output_file)  # ,
-                print(next(tokens).to_xml(lvl + 1), file=output_file)  # varName
-            print(next(tokens).to_xml(lvl + 1), file=output_file)
+                print(next(tokens).to_xml(lvl + 2), file=output_file)  # ,
+                print(next(tokens).to_xml(lvl + 2), file=output_file)  # varName
+            print(next(tokens).to_xml(lvl + 2), file=output_file)
         else:
             raise ValueError(f"invalid token: {tokens.peek()}")
+        print(
+            f"{' ' * CompilationEngine.TAB_SIZE * (lvl + 1)}</varDec>",
+            file=output_file,
+        )
 
     @staticmethod
     def compile_term(tokens, output_file, lvl=0):
@@ -142,13 +168,13 @@ class CompilationEngine:
         )  # subroutine name | (className | varName)
         if tokens.peek() == Symbol("("):
             print(next(tokens).to_xml(lvl + 1), file=output_file)  # (
-            CompilationEngine.compile_expression_list(tokens, output_file)
+            CompilationEngine.compile_expression_list(tokens, output_file, lvl + 1)
             print(next(tokens).to_xml(lvl + 1), file=output_file)  # )
         elif tokens.peek() == Symbol("."):
             print(next(tokens).to_xml(lvl + 1), file=output_file)  # .
             print(next(tokens).to_xml(lvl + 1), file=output_file)  # subroutineName
             print(next(tokens).to_xml(lvl + 1), file=output_file)  # (
-            CompilationEngine.compile_expression_list(tokens, output_file)
+            CompilationEngine.compile_expression_list(tokens, output_file, lvl + 1)
             print(next(tokens).to_xml(lvl + 1), file=output_file)  # )
         else:
             raise ValueError(f"invalid token: {tokens.peek()}")
@@ -157,7 +183,10 @@ class CompilationEngine:
     def compile_statements(tokens, output_file, lvl=0):
         if tokens.peek() == Symbol("}"):
             return
-        print(f"{' ' * CompilationEngine.TAB_SIZE * lvl}<statements>", file=output_file)
+        print(
+            f"{' ' * CompilationEngine.TAB_SIZE * (lvl + 1)}<statements>",
+            file=output_file,
+        )
         while tokens and tokens.peek() in [
             Keyword("let"),
             Keyword("do"),
@@ -165,9 +194,10 @@ class CompilationEngine:
             Keyword("while"),
             Keyword("return"),
         ]:
-            CompilationEngine.compile_statement(tokens, output_file)
+            CompilationEngine.compile_statement(tokens, output_file, lvl + 1)
         print(
-            f"{' ' * CompilationEngine.TAB_SIZE * lvl}</statements>", file=output_file
+            f"{' ' * CompilationEngine.TAB_SIZE * (lvl + 1)}</statements>",
+            file=output_file,
         )
 
     @staticmethod
@@ -228,44 +258,44 @@ class CompilationEngine:
             )
         elif tokens.peek() == Keyword("while"):
             print(
-                f"{' ' * CompilationEngine.TAB_SIZE * lvl}<whileStatement>",
+                f"{' ' * CompilationEngine.TAB_SIZE * (lvl + 1)}<whileStatement>",
                 file=output_file,
             )
-            print(next(tokens).to_xml(lvl + 1), file=output_file)  # while
-            print(next(tokens).to_xml(lvl + 1), file=output_file)  # (
-            CompilationEngine.compile_expression(tokens, output_file, lvl + 1)
-            print(next(tokens).to_xml(lvl + 1), file=output_file)  # )
+            print(next(tokens).to_xml(lvl + 2), file=output_file)  # while
+            print(next(tokens).to_xml(lvl + 2), file=output_file)  # (
+            CompilationEngine.compile_expression(tokens, output_file, lvl + 2)
+            print(next(tokens).to_xml(lvl + 2), file=output_file)  # )
 
-            print(next(tokens).to_xml(lvl + 1), file=output_file)  # {
-            CompilationEngine.compile_statements(tokens, output_file, lvl + 1)
-            print(next(tokens).to_xml(lvl + 1), file=output_file)  # }
+            print(next(tokens).to_xml(lvl + 2), file=output_file)  # {
+            CompilationEngine.compile_statements(tokens, output_file, lvl + 2)
+            print(next(tokens).to_xml(lvl + 2), file=output_file)  # }
             print(
-                f"{' ' * CompilationEngine.TAB_SIZE * lvl}</whileStatement>",
+                f"{' ' * CompilationEngine.TAB_SIZE * (lvl + 1)}</whileStatement>",
                 file=output_file,
             )
         elif tokens.peek() == Keyword("do"):
             print(
-                f"{' ' * CompilationEngine.TAB_SIZE * lvl}<doStatement>",
+                f"{' ' * CompilationEngine.TAB_SIZE * (lvl + 1)}<doStatement>",
                 file=output_file,
             )
-            print(next(tokens).to_xml(lvl + 1), file=output_file)  # do
-            CompilationEngine.compile_subroutine_call(tokens, output_file, lvl + 1)
-            print(next(tokens).to_xml(lvl + 1), file=output_file)  # ;
+            print(next(tokens).to_xml(lvl + 2), file=output_file)  # do
+            CompilationEngine.compile_subroutine_call(tokens, output_file, lvl + 2)
+            print(next(tokens).to_xml(lvl + 2), file=output_file)  # ;
             print(
-                f"{' ' * CompilationEngine.TAB_SIZE * lvl}</doStatement>",
+                f"{' ' * CompilationEngine.TAB_SIZE * (lvl + 1)}</doStatement>",
                 file=output_file,
             )
         elif tokens.peek() == Keyword("return"):
             print(
-                f"{' ' * CompilationEngine.TAB_SIZE * lvl}<returnStatement>",
+                f"{' ' * CompilationEngine.TAB_SIZE * (lvl + 1)}<returnStatement>",
                 file=output_file,
             )
             print(next(tokens).to_xml(lvl + 1), file=output_file)  # return
             if tokens.peek() != Symbol(";"):
-                CompilationEngine.compile_expression(tokens, output_file, lvl + 1)
-            print(next(tokens).to_xml(lvl + 1), file=output_file)  # ;
+                CompilationEngine.compile_expression(tokens, output_file, lvl + 2)
+            print(next(tokens).to_xml(lvl + 2), file=output_file)  # ;
             print(
-                f"{' ' * CompilationEngine.TAB_SIZE * lvl}</returnStatement>",
+                f"{' ' * CompilationEngine.TAB_SIZE * (lvl + 1)}</returnStatement>",
                 file=output_file,
             )
         else:
@@ -274,12 +304,12 @@ class CompilationEngine:
     @staticmethod
     def compile_subroutine_body(tokens, output_file, lvl=0):
         print(
-            f"{' ' * CompilationEngine.TAB_SIZE * lvl}<subroutineBody>",
+            f"{' ' * CompilationEngine.TAB_SIZE * (lvl + 1)}<subroutineBody>",
             file=output_file,
         )
-        print(next(tokens).to_xml(lvl + 1), file=output_file)  # {
+        print(next(tokens).to_xml(lvl + 2), file=output_file)  # {
         while tokens.peek() == Keyword("var"):
-            CompilationEngine.compile_var_dec(tokens, output_file, lvl + 1)
+            CompilationEngine.compile_var_dec(tokens, output_file, lvl + 2)
         while tokens.peek() in [
             Keyword("let"),
             Keyword("if"),
@@ -287,48 +317,49 @@ class CompilationEngine:
             Keyword("do"),
             Keyword("return"),
         ]:
-            CompilationEngine.compile_statements(tokens, output_file, lvl + 1)
-        print(next(tokens).to_xml(lvl + 1), file=output_file)
+            CompilationEngine.compile_statements(tokens, output_file, lvl + 2)
+        print(next(tokens).to_xml(lvl + 2), file=output_file)
         print(
-            f"{' ' * CompilationEngine.TAB_SIZE * lvl}</subroutineBody>",
+            f"{' ' * CompilationEngine.TAB_SIZE * (lvl + 1)}</subroutineBody>",
             file=output_file,
         )
 
     @staticmethod
     def compile_subroutine_dec(tokens, output_file, lvl=0):
         print(
-            f"{' ' * CompilationEngine.TAB_SIZE * lvl}<subroutineDec>", file=output_file
+            f"{' ' * CompilationEngine.TAB_SIZE * (lvl + 1)}<subroutineDec>",
+            file=output_file,
         )
         subroutine_type = next(tokens)
-        print(subroutine_type.to_xml(lvl + 1), file=output_file)
+        print(subroutine_type.to_xml(lvl + 2), file=output_file)
         CompilationEngine.compile_type(tokens, output_file)
         subroutine_name = next(tokens)
-        print(subroutine_name.to_xml(lvl + 1), file=output_file)
+        print(subroutine_name.to_xml(lvl + 2), file=output_file)
         left_bracket = next(tokens)
-        print(left_bracket.to_xml(lvl + 1), file=output_file)
+        print(left_bracket.to_xml(lvl + 2), file=output_file)
 
         if tokens.peek() == Symbol(")"):
             # t is right bracket
-            print(next(tokens).to_xml(lvl + 1), file=output_file)
+            print(next(tokens).to_xml(lvl + 2), file=output_file)
         elif tokens.peek() in [Keyword("static"), Keyword("field")]:
-            CompilationEngine.compile_subroutine_dec(tokens, output_file, lvl + 1)
+            CompilationEngine.compile_subroutine_dec(tokens, output_file, lvl + 2)
         else:
             # parameter list
-            CompilationEngine.compile_type(next(tokens), output_file, lvl + 1)  # type
-            print(next(tokens).to_xml(lvl + 1))  # varNam, file=output_filee
+            CompilationEngine.compile_type(next(tokens), output_file, lvl + 2)  # type
+            print(next(tokens).to_xml(lvl + 2))  # varNam, file=output_filee
             while t := next(tokens):
                 if t == Symbol(","):
-                    print(t.to_xml(lvl + 1), file=output_file)
-                    print(next(tokens).to_xml(lvl + 1), file=output_file)
+                    print(t.to_xml(lvl + 2), file=output_file)
+                    print(next(tokens).to_xml(lvl + 2), file=output_file)
                 elif t == Symbol(";"):
-                    print(t.to_xml(lvl + 1), file=output_file)
+                    print(t.to_xml(lvl + 2), file=output_file)
                     break
                 else:
                     raise ValueError(f"invalid token: {t}")
-            print(t.to_xml(lvl + 1), file=output_file)
-        CompilationEngine.compile_subroutine_body(tokens, output_file, lvl + 1)
+            print(t.to_xml(lvl + 2), file=output_file)
+        CompilationEngine.compile_subroutine_body(tokens, output_file, lvl + 2)
         print(
-            f"{' ' * CompilationEngine.TAB_SIZE * lvl}</subroutineDec>",
+            f"{' ' * CompilationEngine.TAB_SIZE * (lvl + 1)}</subroutineDec>",
             file=output_file,
         )
 
