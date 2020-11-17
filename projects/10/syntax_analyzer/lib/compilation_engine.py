@@ -5,32 +5,6 @@ from .jack_token import Keyword, Identifier, Symbol, IntegerConstant, StringCons
 class CompilationEngine:
     TAB_SIZE = 2
 
-    @staticmethod
-    def compile_class_var_dec(tokens, output_file, lvl=0):
-
-        print(
-            f"{' ' * CompilationEngine.TAB_SIZE * (lvl + 1)}<classVarDec>",
-            file=output_file,
-        )
-        print(next(tokens).to_xml(lvl + 2), file=output_file)  # static|field
-        CompilationEngine.compile_type(tokens, output_file, lvl + 2)  # type
-        print(next(tokens).to_xml(lvl + 2), file=output_file)  # varName
-
-        if tokens.peek() == Symbol(";"):
-            print(next(tokens).to_xml(lvl + 2), file=output_file)
-        elif tokens.peek() == Symbol(","):
-            while tokens.peek() != Symbol(";"):
-                print(next(tokens).to_xml(lvl + 2), file=output_file)  # ,
-                print(next(tokens).to_xml(lvl + 2), file=output_file)  # varName
-            print(next(tokens).to_xml(lvl + 2), file=output_file)
-        elif tokens.peek() in [Keyword("static"), Keyword("field")]:
-            CompilationEngine.compile_class_var_dec(tokens, output_file, lvl + 2)
-        else:
-            raise ValueError(f"invalid token: {tokens.peek()}")
-        print(
-            f"{' ' * CompilationEngine.TAB_SIZE * (lvl + 1)}</classVarDec>",
-            file=output_file,
-        )
 
     @staticmethod
     def compile_var_dec(tokens, output_file, lvl=0):
@@ -350,12 +324,39 @@ class CompilationEngine:
         )
 
     @staticmethod
+    def compile_class_var_dec(tokens, output_file, lvl=0):
+
+        print(
+            f"{' ' * CompilationEngine.TAB_SIZE * (lvl + 1)}<classVarDec>",
+            file=output_file,
+        )
+        print(next(tokens).to_xml(lvl + 2), file=output_file)  # static|field
+        CompilationEngine.compile_type(tokens, output_file, lvl + 2)  # type
+        print(next(tokens).to_xml(lvl + 2), file=output_file)  # varName
+
+        if tokens.peek() == Symbol(";"):
+            print(next(tokens).to_xml(lvl + 2), file=output_file)
+        elif tokens.peek() == Symbol(","):
+            while tokens.peek() != Symbol(";"):
+                print(next(tokens).to_xml(lvl + 2), file=output_file)  # ,
+                print(next(tokens).to_xml(lvl + 2), file=output_file)  # varName
+            print(next(tokens).to_xml(lvl + 2), file=output_file)
+        else:
+            raise ValueError(f"invalid token: {tokens.peek()}")
+        print(
+            f"{' ' * CompilationEngine.TAB_SIZE * (lvl + 1)}</classVarDec>",
+            file=output_file,
+        )
+
+    @staticmethod
     def compile_class(tokens, output_file, lvl=0):
         print(f"{' ' * CompilationEngine.TAB_SIZE * lvl}<class>", file=output_file)
         print(next(tokens).to_xml(lvl + 1), file=output_file)  # class
         print(next(tokens).to_xml(lvl + 1), file=output_file)  # className
         print(next(tokens).to_xml(lvl + 1), file=output_file)  # (
-        CompilationEngine.compile_class_var_dec(tokens, output_file)
+        while tokens.peek() in [Keyword("static"), Keyword("field")]:
+            CompilationEngine.compile_class_var_dec(tokens, output_file, lvl + 1)
+
         while tokens.peek() in [
             Keyword("constructor"),
             Keyword("function"),
