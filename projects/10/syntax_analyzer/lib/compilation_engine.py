@@ -33,27 +33,6 @@ class CompilationEngine:
         )
 
     @staticmethod
-    def compile_type(tokens, output_file, lvl=0):
-        token = next(tokens)
-        print(token.to_xml(lvl + 1), file=output_file)
-
-    @staticmethod
-    def compile_parameter_list(tokens, output_file, lvl=0):
-        print(
-            f"{' ' * CompilationEngine.TAB_SIZE * (lvl + 1)}<parameterList>",
-            file=output_file,
-        )
-        CompilationEngine.compile_type(tokens, output_file, lvl + 2)
-        print(next(tokens).to_xml(lvl + 2), file=output_file)
-        while tokens.peek() == Symbol(","):
-            CompilationEngine.compile_type(tokens, output_file, lvl + 2)
-            print(next(tokens).to_xml(lvl + 2), file=output_file)
-        print(
-            f"{' ' * CompilationEngine.TAB_SIZE * (lvl + 1)}</parameterList>",
-            file=output_file,
-        )
-
-    @staticmethod
     def compile_var_dec(tokens, output_file, lvl=0):
         print(
             f"{' ' * CompilationEngine.TAB_SIZE * (lvl + 1)}<varDec>",
@@ -321,18 +300,38 @@ class CompilationEngine:
         )
 
     @staticmethod
+    def compile_type(tokens, output_file, lvl=0):
+        token = next(tokens)
+        print(token.to_xml(lvl + 1), file=output_file)
+
+    @staticmethod
+    def compile_parameter_list(tokens, output_file, lvl=0):
+        print(
+            f"{' ' * CompilationEngine.TAB_SIZE * (lvl + 1)}<parameterList>",
+            file=output_file,
+        )
+        CompilationEngine.compile_type(tokens, output_file, lvl + 2)
+        print(next(tokens).to_xml(lvl + 2), file=output_file)
+        while tokens.peek() == Symbol(","):
+            CompilationEngine.compile_type(tokens, output_file, lvl + 2)
+            print(next(tokens).to_xml(lvl + 2), file=output_file)
+        print(
+            f"{' ' * CompilationEngine.TAB_SIZE * (lvl + 1)}</parameterList>",
+            file=output_file,
+        )
+
+    @staticmethod
     def compile_subroutine_dec(tokens, output_file, lvl=0):
         print(
             f"{' ' * CompilationEngine.TAB_SIZE * (lvl + 1)}<subroutineDec>",
             file=output_file,
         )
-        subroutine_type = next(tokens)
-        print(subroutine_type.to_xml(lvl + 2), file=output_file)
-        CompilationEngine.compile_type(tokens, output_file)
-        subroutine_name = next(tokens)
-        print(subroutine_name.to_xml(lvl + 2), file=output_file)
-        left_bracket = next(tokens)
-        print(left_bracket.to_xml(lvl + 2), file=output_file)
+        print(
+            next(tokens).to_xml(lvl + 2), file=output_file
+        )  # (constructor | function | method)
+        CompilationEngine.compile_type(tokens, output_file)  # type
+        print(next(tokens).to_xml(lvl + 2), file=output_file)  # subroutine_name
+        print(next(tokens).to_xml(lvl + 2), file=output_file)  # (
 
         if tokens.peek() == Symbol(")"):
             # t is right bracket
@@ -370,6 +369,6 @@ class CompilationEngine:
 
     @staticmethod
     def parse(tokens, output_file):
-        #print("<tokens>", file=output_file)
+        # print("<tokens>", file=output_file)
         CompilationEngine.compile_class(tokens, output_file, lvl=1)
-        #print("</tokens>", file=output_file)
+        # print("</tokens>", file=output_file)
