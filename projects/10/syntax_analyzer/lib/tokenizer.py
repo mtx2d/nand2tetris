@@ -16,8 +16,6 @@ class Tokenizer:
 
     @staticmethod
     def parse(input_file) -> Token:
-        # BUG: cannot handle multi-line block comments
-        # TODO: update tokenizing to handle multiline case
         state = 1  # 1 - normal matching; 2 - match string; 4 - match multiline comments
         with open(input_file, "r") as f:
             for line in f:
