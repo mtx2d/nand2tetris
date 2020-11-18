@@ -8,7 +8,7 @@ class Tokenizer:
     @staticmethod
     def strip_comments(line):
         return re.sub(
-            r"//.*?$|/\*\*.*?\*/|'(?:\\.|[^\\'])*'",
+            r"//.*?$|'(?:\\.|[^\\'])*'",
             "",
             line,
             flags=re.S | re.M,
@@ -27,21 +27,33 @@ class Tokenizer:
 
                 token = ""
                 i = 0
-                is_parsing_quoted_string = False
+                state = 1  # 1 - normal matching; 2 - match string; 4 - match multiline comments
                 while i < len(line):
-                    if is_parsing_quoted_string:
+                    if state == 4:
+                        if i + 1 >= len(line):
+                            continue
+                        if line[i] == "*" and line[i + 1] == "/":
+                            # end of match
+                            state = 1
+                    elif state == 1:
                         while i < len(line) and line[i] != '"':
                             token += line[i]
                             i += 1
                         if token:
                             yield Token.create(f'"{token}"')
                             token = ""
-                        is_parsing_quoted_string = not is_parsing_quoted_string
-                    else:
+                        state = 2
+                    elif state == 2:
                         if line[i] == '"':
-                            is_parsing_quoted_string = not is_parsing_quoted_string
+                            state = 1
+
                         elif line[i] in string.ascii_letters + string.digits + "_":
                             token += line[i]
+                        elif i + 2 < len(line) and line[i : i + 3] == "/**":
+                            if token:
+                                yield Token.create(token)
+                                token = ""
+                            state = 4
                         elif line[i] in Token.SYMBOLS:
                             if token:
                                 yield Token.create(token)
