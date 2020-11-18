@@ -31,20 +31,33 @@ class Tokenizer:
                 while i < len(line):
 
                     if i + 2 < len(line) and line[i : i + 3] == "/**":
-                        if token:
-                            yield Token.create(token)
-                            token = ""
-                        i += 3
-                        while i < len(line) and (
-                            i + 1 >= len(line) or line[i : i + 2] != "*/"
-                        ):
-                            i += 1
-                            continue
-                        state = 4
+                        if state == 4:
+                            token = "" 
+                            i += 3
+                        elif state == 2:
+                            token += line[i : i + 3]
+                            i += 3
+                        elif state == 1:
+                            if token:
+                                yield Token.create(token)
+                                token = ""
+                            i += 3
+                            while i < len(line) and (
+                                i + 1 >= len(line) or line[i : i + 2] != "*/"
+                            ):
+                                i += 1
+                            state = 4
                     elif i + 1 < len(line) and line[i : i + 2] == "*/":
-                        token = ""
-                        i += 2
-                        state = 1
+                        if state == 4:
+                            token = ""
+                            i += 2
+                            state = 1
+                        elif state == 2:
+                            token += token[i]
+                            i += 1
+                        elif state == 1:
+                            token += token[i]
+                            i += 1
                     elif line[i] == '"':
                         if state == 4:
                             token = ""
@@ -78,15 +91,10 @@ class Tokenizer:
                                 token = ""
                             i += 1
                             yield Token.create(line[i])
-                    elif line[i] in string.whitespace:
-
+                    else:
                         if state == 4:
                             i += 1
-                        elif state == 2:
+                        elif state == 2 or state == 1:
                             token += line[i]
                             i += 1
-                        elif state == 1:
-                            if token:
-                                yield Token.create(token)
-                                token = ""
-                            i += 1
+
