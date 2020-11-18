@@ -26,7 +26,6 @@ class Tokenizer:
 
                 token = ""
                 i = 0
-                print("DEBUG, line before start:", line)
                 while i < len(line):
                     if i + 2 < len(line) and line[i : i + 3] == "/**":
                         if state == 4:
