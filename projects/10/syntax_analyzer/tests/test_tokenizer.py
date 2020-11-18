@@ -151,7 +151,6 @@ class TestTokenizer(unittest.TestCase):
 
     def test_parse_1(self):
         file_without_comments = Tokenizer.parse(TEST_FILE_1)
-
         self.assertEqual(Keyword("class"), next(file_without_comments))
         self.assertEqual(Identifier("SquareGame"), next(file_without_comments))
         self.assertEqual(Symbol("{"), next(file_without_comments))
