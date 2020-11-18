@@ -18,6 +18,7 @@ class Tokenizer:
     def parse(input_file) -> Token:
         # BUG: cannot handle multi-line block comments
         # TODO: update tokenizing to handle multiline case
+        state = 1  # 1 - normal matching; 2 - match string; 4 - match multiline comments
         with open(input_file, "r") as f:
             for line in f:
                 line = line.strip()
@@ -27,12 +28,11 @@ class Tokenizer:
 
                 token = ""
                 i = 0
-                state = 1  # 1 - normal matching; 2 - match string; 4 - match multiline comments
+                print("DEBUG, line before start:", line)
                 while i < len(line):
-
                     if i + 2 < len(line) and line[i : i + 3] == "/**":
                         if state == 4:
-                            token = "" 
+                            token = ""
                             i += 3
                         elif state == 2:
                             token += line[i : i + 3]
@@ -97,4 +97,3 @@ class Tokenizer:
                         elif state == 2 or state == 1:
                             token += line[i]
                             i += 1
-
