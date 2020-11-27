@@ -368,6 +368,4 @@ class CompilationEngine:
 
     @staticmethod
     def parse(tokens, output_file):
-        # print("<tokens>", file=output_file)
         CompilationEngine.compile_class(tokens, output_file, lvl=1)
-        # print("</tokens>", file=output_file)

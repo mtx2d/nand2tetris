@@ -3,8 +3,9 @@ import sys
 import argparse
 from pathlib import Path
 from more_itertools import peekable
-from lib.tokenizer import Tokenizer
 from lib.compilation_engine import CompilationEngine
+from lib.symbol_table import SymbolTable
+from lib.tokenizer import Tokenizer
 
 
 def parse_args(argv):
@@ -37,14 +38,18 @@ def main(argv):
     source_path = Path(args.source_path).absolute()
     for file in get_files(source_path):
         tokens = peekable(Tokenizer.parse(file))
-        output_xml = file.parent.joinpath(f"{file.stem}.xml")
+        symbol_table = SymbolTable(file)
+        vm_instructions = CompilationEngine.parse(tokens, symbol_table)
 
+        output_xml = file.parent.joinpath(f"{file.stem}.xml")
         if output_xml.exists():
             print(f"{output_xml} already exists, skipping.")
             continue
 
         with open(output_xml, "w") as of:
-            CompilationEngine.parse(tokens, of)
+            for instruction in vm_instructions:
+                print(instruction, file=of)
+            
 
     return 0
 
