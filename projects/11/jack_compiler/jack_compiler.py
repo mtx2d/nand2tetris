@@ -49,7 +49,6 @@ def main(argv):
         with open(output_xml, "w") as of:
             for instruction in vm_instructions:
                 print(instruction, file=of)
-            
 
     return 0
 
