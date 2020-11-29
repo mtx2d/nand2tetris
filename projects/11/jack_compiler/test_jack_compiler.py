@@ -2,10 +2,10 @@ from pathlib import Path
 import unittest
 from unittest import mock
 
-from syntax_analyzer import get_files
+from jack_compiler import get_files
 
 
-class TestSyntaxAnalyzer(unittest.TestCase):
+class TestJackCompiler(unittest.TestCase):
     def test_get_files_for_non_exists_file(self):
         NON_EXISTS_FILE_PATH = "/non/exists/file/path"
         self.assertRaises(FileNotFoundError, get_files, Path(NON_EXISTS_FILE_PATH))
