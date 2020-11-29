@@ -324,45 +324,44 @@ class CompilationEngine:
         )
 
     @staticmethod
-    def compile_class_var_dec(tokens, output_file, lvl=0):
-
-        print(
-            f"{' ' * CompilationEngine.TAB_SIZE * (lvl + 1)}<classVarDec>",
-            file=output_file,
-        )
-        print(next(tokens).to_xml(lvl + 2), file=output_file)  # static|field
-        CompilationEngine.compile_type(tokens, output_file, lvl + 2)  # type
-        print(next(tokens).to_xml(lvl + 2), file=output_file)  # varName
+    def compile_class_var_dec(tokens, symbol_table, lvl=0):
+        yield f"{' ' * CompilationEngine.TAB_SIZE * (lvl + 1)}<classVarDec>"
+        yield next(tokens).to_xml(lvl + 2)  # static|field
+        yield next(
+            CompilationEngine.compile_type(tokens, symbol_table, lvl + 2)
+        )  # type
+        yield next(tokens).to_xml(lvl + 2)  # varName
 
         if tokens.peek() == Symbol(";"):
-            print(next(tokens).to_xml(lvl + 2), file=output_file)
+            yield next(tokens).to_xml(lvl + 2)
         elif tokens.peek() == Symbol(","):
             while tokens.peek() != Symbol(";"):
-                print(next(tokens).to_xml(lvl + 2), file=output_file)  # ,
-                print(next(tokens).to_xml(lvl + 2), file=output_file)  # varName
-            print(next(tokens).to_xml(lvl + 2), file=output_file)
+                yield next(tokens).to_xml(lvl + 2)  # ,
+                yield next(tokens).to_xml(lvl + 2)  # varName
+            yield next(tokens).to_xml(lvl + 2)
         else:
             raise ValueError(f"invalid token: {tokens.peek()}")
-        print(
-            f"{' ' * CompilationEngine.TAB_SIZE * (lvl + 1)}</classVarDec>",
-            file=output_file,
-        )
+        yield f"{' ' * CompilationEngine.TAB_SIZE * (lvl + 1)}</classVarDec>"
 
     @staticmethod
     def compile_class(tokens, symbol_table, lvl=0):
         yield f"{' ' * CompilationEngine.TAB_SIZE * lvl}<class>"
-        yield next(tokens).to_xml(lvl + 1) # class
-        yield next(tokens).to_xml(lvl + 1) # className
-        yield next(tokens).to_xml(lvl + 1) # (
+        yield next(tokens).to_xml(lvl + 1)  # class
+        yield next(tokens).to_xml(lvl + 1)  # className
+        yield next(tokens).to_xml(lvl + 1)  # (
         while tokens.peek() in [Keyword("static"), Keyword("field")]:
-            yield next(CompilationEngine.compile_class_var_dec(tokens, symbol_table, lvl + 1))
+            yield next(
+                CompilationEngine.compile_class_var_dec(tokens, symbol_table, lvl + 1)
+            )
 
         while tokens.peek() in [
             Keyword("constructor"),
             Keyword("function"),
             Keyword("method"),
         ]:
-            yield next(CompilationEngine.compile_subroutine_dec(tokens, symbol_table, lvl + 1))
+            yield next(
+                CompilationEngine.compile_subroutine_dec(tokens, symbol_table, lvl + 1)
+            )
         yield next(tokens).to_xml(lvl + 1)  # )
         yield f"{' ' * CompilationEngine.TAB_SIZE * lvl}</class>"
 
