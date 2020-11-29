@@ -349,23 +349,23 @@ class CompilationEngine:
         )
 
     @staticmethod
-    def compile_class(tokens, output_file, lvl=0):
-        print(f"{' ' * CompilationEngine.TAB_SIZE * lvl}<class>", file=output_file)
-        print(next(tokens).to_xml(lvl + 1), file=output_file)  # class
-        print(next(tokens).to_xml(lvl + 1), file=output_file)  # className
-        print(next(tokens).to_xml(lvl + 1), file=output_file)  # (
+    def compile_class(tokens, symbol_table, lvl=0):
+        yield f"{' ' * CompilationEngine.TAB_SIZE * lvl}<class>"
+        yield next(tokens).to_xml(lvl + 1) # class
+        yield next(tokens).to_xml(lvl + 1) # className
+        yield next(tokens).to_xml(lvl + 1) # (
         while tokens.peek() in [Keyword("static"), Keyword("field")]:
-            CompilationEngine.compile_class_var_dec(tokens, output_file, lvl + 1)
+            yield next(CompilationEngine.compile_class_var_dec(tokens, symbol_table, lvl + 1))
 
         while tokens.peek() in [
             Keyword("constructor"),
             Keyword("function"),
             Keyword("method"),
         ]:
-            CompilationEngine.compile_subroutine_dec(tokens, output_file)
-        print(next(tokens).to_xml(lvl + 1), file=output_file)  # )
-        print(f"{' ' * CompilationEngine.TAB_SIZE * lvl}</class>", file=output_file)
+            yield next(CompilationEngine.compile_subroutine_dec(tokens, symbol_table, lvl + 1))
+        yield next(tokens).to_xml(lvl + 1)  # )
+        yield f"{' ' * CompilationEngine.TAB_SIZE * lvl}</class>"
 
     @staticmethod
-    def parse(tokens, output_file):
-        CompilationEngine.compile_class(tokens, output_file, lvl=1)
+    def parse(tokens, symbol_table):
+        yield CompilationEngine.compile_class(tokens, symbol_table, lvl=1)
