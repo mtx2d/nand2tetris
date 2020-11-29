@@ -20,6 +20,7 @@ def parse_args(argv):
 
 
 def get_files(path):
+    # return a list of .jack files
     if not path.exists():
         raise FileNotFoundError(f"{path} does not exist.")
     if path.is_file():
