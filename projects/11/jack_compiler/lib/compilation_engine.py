@@ -321,18 +321,17 @@ class CompilationEngine:
         yield next(tokens).to_xml(lvl + 1)  # className
         yield next(tokens).to_xml(lvl + 1)  # (
         while tokens.peek() in [Keyword("static"), Keyword("field")]:
-            yield next(
-                CompilationEngine.compile_class_var_dec(tokens, symbol_table, lvl + 1)
-            )
+            yield CompilationEngine.compile_class_var_dec(tokens, symbol_table, lvl + 1)
 
         while tokens.peek() in [
             Keyword("constructor"),
             Keyword("function"),
             Keyword("method"),
         ]:
-            yield next(
-                CompilationEngine.compile_subroutine_dec(tokens, symbol_table, lvl + 1)
+            yield CompilationEngine.compile_subroutine_dec(
+                tokens, symbol_table, lvl + 1
             )
+
         yield next(tokens).to_xml(lvl + 1)  # )
         yield f"{' ' * CompilationEngine.TAB_SIZE * lvl}</class>"
 
