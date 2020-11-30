@@ -27,74 +27,9 @@ class TestCompilationEngine(unittest.TestCase):
                 ]
             )
         )
-        mock_output_file = mock.Mock()
-        CompilationEngine.compile_statements(mock_tokens, mock_output_file)
-        mock_output_file.assert_has_calls(
-            [
-                mock.call.write(f'{" " * 2 * 1}<statements>'),
-                mock.call.write("\n"),
-                mock.call.write(f'{" " * 2 * 2}<ifStatement>'),
-                mock.call.write("\n"),
-                mock.call.write(Keyword("if").to_xml(3)),
-                mock.call.write("\n"),
-                mock.call.write(Symbol("(").to_xml(3)),
-                mock.call.write("\n"),
-                mock.call.write(f'{" " * 2 * 3}<expression>'),
-                mock.call.write("\n"),
-                mock.call.write(f'{" " * 2 * 4}<term>'),
-                mock.call.write("\n"),
-                mock.call.write(Identifier("x").to_xml(5)),
-                mock.call.write("\n"),
-                mock.call.write(f'{" " * 2 * 4}</term>'),
-                mock.call.write("\n"),
-                mock.call.write(Symbol("<").to_xml(4)),
-                mock.call.write("\n"),
-                mock.call.write(f'{" " * 2 * 4}<term>'),
-                mock.call.write("\n"),
-                mock.call.write(IntegerConstant("153").to_xml(5)),
-                mock.call.write("\n"),
-                mock.call.write(f'{" " * 2 * 4}</term>'),
-                mock.call.write("\n"),
-                mock.call.write(f'{" " * 2 * 3}</expression>'),
-                mock.call.write("\n"),
-                mock.call.write(Symbol(")").to_xml(3)),
-                mock.call.write("\n"),
-                mock.call.write(Symbol("{").to_xml(3)),
-                mock.call.write("\n"),
-                mock.call.write(f'{" " * 2 * 4}<statements>'),
-                mock.call.write("\n"),
-                mock.call.write(f'{" " * 2 * 5}<letStatement>'),
-                mock.call.write("\n"),
-                mock.call.write(Keyword("let").to_xml(6)),
-                mock.call.write("\n"),
-                mock.call.write(Identifier("city").to_xml(6)),
-                mock.call.write("\n"),
-                mock.call.write(Symbol("=").to_xml(6)),
-                mock.call.write("\n"),
-                mock.call.write(f'{" " * 2 * 6}<expression>'),
-                mock.call.write("\n"),
-                mock.call.write(f'{" " * 2 * 7}<term>'),
-                mock.call.write("\n"),
-                mock.call.write(StringConstant("Paris").to_xml(8)),
-                mock.call.write("\n"),
-                mock.call.write(f'{" " * 2 * 7}</term>'),
-                mock.call.write("\n"),
-                mock.call.write(f'{" " * 2 * 6}</expression>'),
-                mock.call.write("\n"),
-                mock.call.write(Symbol(";").to_xml(6)),
-                mock.call.write("\n"),
-                mock.call.write(f'{" " * 2 * 5}</letStatement>'),
-                mock.call.write("\n"),
-                mock.call.write(f'{" " * 2 * 4}</statements>'),
-                mock.call.write("\n"),
-                mock.call.write(Symbol("}").to_xml(3)),
-                mock.call.write("\n"),
-                mock.call.write(f'{" " * 2 * 2}</ifStatement>'),
-                mock.call.write("\n"),
-                mock.call.write(f'{" " * 2 * 1}</statements>'),
-                mock.call.write("\n"),
-            ]
-        )
+        mock_symbol_table = mock.Mock()
+        CompilationEngine.compile_statements(mock_tokens, mock_symbol_table)
+        mock_symbol_table.return_value
 
     def test_compile_class(self):
         mock_tokens = peekable(
