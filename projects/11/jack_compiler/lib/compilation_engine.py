@@ -268,7 +268,7 @@ class CompilationEngine:
     def compile_class_var_dec(tokens, symbol_table, lvl=0):
         yield f"{' ' * CompilationEngine.TAB_SIZE * (lvl + 1)}<classVarDec>"
         yield next(tokens).to_xml(lvl + 2)  # static|field
-        yield CompilationEngine.compile_type(tokens, symbol_table, lvl + 2) # type
+        yield CompilationEngine.compile_type(tokens, symbol_table, lvl + 2)  # type
         yield next(tokens).to_xml(lvl + 2)  # varName
 
         if tokens.peek() == Symbol(";"):
