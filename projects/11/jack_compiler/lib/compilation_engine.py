@@ -253,12 +253,15 @@ class CompilationEngine:
         yield f"{' ' * CompilationEngine.TAB_SIZE * (lvl + 1)}<parameterList>"
         if tokens.peek() == Symbol(")"):
             yield f"{' ' * CompilationEngine.TAB_SIZE * (lvl + 1)}</parameterList>"
+            return
 
-        yield CompilationEngine.compile_type(tokens, symbol_table, lvl + 2)
+        for i in CompilationEngine.compile_type(tokens, symbol_table, lvl + 2):
+            yield i
         yield next(tokens).to_xml(lvl + 2)
         while tokens.peek() == Symbol(","):
             yield next(tokens).to_xml(lvl + 2)  # ,
-            yield CompilationEngine.compile_type(tokens, symbol_table, lvl + 2)  # type
+            for i in CompilationEngine.compile_type(tokens, symbol_table, lvl + 2):  # type
+                yield i
             yield next(tokens).to_xml(lvl + 2)  # varName
         yield f"{' ' * CompilationEngine.TAB_SIZE * (lvl + 1)}</parameterList>"
 
@@ -267,12 +270,19 @@ class CompilationEngine:
         yield f"{' ' * CompilationEngine.TAB_SIZE * (lvl + 1)}<subroutineDec>"
 
         yield next(tokens).to_xml(lvl + 2)  # (constructor | function | method)
-        yield CompilationEngine.compile_type(tokens, symbol_table)  # type
+        for i in CompilationEngine.compile_type(tokens, symbol_table):  # type
+            yield i
         yield next(tokens).to_xml(lvl + 2)  # subroutine_name
         yield next(tokens).to_xml(lvl + 2)  # (
-        yield CompilationEngine.compile_parameter_list(tokens, symbol_table, lvl + 2)
+        for i in CompilationEngine.compile_parameter_list(
+            tokens, symbol_table, lvl + 2
+        ):
+            yield i
         yield next(tokens).to_xml(lvl + 2)  # )
-        yield CompilationEngine.compile_subroutine_body(tokens, symbol_table, lvl + 2)
+        for i in CompilationEngine.compile_subroutine_body(
+            tokens, symbol_table, lvl + 2
+        ):
+            yield i
 
         yield f"{' ' * CompilationEngine.TAB_SIZE * (lvl + 1)}</subroutineDec>"
 
