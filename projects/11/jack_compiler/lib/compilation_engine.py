@@ -280,7 +280,8 @@ class CompilationEngine:
     def compile_class_var_dec(tokens, symbol_table, lvl=0):
         yield f"{' ' * CompilationEngine.TAB_SIZE * (lvl + 1)}<classVarDec>"
         yield next(tokens).to_xml(lvl + 2)  # static|field
-        yield CompilationEngine.compile_type(tokens, symbol_table, lvl + 2)  # type
+        for i in CompilationEngine.compile_type(tokens, symbol_table, lvl + 2):  # type
+            yield i
         yield next(tokens).to_xml(lvl + 2)  # varName
 
         if tokens.peek() == Symbol(";"):
@@ -301,16 +302,20 @@ class CompilationEngine:
         yield next(tokens).to_xml(lvl + 1)  # className
         yield next(tokens).to_xml(lvl + 1)  # (
         while tokens.peek() in [Keyword("static"), Keyword("field")]:
-            yield CompilationEngine.compile_class_var_dec(tokens, symbol_table, lvl + 1)
+            for i in CompilationEngine.compile_class_var_dec(
+                tokens, symbol_table, lvl + 1
+            ):
+                yield i
 
         while tokens.peek() in [
             Keyword("constructor"),
             Keyword("function"),
             Keyword("method"),
         ]:
-            yield CompilationEngine.compile_subroutine_dec(
-                tokens, symbol_table, lvl + 1
-            )
+            for i in CompilationEngine.compile_subroutine_dec(
+                tokens, symbol_table, lvl  # TODO fix this indentation bug
+            ):
+                yield i
 
         yield next(tokens).to_xml(lvl + 1)  # )
         yield f"{' ' * CompilationEngine.TAB_SIZE * lvl}</class>"
