@@ -31,25 +31,25 @@ class SymbolTable:
     def kind_of(self, name: str) -> str:
         if name in self.subroutine_table:
             return self.subroutine_table[name]
-        
+
         if name in self.global_table:
             return self.global_table[name]
-        
+
         raise ValueError(f"name not found: {name}")
 
     def type_of(self, name: str) -> str:
         if name in self.subroutine_table:
             return self.subroutine_table[name]
-        
+
         if name in self.global_table:
             return self.global_table[name]
-        
+
         raise ValueError(f"name not found: {name}")
 
     def index_of(self, name: str) -> int:
         if name in self.subroutine_table:
             return self.subroutine_table[name].index
-        
+
         if name in self.global_table:
             return self.global_table[name].index
 
