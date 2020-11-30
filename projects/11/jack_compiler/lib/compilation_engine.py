@@ -10,7 +10,8 @@ class CompilationEngine:
         yield f"{' ' * CompilationEngine.TAB_SIZE * (lvl + 1)}<varDec>"
 
         yield next(tokens).to_xml(lvl=lvl + 2)  # 'var'
-        yield CompilationEngine.compile_type(tokens, symbol_table, lvl + 2)  # type
+        for i in CompilationEngine.compile_type(tokens, symbol_table, lvl + 2):  # type
+            yield i
         yield next(tokens).to_xml(lvl=lvl + 2)  # varName
 
         if tokens.peek() == Symbol(";"):
@@ -38,20 +39,25 @@ class CompilationEngine:
             if tokens[1] == Symbol("["):
                 yield next(tokens).to_xml(lvl + 1)  # varName
                 yield next(tokens).to_xml(lvl + 1)  # [
-                yield CompilationEngine.compile_expression(
+                for i in CompilationEngine.compile_expression(
                     tokens, symbol_table, lvl + 1
-                )
+                ):
+                    yield i
                 yield next(tokens).to_xml(lvl + 1)  # ]
             elif tokens[1] in [Symbol("("), Symbol(".")]:
                 # subRoutineCall
-                yield CompilationEngine.compile_subroutine_call(
+                for i in CompilationEngine.compile_subroutine_call(
                     tokens, symbol_table, lvl + 1
-                )
+                ):
+                    yield i
             else:
                 yield next(tokens).to_xml(lvl + 1)  # varName
         elif tokens.peek() == Symbol("("):
             yield next(tokens).to_xml(lvl + 1)  # (
-            yield CompilationEngine.compile_expression(tokens, symbol_table, lvl + 1)
+            for i in CompilationEngine.compile_expression(
+                tokens, symbol_table, lvl + 1
+            ):
+                yield i
             yield next(tokens).to_xml(lvl + 1)  # )
         elif tokens.peek() in [Symbol("-"), Symbol("~")]:
             yield next(tokens).to_xml(lvl + 1)
@@ -87,10 +93,14 @@ class CompilationEngine:
     def compile_expression_list(tokens, symbol_table, lvl=0):
         yield f"{' ' * CompilationEngine.TAB_SIZE * lvl}<expressionList>"
 
-        yield CompilationEngine.compile_expression(tokens, symbol_table, lvl + 1)
+        for i in CompilationEngine.compile_expression(tokens, symbol_table, lvl + 1):
+            yield i
         while tokens.peek() == Symbol(","):
             yield next(tokens).to_xml(lvl + 1)  # ,
-            yield CompilationEngine.compile_expression(tokens, symbol_table, lvl + 1)
+            for i in CompilationEngine.compile_expression(
+                tokens, symbol_table, lvl + 1
+            ):
+                yield i
         yield f"{' ' * CompilationEngine.TAB_SIZE * lvl}</expressionList>"
 
     @staticmethod
@@ -98,17 +108,19 @@ class CompilationEngine:
         yield next(tokens).to_xml(lvl + 1)  # subroutine name | (className | varName)
         if tokens.peek() == Symbol("("):
             yield next(tokens).to_xml(lvl + 1)  # (
-            yield CompilationEngine.compile_expression_list(
+            for i in CompilationEngine.compile_expression_list(
                 tokens, symbol_table, lvl + 1
-            )
+            ):
+                yield i
             yield next(tokens).to_xml(lvl + 1)  # )
         elif tokens.peek() == Symbol("."):
             yield next(tokens).to_xml(lvl + 1)  # .
             yield next(tokens).to_xml(lvl + 1)  # subroutineName
             yield next(tokens).to_xml(lvl + 1)  # (
-            yield CompilationEngine.compile_expression_list(
+            for i in CompilationEngine.compile_expression_list(
                 tokens, symbol_table, lvl + 1
-            )
+            ):
+                yield i
             yield next(tokens).to_xml(lvl + 1)  # )
         else:
             raise ValueError(f"invalid token: {tokens.peek()}")
@@ -207,9 +219,10 @@ class CompilationEngine:
             yield f"{' ' * CompilationEngine.TAB_SIZE * (lvl + 1)}<doStatement>"
 
             yield next(tokens).to_xml(lvl + 2)  # do
-            yield CompilationEngine.compile_subroutine_call(
+            for i in CompilationEngine.compile_subroutine_call(
                 tokens, symbol_table, lvl + 2
-            )
+            ):
+                yield i
             yield next(tokens).to_xml(lvl + 2)  # ;
             yield f"{' ' * CompilationEngine.TAB_SIZE * (lvl + 1)}</doStatement>"
         elif tokens.peek() == Keyword("return"):
@@ -232,7 +245,8 @@ class CompilationEngine:
 
         yield next(tokens).to_xml(lvl + 2)  # {
         while tokens.peek() == Keyword("var"):
-            yield CompilationEngine.compile_var_dec(tokens, symbol_table, lvl + 2)
+            for i in CompilationEngine.compile_var_dec(tokens, symbol_table, lvl + 2):
+                yield i
         while tokens.peek() in [
             Keyword("let"),
             Keyword("if"),
@@ -240,7 +254,10 @@ class CompilationEngine:
             Keyword("do"),
             Keyword("return"),
         ]:
-            yield CompilationEngine.compile_statements(tokens, symbol_table, lvl + 2)
+            for i in CompilationEngine.compile_statements(
+                tokens, symbol_table, lvl + 2
+            ):
+                yield i
         yield next(tokens).to_xml(lvl + 2)
         yield f"{' ' * CompilationEngine.TAB_SIZE * (lvl + 1)}</subroutineBody>"
 
@@ -260,7 +277,9 @@ class CompilationEngine:
         yield next(tokens).to_xml(lvl + 2)
         while tokens.peek() == Symbol(","):
             yield next(tokens).to_xml(lvl + 2)  # ,
-            for i in CompilationEngine.compile_type(tokens, symbol_table, lvl + 2):  # type
+            for i in CompilationEngine.compile_type(
+                tokens, symbol_table, lvl + 2
+            ):  # type
                 yield i
             yield next(tokens).to_xml(lvl + 2)  # varName
         yield f"{' ' * CompilationEngine.TAB_SIZE * (lvl + 1)}</parameterList>"
