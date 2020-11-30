@@ -61,7 +61,8 @@ class CompilationEngine:
             yield next(tokens).to_xml(lvl + 1)  # )
         elif tokens.peek() in [Symbol("-"), Symbol("~")]:
             yield next(tokens).to_xml(lvl + 1)
-            yield CompilationEngine.compile_term(tokens, symbol_table, lvl + 1)
+            for i in CompilationEngine.compile_term(tokens, symbol_table, lvl + 1):
+                yield i
         else:
             raise ValueError(f"invalid token {tokens.peek()}")
         yield f"{' ' * CompilationEngine.TAB_SIZE * lvl}</term>"
@@ -142,7 +143,7 @@ class CompilationEngine:
         ]:
             for i in CompilationEngine.compile_statement(tokens, symbol_table, lvl + 1):
                 yield i
-            yield f"{' ' * CompilationEngine.TAB_SIZE * (lvl + 1)}</statements>"
+        yield f"{' ' * CompilationEngine.TAB_SIZE * (lvl + 1)}</statements>"
 
     @staticmethod
     def compile_statement(tokens, symbol_table, lvl=0) -> str:
