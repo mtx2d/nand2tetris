@@ -26,7 +26,7 @@ class CompilationEngine:
 
     @staticmethod
     def compile_term(tokens, symbol_table, lvl=0):
-        yield f"{' ' * CompilationEngine.TAB_SIZE * lvl}<term>",
+        yield f"{' ' * CompilationEngine.TAB_SIZE * lvl}<term>"
         if isinstance(tokens.peek(), IntegerConstant):
             yield next(tokens).to_xml(lvl + 1)
         elif isinstance(tokens.peek(), StringConstant):
@@ -58,7 +58,7 @@ class CompilationEngine:
             yield CompilationEngine.compile_term(tokens, symbol_table, lvl + 1)
         else:
             raise ValueError(f"invalid token {tokens.peek()}")
-        yield f"{' ' * CompilationEngine.TAB_SIZE * lvl}</term>",
+        yield f"{' ' * CompilationEngine.TAB_SIZE * lvl}</term>"
 
     @staticmethod
     def compile_expression(tokens, symbol_table, lvl=0) -> str:
@@ -166,12 +166,16 @@ class CompilationEngine:
 
             yield next(tokens).to_xml(lvl + 2)  # if
             yield next(tokens).to_xml(lvl + 2)  # (
-            for i in CompilationEngine.compile_expression(tokens, symbol_table, lvl + 2):
+            for i in CompilationEngine.compile_expression(
+                tokens, symbol_table, lvl + 2
+            ):
                 yield i
             yield next(tokens).to_xml(lvl + 2)  # )
 
             yield next(tokens).to_xml(lvl + 2)  # {
-            for i in CompilationEngine.compile_statements(tokens, symbol_table, lvl + 2):
+            for i in CompilationEngine.compile_statements(
+                tokens, symbol_table, lvl + 2
+            ):
                 yield i
             yield next(tokens).to_xml(lvl + 2)  # }
 
