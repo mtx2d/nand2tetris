@@ -1,4 +1,4 @@
-from typing import Dict
+from typing import DefaultDict, Dict
 
 
 class Kind:
@@ -32,14 +32,19 @@ class SymbolTable:
     def __init__(self):
         self.global_table: Dict[str, SymbolTable.Entry] = {}
         self.subroutine_table: Dict[str, SymbolTable.Entry] = {}
+        self.var_count: Dict[Kind, int] = DefaultDict{}
 
     def start_subroutine(self):
         pass
 
-    def define(self, name, type: str, kind: Kind):
-        pass
+    def define(self, name: str, type: str, kind: Kind):
+        if not isinstance(kind, Kind):
+            raise ValueError(f"invalid identifier kind: {kind}")
+        new_entry = SymbolTable.Entry(name, type, kind, self.var_count(kind) + 1)
+        self.global_table[name] =  new_entry
+        self.var_count[kind] += 1
 
-    def var_count(self) -> int:
+    def var_count(self, kind: Kind) -> int:
         pass
 
     def kind_of(self, name: str) -> Kind:
