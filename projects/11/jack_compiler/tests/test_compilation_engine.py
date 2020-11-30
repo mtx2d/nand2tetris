@@ -29,8 +29,37 @@ class TestCompilationEngine(unittest.TestCase):
         )
         mock_symbol_table = mock.Mock()
         vm_instructions = CompilationEngine.compile_statements(mock_tokens, mock_symbol_table)
-        self.assertEqual(next(vm_instructions), "  <statements>")
-        self.assertEqual(next(vm_instructions), "    <ifStatement>")
+        self.assertEqual(next(vm_instructions), f'{" " * 2 * 1}<statements>')
+        self.assertEqual(next(vm_instructions), f'{" " * 2 * 2}<ifStatements>')
+        self.assertEqual(next(vm_instructions), Keyword("if").to_xml(3))
+        self.assertEqual(next(vm_instructions), Symbol("(").to_xml(3))
+        self.assertEqual(next(vm_instructions), f'{" " * 2 * 3}<expression>'),
+        self.assertEqual(next(vm_instructions), f'{" " * 2 * 4}<term>'),
+        self.assertEqual(next(vm_instructions), Identifier("x").to_xml(5)),
+        self.assertEqual(next(vm_instructions), f'{" " * 2 * 4}</term>'),
+        self.assertEqual(next(vm_instructions), Symbol("<").to_xml(4)),
+        self.assertEqual(next(vm_instructions), f'{" " * 2 * 4}<term>'),
+        self.assertEqual(next(vm_instructions), IntegerConstant("153").to_xml(5)),
+        self.assertEqual(next(vm_instructions), f'{" " * 2 * 4}</term>'),
+        self.assertEqual(next(vm_instructions), f'{" " * 2 * 3}</expression>'),
+        self.assertEqual(next(vm_instructions), Symbol(")").to_xml(3)),
+        self.assertEqual(Symbol("{").to_xml(3)),
+        self.assertEqual(f'{" " * 2 * 4}<statements>'),
+        self.assertEqual(f'{" " * 2 * 5}<letStatement>'),
+        self.assertEqual(Keyword("let").to_xml(6)),
+        self.assertEqual(Identifier("city").to_xml(6)),
+        self.assertEqual(Symbol("=").to_xml(6)),
+        self.assertEqual(f'{" " * 2 * 6}<expression>'),
+        self.assertEqual(f'{" " * 2 * 7}<term>'),
+        self.assertEqual(StringConstant("Paris").to_xml(8)),
+        self.assertEqual(f'{" " * 2 * 7}</term>'),
+        self.assertEqual(f'{" " * 2 * 6}</expression>'),
+        self.assertEqual(Symbol(";").to_xml(6)),
+        self.assertEqual(f'{" " * 2 * 5}</letStatement>'),
+        self.assertEqual(f'{" " * 2 * 4}</statements>'),
+        self.assertEqual(Symbol("}").to_xml(3)),
+        self.assertEqual(f'{" " * 2 * 2}</ifStatement>'),
+        self.assertEqual(f'{" " * 2 * 1}</statements>'),
 
     def test_compile_class(self):
         mock_tokens = peekable(
