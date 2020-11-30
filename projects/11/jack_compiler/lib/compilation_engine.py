@@ -132,7 +132,6 @@ class CompilationEngine:
 
     @staticmethod
     def compile_statement(tokens, symbol_table, lvl=0) -> str:
-        print("compile_statement")
         if tokens.peek() == Keyword("let"):
             yield f"{' ' * CompilationEngine.TAB_SIZE * (lvl + 1)}<letStatement>"
 
@@ -141,20 +140,23 @@ class CompilationEngine:
 
             if tokens.peek() == Symbol("="):
                 yield next(tokens).to_xml(lvl + 2)  # "="
-                yield CompilationEngine.compile_expression(
+                for i in CompilationEngine.compile_expression(
                     tokens, symbol_table, lvl + 2
-                )  # expression
+                ):  # expression
+                    yield i
                 yield next(tokens).to_xml(lvl + 2)  # ";"
             elif tokens.peek() == Symbol("["):
                 yield next(tokens).to_xml(lvl + 2)  # [
-                yield CompilationEngine.compile_expression(
+                for i in CompilationEngine.compile_expression(
                     tokens, symbol_table, lvl + 2
-                )  # expression
+                ):  # expression
+                    yield i
                 yield next(tokens).to_xml(lvl + 2)  # "]"
                 yield next(tokens).to_xml(lvl + 2)  # =
-                yield CompilationEngine.compile_expression(
+                for i in CompilationEngine.compile_expression(
                     tokens, symbol_table, lvl + 2
-                )
+                ):
+                    yield i
                 yield next(tokens).to_xml(lvl + 2)  # ;
             else:
                 raise ValueError(f"{tokens.peek()} invalid.")
