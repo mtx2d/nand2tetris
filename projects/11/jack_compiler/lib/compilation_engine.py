@@ -6,11 +6,11 @@ class CompilationEngine:
     TAB_SIZE = 2
 
     @staticmethod
-    def compile_var_dec(tokens, output_file, lvl=0):
+    def compile_var_dec(tokens, symbol_table, lvl=0):
         yield f"{' ' * CompilationEngine.TAB_SIZE * (lvl + 1)}<varDec>"
 
         yield next(tokens).to_xml(lvl=lvl + 2)  # 'var'
-        yield CompilationEngine.compile_type(tokens, output_file, lvl + 2)  # type
+        yield CompilationEngine.compile_type(tokens, symbol_table, lvl + 2)  # type
         yield next(tokens).to_xml(lvl=lvl + 2)  # varName
 
         if tokens.peek() == Symbol(";"):
@@ -61,7 +61,7 @@ class CompilationEngine:
         yield f"{' ' * CompilationEngine.TAB_SIZE * lvl}</term>",
 
     @staticmethod
-    def compile_expression(tokens, output_file, lvl=0):
+    def compile_expression(tokens, symbol_table, lvl=0):
         if tokens.peek() in [
             Symbol("="),
             Symbol(")"),
@@ -73,12 +73,12 @@ class CompilationEngine:
         yield f"{' ' * CompilationEngine.TAB_SIZE * lvl}<expression>"
 
         # caller handles the starting([) and enclosing(]) brackets.
-        yield CompilationEngine.compile_term(tokens, output_file, lvl + 1)
+        yield CompilationEngine.compile_term(tokens, symbol_table, lvl + 1)
         while tokens.peek() in [
             Symbol(x) for x in ["+", "-", "*", "/", "&", "|", "<", ">", "="]
         ]:
             yield next(tokens).to_xml(lvl + 1)
-            yield CompilationEngine.compile_term(tokens, output_file, lvl + 1)
+            yield CompilationEngine.compile_term(tokens, symbol_table, lvl + 1)
         yield f"{' ' * CompilationEngine.TAB_SIZE * lvl}</expression>"
 
     @staticmethod
@@ -215,12 +215,12 @@ class CompilationEngine:
             raise ValueError(f"invalid token: {tokens.peek()}")
 
     @staticmethod
-    def compile_subroutine_body(tokens, output_file, lvl=0):
+    def compile_subroutine_body(tokens, symbol_table, lvl=0):
         yield f"{' ' * CompilationEngine.TAB_SIZE * (lvl + 1)}<subroutineBody>"
 
         yield next(tokens).to_xml(lvl + 2)  # {
         while tokens.peek() == Keyword("var"):
-            yield CompilationEngine.compile_var_dec(tokens, output_file, lvl + 2)
+            yield CompilationEngine.compile_var_dec(tokens, symbol_table, lvl + 2)
         while tokens.peek() in [
             Keyword("let"),
             Keyword("if"),
@@ -228,7 +228,7 @@ class CompilationEngine:
             Keyword("do"),
             Keyword("return"),
         ]:
-            yield CompilationEngine.compile_statements(tokens, output_file, lvl + 2)
+            yield CompilationEngine.compile_statements(tokens, symbol_table, lvl + 2)
         yield next(tokens).to_xml(lvl + 2)
         yield f"{' ' * CompilationEngine.TAB_SIZE * (lvl + 1)}</subroutineBody>"
 
@@ -251,16 +251,16 @@ class CompilationEngine:
         yield f"{' ' * CompilationEngine.TAB_SIZE * (lvl + 1)}</parameterList>"
 
     @staticmethod
-    def compile_subroutine_dec(tokens, output_file, lvl=0):
+    def compile_subroutine_dec(tokens, symbol_table, lvl=0):
         yield f"{' ' * CompilationEngine.TAB_SIZE * (lvl + 1)}<subroutineDec>"
 
         yield next(tokens).to_xml(lvl + 2)  # (constructor | function | method)
-        yield CompilationEngine.compile_type(tokens, output_file)  # type
+        yield CompilationEngine.compile_type(tokens, symbol_table)  # type
         yield next(tokens).to_xml(lvl + 2)  # subroutine_name
         yield next(tokens).to_xml(lvl + 2)  # (
-        yield CompilationEngine.compile_parameter_list(tokens, output_file, lvl + 2)
+        yield CompilationEngine.compile_parameter_list(tokens, symbol_table, lvl + 2)
         yield next(tokens).to_xml(lvl + 2)  # )
-        yield CompilationEngine.compile_subroutine_body(tokens, output_file, lvl + 2)
+        yield CompilationEngine.compile_subroutine_body(tokens, symbol_table, lvl + 2)
 
         yield f"{' ' * CompilationEngine.TAB_SIZE * (lvl + 1)}</subroutineDec>"
 
@@ -268,8 +268,7 @@ class CompilationEngine:
     def compile_class_var_dec(tokens, symbol_table, lvl=0):
         yield f"{' ' * CompilationEngine.TAB_SIZE * (lvl + 1)}<classVarDec>"
         yield next(tokens).to_xml(lvl + 2)  # static|field
-        yield CompilationEngine.compile_type(tokens, symbol_table, lvl + 2)
-        # type
+        yield CompilationEngine.compile_type(tokens, symbol_table, lvl + 2) # type
         yield next(tokens).to_xml(lvl + 2)  # varName
 
         if tokens.peek() == Symbol(";"):
