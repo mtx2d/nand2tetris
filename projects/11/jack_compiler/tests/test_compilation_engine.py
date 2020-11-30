@@ -7,6 +7,40 @@ from lib.compilation_engine import CompilationEngine
 
 
 class TestCompilationEngine(unittest.TestCase):
+    def test_compile_class_seven(self):
+        mock_tokens = peekable(
+            iter(
+                Keyword("class"),
+                Identifier("Main"),
+                Symbol("{"),
+                Keyword("function"),
+                Keyword("void"),
+                Identifier("main"),
+                Symbol("("),
+                Symbol(")"),
+                Symbol("{"),
+                Keyword("do"),
+                Identifier("Output"),
+                Symbol("."),
+                Identifier("printInt"),
+                Symbol("("),
+                IntegerConstant("1"),
+                Symbol("+"),
+                Symbol("("),
+                IntegerConstant("2"),
+                Symbol("*"),
+                IntegerConstant("3"),
+                Symbol(")"),
+                Symbol(")"),
+                Symbol(";"),
+                Keyword("return"),
+                Symbol(";"),
+                Symbol("}"),
+                Symbol("}"),
+            )
+        )
+
+
     def test_compile_statements(self):
         mock_tokens = peekable(
             iter(
