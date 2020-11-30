@@ -75,37 +75,27 @@ class CompilationEngine:
             Symbol(";"),
             Symbol("}"),
         ]:
-            return
-        print(
-            f"{' ' * CompilationEngine.TAB_SIZE * lvl}<expression>",
-            file=output_file,
-        )
+            yield
+        yield f"{' ' * CompilationEngine.TAB_SIZE * lvl}<expression>"
+
         # caller handles the starting([) and enclosing(]) brackets.
-        CompilationEngine.compile_term(tokens, output_file, lvl + 1)
+        yield CompilationEngine.compile_term(tokens, output_file, lvl + 1)
         while tokens.peek() in [
             Symbol(x) for x in ["+", "-", "*", "/", "&", "|", "<", ">", "="]
         ]:
-            print(next(tokens).to_xml(lvl + 1), file=output_file)
-            CompilationEngine.compile_term(tokens, output_file, lvl + 1)
-        print(
-            f"{' ' * CompilationEngine.TAB_SIZE * lvl}</expression>",
-            file=output_file,
-        )
+            yield next(tokens).to_xml(lvl + 1)
+            yield CompilationEngine.compile_term(tokens, output_file, lvl + 1)
+        yield f"{' ' * CompilationEngine.TAB_SIZE * lvl}</expression>"
 
     @staticmethod
-    def compile_expression_list(tokens, output_file, lvl=0):
-        print(
-            f"{' ' * CompilationEngine.TAB_SIZE * lvl}<expressionList>",
-            file=output_file,
-        )
-        CompilationEngine.compile_expression(tokens, output_file, lvl + 1)
+    def compile_expression_list(tokens, symbol_table, lvl=0):
+        yield f"{' ' * CompilationEngine.TAB_SIZE * lvl}<expressionList>"
+
+        yield CompilationEngine.compile_expression(tokens, symbol_table, lvl + 1)
         while tokens.peek() == Symbol(","):
-            print(next(tokens).to_xml(lvl + 1), file=output_file)  # ,
-            CompilationEngine.compile_expression(tokens, output_file, lvl + 1)
-        print(
-            f"{' ' * CompilationEngine.TAB_SIZE * lvl}</expressionList>",
-            file=output_file,
-        )
+            yield next(tokens).to_xml(lvl + 1)  # ,
+            yield CompilationEngine.compile_expression(tokens, symbol_table, lvl + 1)
+        yield f"{' ' * CompilationEngine.TAB_SIZE * lvl}</expressionList>"
 
     @staticmethod
     def compile_subroutine_call(tokens, symbol_table, lvl=0):
@@ -179,65 +169,54 @@ class CompilationEngine:
             yield f"{' ' * CompilationEngine.TAB_SIZE * (lvl + 1)}<ifStatement>",
 
             yield next(tokens).to_xml(lvl + 2)  # if
-            print(next(tokens).to_xml(lvl + 2), file=output_file)  # (
-            CompilationEngine.compile_expression(tokens, output_file, lvl + 2)
-            print(next(tokens).to_xml(lvl + 2), file=output_file)  # )
+            yield next(tokens).to_xml(lvl + 2)  # (
+            yield CompilationEngine.compile_expression(tokens, symbol_table, lvl + 2)
+            yield next(tokens).to_xml(lvl + 2)  # )
 
-            print(next(tokens).to_xml(lvl + 2), file=output_file)  # {
-            CompilationEngine.compile_statements(tokens, output_file, lvl + 2)
-            print(next(tokens).to_xml(lvl + 2), file=output_file)  # }
+            yield next(tokens).to_xml(lvl + 2)  # {
+            yield CompilationEngine.compile_statements(tokens, symbol_table, lvl + 2)
+            yield next(tokens).to_xml(lvl + 2)  # }
 
             if tokens and tokens.peek() == Keyword("else"):
-                print(next(tokens).to_xml(lvl + 2), file=output_file)  # else
-                print(next(tokens).to_xml(lvl + 2), file=output_file)  # {
-                CompilationEngine.compile_statements(tokens, output_file, lvl + 2)
-                print(next(tokens).to_xml(lvl + 2), file=output_file)  # }
-            print(
-                f"{' ' * CompilationEngine.TAB_SIZE * (lvl + 1)}</ifStatement>",
-                file=output_file,
-            )
+                yield next(tokens).to_xml(lvl + 2)  # else
+                yield next(tokens).to_xml(lvl + 2)  # {
+                yield CompilationEngine.compile_statements(
+                    tokens, symbol_table, lvl + 2
+                )
+                yield next(tokens).to_xml(lvl + 2)  # }
+            yield f"{' ' * CompilationEngine.TAB_SIZE * (lvl + 1)}</ifStatement>"
         elif tokens.peek() == Keyword("while"):
-            print(
-                f"{' ' * CompilationEngine.TAB_SIZE * (lvl + 1)}<whileStatement>",
-                file=output_file,
-            )
-            print(next(tokens).to_xml(lvl + 2), file=output_file)  # while
-            print(next(tokens).to_xml(lvl + 2), file=output_file)  # (
-            CompilationEngine.compile_expression(tokens, output_file, lvl + 2)
-            print(next(tokens).to_xml(lvl + 2), file=output_file)  # )
+            yield f"{' ' * CompilationEngine.TAB_SIZE * (lvl + 1)}<whileStatement>"
 
-            print(next(tokens).to_xml(lvl + 2), file=output_file)  # {
-            CompilationEngine.compile_statements(tokens, output_file, lvl + 2)
-            print(next(tokens).to_xml(lvl + 2), file=output_file)  # }
-            print(
-                f"{' ' * CompilationEngine.TAB_SIZE * (lvl + 1)}</whileStatement>",
-                file=output_file,
-            )
+            yield next(tokens).to_xml(lvl + 2)  # while
+            yield next(tokens).to_xml(lvl + 2)  # (
+            yield CompilationEngine.compile_expression(tokens, symbol_table, lvl + 2)
+            yield next(tokens).to_xml(lvl + 2)  # )
+
+            yield next(tokens).to_xml(lvl + 2)  # {
+            yield CompilationEngine.compile_statements(tokens, symbol_table, lvl + 2)
+            yield next(tokens).to_xml(lvl + 2)  # }
+            yield f"{' ' * CompilationEngine.TAB_SIZE * (lvl + 1)}</whileStatement>"
+
         elif tokens.peek() == Keyword("do"):
-            print(
-                f"{' ' * CompilationEngine.TAB_SIZE * (lvl + 1)}<doStatement>",
-                file=output_file,
+            yield f"{' ' * CompilationEngine.TAB_SIZE * (lvl + 1)}<doStatement>"
+
+            yield next(tokens).to_xml(lvl + 2)  # do
+            yield CompilationEngine.compile_subroutine_call(
+                tokens, symbol_table, lvl + 2
             )
-            print(next(tokens).to_xml(lvl + 2), file=output_file)  # do
-            CompilationEngine.compile_subroutine_call(tokens, output_file, lvl + 2)
-            print(next(tokens).to_xml(lvl + 2), file=output_file)  # ;
-            print(
-                f"{' ' * CompilationEngine.TAB_SIZE * (lvl + 1)}</doStatement>",
-                file=output_file,
-            )
+            yield next(tokens).to_xml(lvl + 2)  # ;
+            yield f"{' ' * CompilationEngine.TAB_SIZE * (lvl + 1)}</doStatement>"
         elif tokens.peek() == Keyword("return"):
-            print(
-                f"{' ' * CompilationEngine.TAB_SIZE * (lvl + 1)}<returnStatement>",
-                file=output_file,
-            )
-            print(next(tokens).to_xml(lvl + 1), file=output_file)  # return
+            yield f"{' ' * CompilationEngine.TAB_SIZE * (lvl + 1)}<returnStatement>"
+            yield next(tokens).to_xml(lvl + 1)  # return
             if tokens.peek() != Symbol(";"):
-                CompilationEngine.compile_expression(tokens, output_file, lvl + 2)
-            print(next(tokens).to_xml(lvl + 2), file=output_file)  # ;
-            print(
-                f"{' ' * CompilationEngine.TAB_SIZE * (lvl + 1)}</returnStatement>",
-                file=output_file,
-            )
+                yield CompilationEngine.compile_expression(
+                    tokens, symbol_table, lvl + 2
+                )
+            yield next(tokens).to_xml(lvl + 2)  # ;
+            yield f"{' ' * CompilationEngine.TAB_SIZE * (lvl + 1)}</returnStatement>"
+
         else:
             raise ValueError(f"invalid token: {tokens.peek()}")
 
