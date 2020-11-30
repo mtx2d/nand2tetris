@@ -75,7 +75,8 @@ class CompilationEngine:
             Symbol(";"),
             Symbol("}"),
         ]:
-            yield
+            return
+
         yield f"{' ' * CompilationEngine.TAB_SIZE * lvl}<expression>"
 
         # caller handles the starting([) and enclosing(]) brackets.
@@ -128,7 +129,8 @@ class CompilationEngine:
     @staticmethod
     def compile_statements(tokens, symbol_table, lvl=0) -> str:
         if tokens.peek() == Symbol("}"):
-            yield
+            return
+
         yield f"{' ' * CompilationEngine.TAB_SIZE * (lvl + 1)}<statements>"
 
         while tokens and tokens.peek() in [
