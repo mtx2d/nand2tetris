@@ -20,7 +20,12 @@ class SymbolTable:
 
     def define(self, name: str, type: str, kind: str):
         new_entry = SymbolTable.Entry(name, type, kind, self.var_count(kind) + 1)
-        self.global_table[name] = new_entry
+        if kind in ['static', 'field']:
+            self.global_table[name] = new_entry
+        elif kind in ['arg', 'var']:
+            self.subroutine_table[name] = new_entry
+        else:
+            raise ValueError(f'Unknown kind: {kind}')
         self.var_count[kind] += 1
 
     def var_count(self, kind: str) -> int:
