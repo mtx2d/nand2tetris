@@ -73,12 +73,14 @@ class CompilationEngine:
         yield f"{' ' * CompilationEngine.TAB_SIZE * lvl}<expression>"
 
         # caller handles the starting([) and enclosing(]) brackets.
-        yield CompilationEngine.compile_term(tokens, symbol_table, lvl + 1)
+        for i in CompilationEngine.compile_term(tokens, symbol_table, lvl + 1):
+            yield i
         while tokens.peek() in [
             Symbol(x) for x in ["+", "-", "*", "/", "&", "|", "<", ">", "="]
         ]:
             yield next(tokens).to_xml(lvl + 1)
-            yield CompilationEngine.compile_term(tokens, symbol_table, lvl + 1)
+            for i in CompilationEngine.compile_term(tokens, symbol_table, lvl + 1):
+                yield i
         yield f"{' ' * CompilationEngine.TAB_SIZE * lvl}</expression>"
 
     @staticmethod
@@ -126,13 +128,13 @@ class CompilationEngine:
         ]:
             for i in CompilationEngine.compile_statement(tokens, symbol_table, lvl + 1):
                 yield i
-            yield f"{' ' * CompilationEngine.TAB_SIZE * (lvl + 1)}</statements>",
+            yield f"{' ' * CompilationEngine.TAB_SIZE * (lvl + 1)}</statements>"
 
     @staticmethod
     def compile_statement(tokens, symbol_table, lvl=0) -> str:
         print("compile_statement")
         if tokens.peek() == Keyword("let"):
-            yield f"{' ' * CompilationEngine.TAB_SIZE * (lvl + 1)}<letStatement>",
+            yield f"{' ' * CompilationEngine.TAB_SIZE * (lvl + 1)}<letStatement>"
 
             yield next(tokens).to_xml(lvl + 2)  # let
             yield next(tokens).to_xml(lvl + 2)  # varName
@@ -157,27 +159,29 @@ class CompilationEngine:
             else:
                 raise ValueError(f"{tokens.peek()} invalid.")
 
-            yield f"{' ' * CompilationEngine.TAB_SIZE * (lvl + 1)}</letStatement>",
+            yield f"{' ' * CompilationEngine.TAB_SIZE * (lvl + 1)}</letStatement>"
 
         elif tokens.peek() == Keyword("if"):
-            print("statements_if")
-            yield f"{' ' * CompilationEngine.TAB_SIZE * (lvl + 1)}<ifStatement>",
+            yield f"{' ' * CompilationEngine.TAB_SIZE * (lvl + 1)}<ifStatement>"
 
             yield next(tokens).to_xml(lvl + 2)  # if
             yield next(tokens).to_xml(lvl + 2)  # (
-            yield CompilationEngine.compile_expression(tokens, symbol_table, lvl + 2)
+            for i in CompilationEngine.compile_expression(tokens, symbol_table, lvl + 2):
+                yield i
             yield next(tokens).to_xml(lvl + 2)  # )
 
             yield next(tokens).to_xml(lvl + 2)  # {
-            yield CompilationEngine.compile_statements(tokens, symbol_table, lvl + 2)
+            for i in CompilationEngine.compile_statements(tokens, symbol_table, lvl + 2):
+                yield i
             yield next(tokens).to_xml(lvl + 2)  # }
 
             if tokens and tokens.peek() == Keyword("else"):
                 yield next(tokens).to_xml(lvl + 2)  # else
                 yield next(tokens).to_xml(lvl + 2)  # {
-                yield CompilationEngine.compile_statements(
+                for i in CompilationEngine.compile_statements(
                     tokens, symbol_table, lvl + 2
-                )
+                ):
+                    yield i
                 yield next(tokens).to_xml(lvl + 2)  # }
             yield f"{' ' * CompilationEngine.TAB_SIZE * (lvl + 1)}</ifStatement>"
         elif tokens.peek() == Keyword("while"):
@@ -206,9 +210,10 @@ class CompilationEngine:
             yield f"{' ' * CompilationEngine.TAB_SIZE * (lvl + 1)}<returnStatement>"
             yield next(tokens).to_xml(lvl + 1)  # return
             if tokens.peek() != Symbol(";"):
-                yield CompilationEngine.compile_expression(
+                for i in CompilationEngine.compile_expression(
                     tokens, symbol_table, lvl + 2
-                )
+                ):
+                    yield i
             yield next(tokens).to_xml(lvl + 2)  # ;
             yield f"{' ' * CompilationEngine.TAB_SIZE * (lvl + 1)}</returnStatement>"
 
