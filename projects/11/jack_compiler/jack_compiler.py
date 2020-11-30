@@ -20,6 +20,7 @@ def parse_args(argv):
 
 
 def get_files(path):
+    # return a list of .jack files
     if not path.exists():
         raise FileNotFoundError(f"{path} does not exist.")
     if path.is_file():
@@ -41,12 +42,12 @@ def main(argv):
         symbol_table = SymbolTable(file)
         vm_instructions = CompilationEngine.parse(tokens, symbol_table)
 
-        output_xml = file.parent.joinpath(f"{file.stem}.xml")
-        if output_xml.exists():
-            print(f"{output_xml} already exists, skipping.")
+        output_vm = file.parent.joinpath(f"{file.stem}.vm")
+        if output_vm.exists():
+            print(f"{output_vm} already exists, skipping.")
             continue
 
-        with open(output_xml, "w") as of:
+        with open(output_vm, "w") as of:
             for instruction in vm_instructions:
                 print(instruction, file=of)
 
