@@ -40,6 +40,10 @@ class TestCompilationEngine(unittest.TestCase):
             )
         )
 
+        mock_symbol_table = mock.Mock()
+        vm_insts = CompilationEngine.compile_class(mock_tokens, mock_symbol_table)
+
+        self.assertEqual(next(vm_insts), f'{" " * 2 * 1}<class>')
 
     def test_compile_statements(self):
         mock_tokens = peekable(

@@ -331,7 +331,9 @@ class CompilationEngine:
     def compile_class(tokens, symbol_table, lvl=0):
         yield f"{' ' * CompilationEngine.TAB_SIZE * lvl}<class>"
         yield next(tokens).to_xml(lvl + 1)  # class
-        yield next(tokens).to_xml(lvl + 1)  # className
+        class_name = next(tokens)  # className
+        symbol_table.add(class_name)
+        print(class_name.to_xml(lvl + 1))
         yield next(tokens).to_xml(lvl + 1)  # (
         while tokens.peek() in [Keyword("static"), Keyword("field")]:
             for i in CompilationEngine.compile_class_var_dec(

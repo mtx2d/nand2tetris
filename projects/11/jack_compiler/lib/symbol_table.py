@@ -1,11 +1,23 @@
 from typing import Dict
 
 
-class Type:
+class Kind:
     pass
 
 
-class Kind:
+class Static(Kind):
+    pass
+
+
+class Field(Kind):
+    pass
+
+
+class Arg(Kind):
+    pass
+
+
+class Var(Kind):
     pass
 
 
@@ -13,7 +25,7 @@ class SymbolTable:
     class Entry:
         def __init__(self, name, type, kind, index):
             self.name: str = name
-            self.type: Type = type
+            self.type: str = type
             self.kind: Kind = kind
             self.index: int = index
 
@@ -24,7 +36,7 @@ class SymbolTable:
     def start_subroutine(self):
         pass
 
-    def define(self):
+    def define(self, name, type: str, kind: Kind):
         pass
 
     def var_count(self) -> int:
@@ -33,7 +45,7 @@ class SymbolTable:
     def kind_of(self, name: str) -> Kind:
         pass
 
-    def type_of(self, name: str) -> Type:
+    def type_of(self, name: str) -> str:
         pass
 
     def index_of(self, name: str) -> int:
