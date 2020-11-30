@@ -61,7 +61,7 @@ class CompilationEngine:
         yield f"{' ' * CompilationEngine.TAB_SIZE * lvl}</term>",
 
     @staticmethod
-    def compile_expression(tokens, symbol_table, lvl=0):
+    def compile_expression(tokens, symbol_table, lvl=0) -> str:
         if tokens.peek() in [
             Symbol("="),
             Symbol(")"),
@@ -112,10 +112,10 @@ class CompilationEngine:
             raise ValueError(f"invalid token: {tokens.peek()}")
 
     @staticmethod
-    def compile_statements(tokens, symbol_table, lvl=0):
+    def compile_statements(tokens, symbol_table, lvl=0) -> str:
         if tokens.peek() == Symbol("}"):
             yield
-        yield f"{' ' * CompilationEngine.TAB_SIZE * (lvl + 1)}<statements>",
+        yield f"{' ' * CompilationEngine.TAB_SIZE * (lvl + 1)}<statements>"
 
         while tokens and tokens.peek() in [
             Keyword("let"),
@@ -124,13 +124,13 @@ class CompilationEngine:
             Keyword("while"),
             Keyword("return"),
         ]:
-            yield next(
-                CompilationEngine.compile_statement(tokens, symbol_table, lvl + 1)
-            )
+            for i in CompilationEngine.compile_statement(tokens, symbol_table, lvl + 1):
+                yield i
             yield f"{' ' * CompilationEngine.TAB_SIZE * (lvl + 1)}</statements>",
 
     @staticmethod
-    def compile_statement(tokens, symbol_table, lvl=0):
+    def compile_statement(tokens, symbol_table, lvl=0) -> str:
+        print("compile_statement")
         if tokens.peek() == Keyword("let"):
             yield f"{' ' * CompilationEngine.TAB_SIZE * (lvl + 1)}<letStatement>",
 
@@ -160,6 +160,7 @@ class CompilationEngine:
             yield f"{' ' * CompilationEngine.TAB_SIZE * (lvl + 1)}</letStatement>",
 
         elif tokens.peek() == Keyword("if"):
+            print("statements_if")
             yield f"{' ' * CompilationEngine.TAB_SIZE * (lvl + 1)}<ifStatement>",
 
             yield next(tokens).to_xml(lvl + 2)  # if

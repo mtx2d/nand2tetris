@@ -28,8 +28,9 @@ class TestCompilationEngine(unittest.TestCase):
             )
         )
         mock_symbol_table = mock.Mock()
-        CompilationEngine.compile_statements(mock_tokens, mock_symbol_table)
-        mock_symbol_table.return_value
+        vm_instructions = CompilationEngine.compile_statements(mock_tokens, mock_symbol_table)
+        self.assertEqual(next(vm_instructions), "  <statements>")
+        self.assertEqual(next(vm_instructions), "    <ifStatement>")
 
     def test_compile_class(self):
         mock_tokens = peekable(
