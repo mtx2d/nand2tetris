@@ -7,6 +7,9 @@ from .vm_writer import VMWriter
 class CompilationEngine:
     TAB_SIZE = 2
 
+    def __init__(self):
+        self.class_name: str = None
+
     @staticmethod
     def compile_var_dec(tokens, symbol_table, lvl=0):
 
@@ -303,9 +306,7 @@ class CompilationEngine:
         ):
             yield i
 
-    @staticmethod
-    def compile_class_var_dec(tokens, symbol_table, lvl=0):
-        yield f"{' ' * CompilationEngine.TAB_SIZE * (lvl + 1)}<classVarDec>"
+    def compile_class_var_dec(self, tokens, symbol_table, lvl=0):
         yield next(tokens).to_xml(lvl + 2)  # static|field
         for i in CompilationEngine.compile_type(tokens, symbol_table, lvl + 2):  # type
             yield i
@@ -322,11 +323,10 @@ class CompilationEngine:
             raise ValueError(f"invalid token: {tokens.peek()}")
         yield f"{' ' * CompilationEngine.TAB_SIZE * (lvl + 1)}</classVarDec>"
 
-    @staticmethod
-    def compile_class(tokens, symbol_table: SymbolTable, lvl=0):
-        yield next(tokens).to_xml(lvl + 1)  # class
-        class_name = next(tokens)  # className
-        yield next(tokens).to_xml(lvl + 1)  # (
+    def compile_class(self, tokens, symbol_table: SymbolTable, lvl=0):
+        next(tokens).to_xml(lvl + 1)  # class
+        self.class_name = next(tokens)  # className
+        next(tokens).to_xml(lvl + 1)  # (
         while tokens.peek() in [Keyword("static"), Keyword("field")]:
             for i in CompilationEngine.compile_class_var_dec(
                 tokens, symbol_table, lvl + 1
@@ -343,8 +343,7 @@ class CompilationEngine:
             ):
                 yield i
 
-        yield next(tokens).to_xml(lvl + 1)  # )
+        next(tokens).to_xml(lvl + 1)  # )
 
-    @staticmethod
-    def parse(tokens, symbol_table):
+    def parse(self, tokens, symbol_table):
         yield CompilationEngine.compile_class(tokens, symbol_table, lvl=1)

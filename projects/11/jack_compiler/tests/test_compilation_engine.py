@@ -4,6 +4,7 @@ from unittest import mock
 from more_itertools import peekable
 from lib.jack_token import Keyword, Symbol, Identifier, IntegerConstant, StringConstant
 from lib.compilation_engine import CompilationEngine
+from lib.symbol_table import SymbolTable
 
 
 class TestCompilationEngine(unittest.TestCase):
@@ -42,8 +43,9 @@ class TestCompilationEngine(unittest.TestCase):
             )
         )
 
-        mock_symbol_table = mock.Mock()
-        vm_insts = CompilationEngine.compile_class(mock_tokens, mock_symbol_table)
+        engine = CompilationEngine("Main.jack")
+
+        vm_insts = engine.compile_class(mock_tokens, SymbolTable())
 
         self.assertEqual(next(vm_insts), "function Main.main 0")
         self.assertEqual(next(vm_insts), "push constant 1")
