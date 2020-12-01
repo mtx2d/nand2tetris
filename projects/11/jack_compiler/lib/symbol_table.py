@@ -1,4 +1,5 @@
 from collections import defaultdict
+from enum import Enum
 from typing import DefaultDict, Dict
 
 
@@ -10,6 +11,12 @@ class SymbolTable:
             self.kind: str = kind
             self.index: int = index
 
+    class Kind(Enum):
+        STATIC = 1
+        FIELD = 2
+        VAR = 3
+        ARG = 4
+
     def __init__(self):
         self.global_table: Dict[str, SymbolTable.Entry] = {}
         self.subroutine_table: Dict[str, SymbolTable.Entry] = {}
@@ -20,12 +27,19 @@ class SymbolTable:
 
     def define(self, name: str, type: str, kind: str):
         new_entry = SymbolTable.Entry(name, type, kind, self.var_count(kind) + 1)
-        if kind in ['static', 'field']:
+        # symbol exist, new definition overrides old definition
+        if kind in ["static", "field"]:
             self.global_table[name] = new_entry
-        elif kind in ['arg', 'var']:
+        elif kind in ["arg", "var"]:
             self.subroutine_table[name] = new_entry
         else:
-            raise ValueError(f'Unknown kind: {kind}')
+            raise ValueError(f"Unknown kind: {kind}")
+
+        if name in self.global_table:
+            return
+        if name in self.subroutine_table:
+            return
+        # symbol does not exist before add count
         self.var_count[kind] += 1
 
     def var_count(self, kind: str) -> int:

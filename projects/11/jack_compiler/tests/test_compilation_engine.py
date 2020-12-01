@@ -10,40 +10,51 @@ class TestCompilationEngine(unittest.TestCase):
     def test_compile_class_seven(self):
         mock_tokens = peekable(
             iter(
-                Keyword("class"),
-                Identifier("Main"),
-                Symbol("{"),
-                Keyword("function"),
-                Keyword("void"),
-                Identifier("main"),
-                Symbol("("),
-                Symbol(")"),
-                Symbol("{"),
-                Keyword("do"),
-                Identifier("Output"),
-                Symbol("."),
-                Identifier("printInt"),
-                Symbol("("),
-                IntegerConstant("1"),
-                Symbol("+"),
-                Symbol("("),
-                IntegerConstant("2"),
-                Symbol("*"),
-                IntegerConstant("3"),
-                Symbol(")"),
-                Symbol(")"),
-                Symbol(";"),
-                Keyword("return"),
-                Symbol(";"),
-                Symbol("}"),
-                Symbol("}"),
+                [
+                    Keyword("class"),
+                    Identifier("Main"),
+                    Symbol("{"),
+                    Keyword("function"),
+                    Keyword("void"),
+                    Identifier("main"),
+                    Symbol("("),
+                    Symbol(")"),
+                    Symbol("{"),
+                    Keyword("do"),
+                    Identifier("Output"),
+                    Symbol("."),
+                    Identifier("printInt"),
+                    Symbol("("),
+                    IntegerConstant("1"),
+                    Symbol("+"),
+                    Symbol("("),
+                    IntegerConstant("2"),
+                    Symbol("*"),
+                    IntegerConstant("3"),
+                    Symbol(")"),
+                    Symbol(")"),
+                    Symbol(";"),
+                    Keyword("return"),
+                    Symbol(";"),
+                    Symbol("}"),
+                    Symbol("}"),
+                ]
             )
         )
 
         mock_symbol_table = mock.Mock()
         vm_insts = CompilationEngine.compile_class(mock_tokens, mock_symbol_table)
 
-        self.assertEqual(next(vm_insts), f'{" " * 2 * 1}<class>')
+        self.assertEqual(next(vm_insts), "function Main.main 0")
+        self.assertEqual(next(vm_insts), "push constant 1")
+        self.assertEqual(next(vm_insts), "push constant 2")
+        self.assertEqual(next(vm_insts), "push constant 3")
+        self.assertEqual(next(vm_insts), "call Math.multiply 2")
+        self.assertEqual(next(vm_insts), "add")
+        self.assertEqual(next(vm_insts), "call Output.printInt 1")
+        self.assertEqual(next(vm_insts), "pop temp 0")
+        self.assertEqual(next(vm_insts), "push constant 0")
+        self.assertEqual(next(vm_insts), "return")
 
     def test_compile_statements(self):
         mock_tokens = peekable(
