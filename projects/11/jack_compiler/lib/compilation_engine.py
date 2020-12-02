@@ -36,8 +36,8 @@ class CompilationEngine:
     def compile_term(self, tokens, symbol_table, lvl=0):
         if isinstance(tokens.peek(), IntegerConstant):
             # consume int constant
-            num = next(tokens).val
-            yield f"push constant {num}"
+            num = next(tokens)
+            yield f"push constant {num.val}"
         elif isinstance(tokens.peek(), StringConstant):
             # consume string constant
             string = next(tokens)
@@ -94,7 +94,12 @@ class CompilationEngine:
             for i in self.compile_expression(tokens, symbol_table, lvl + 1):
                 yield i
         if op:
-            yield f"{op}"
+            if op.val == "+":
+                yield f"add"
+            elif op.val == "*":
+                yield f"call Math.multiply 2"
+            else:
+                raise ValueError("Operator not supported: {op}")
 
     def compile_expression_list(self, tokens, symbol_table, lvl=0):
 
@@ -203,13 +208,12 @@ class CompilationEngine:
                 yield i
             next(tokens)  # ;
         elif tokens.peek() == Keyword("return"):
-            yield f"{' ' * self.TAB_SIZE * (lvl + 1)}<returnStatement>"
-            yield next(tokens).to_xml(lvl + 1)  # return
+            # TODO: handle return; keep state for sub_method return type
+            next(tokens)  # return
             if tokens.peek() != Symbol(";"):
                 for i in self.compile_expression(tokens, symbol_table, lvl + 2):
                     yield i
-            yield next(tokens).to_xml(lvl + 2)  # ;
-            yield f"{' ' * self.TAB_SIZE * (lvl + 1)}</returnStatement>"
+            next(tokens).to_xml(lvl + 2)  # ;
 
         else:
             raise ValueError(f"invalid token: {tokens.peek()}")
@@ -229,7 +233,7 @@ class CompilationEngine:
         ]:
             for i in self.compile_statements(tokens, symbol_table, lvl + 2):
                 yield i
-        yield next(tokens).to_xml(lvl + 2)  # }
+        next(tokens).to_xml(lvl + 2)  # }
 
     def compile_type(self, tokens, symbol_table, lvl=0):
         yield next(tokens).to_xml(lvl + 1)
@@ -267,10 +271,9 @@ class CompilationEngine:
             yield i
 
     def compile_class_var_dec(self, tokens, symbol_table, lvl=0):
-        yield next(tokens).to_xml(lvl + 2)  # static|field
-        for i in self.compile_type(tokens, symbol_table, lvl + 2):  # type
-            yield i
-        yield next(tokens).to_xml(lvl + 2)  # varName
+        scope = next(tokens).to_xml(lvl + 2)  # static|field
+        type = next(tokens)  # static|field
+        var_name = next(tokens).to_xml(lvl + 2)  # varName
 
         if tokens.peek() == Symbol(";"):
             yield next(tokens).to_xml(lvl + 2)
