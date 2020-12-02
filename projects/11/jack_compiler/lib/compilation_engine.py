@@ -36,12 +36,16 @@ class CompilationEngine:
     def compile_term(self, tokens, symbol_table, lvl=0):
         if isinstance(tokens.peek(), IntegerConstant):
             # consume int constant
-            next(tokens).to_xml(lvl + 1)
+            num = next(tokens).val
+            yield f"push constant {num}"
         elif isinstance(tokens.peek(), StringConstant):
             # consume string constant
-            next(tokens).to_xml(lvl + 1)
+            string = next(tokens)
+            yield f"Sys.alloc({len(string)})"
+            for s in string:
+                yield f"push {s}"
         elif isinstance(tokens.peek(), Keyword):
-            # consume keyword constant
+            # consume keyword constant (true/false/null)
             next(tokens).to_xml(lvl + 1)
         elif isinstance(tokens.peek(), Identifier):
             if tokens[1] == Symbol("["):
@@ -49,18 +53,19 @@ class CompilationEngine:
                 next(tokens).to_xml(lvl + 1)  # [
                 for i in self.compile_expression(tokens, symbol_table, lvl + 1):
                     yield i
-                yield next(tokens).to_xml(lvl + 1)  # ]
+                next(tokens).to_xml(lvl + 1)  # ]
             elif tokens[1] in [Symbol("("), Symbol(".")]:
                 # subRoutineCall
                 for i in self.compile_subroutine_call(tokens, symbol_table, lvl + 1):
                     yield i
             else:
-                yield next(tokens).to_xml(lvl + 1)  # varName
+                var_name = next(tokens).to_xml(lvl + 1)  # varName
+                yield f"push {var_name}"
         elif tokens.peek() == Symbol("("):
-            yield next(tokens).to_xml(lvl + 1)  # (
+            next(tokens).to_xml(lvl + 1)  # (
             for i in self.compile_expression(tokens, symbol_table, lvl + 1):
                 yield i
-            yield next(tokens).to_xml(lvl + 1)  # )
+            next(tokens).to_xml(lvl + 1)  # )
         elif tokens.peek() in [Symbol("-"), Symbol("~")]:
             yield next(tokens).to_xml(lvl + 1)
             for i in self.compile_term(tokens, symbol_table, lvl + 1):
@@ -81,38 +86,39 @@ class CompilationEngine:
         # caller handles the starting([) and enclosing(]) brackets.
         for i in self.compile_term(tokens, symbol_table, lvl + 1):
             yield i
-        while tokens.peek() in [
+        op = None
+        if tokens.peek() in [
             Symbol(x) for x in ["+", "-", "*", "/", "&", "|", "<", ">", "="]
         ]:
-            next(tokens).to_xml(lvl + 1)  # op
-            for i in self.compile_term(tokens, symbol_table, lvl + 1):
+            op = next(tokens)  # op
+            for i in self.compile_expression(tokens, symbol_table, lvl + 1):
                 yield i
+        if op:
+            yield f"{op}"
 
     def compile_expression_list(self, tokens, symbol_table, lvl=0):
-        yield f"{' ' * self.TAB_SIZE * lvl}<expressionList>"
 
         for i in self.compile_expression(tokens, symbol_table, lvl + 1):
             yield i
         while tokens.peek() == Symbol(","):
-            yield next(tokens).to_xml(lvl + 1)  # ,
+            next(tokens).to_xml(lvl + 1)  # ,
             for i in self.compile_expression(tokens, symbol_table, lvl + 1):
                 yield i
-        yield f"{' ' * self.TAB_SIZE * lvl}</expressionList>"
 
     def compile_subroutine_call(self, tokens, symbol_table, lvl=0):
-        yield next(tokens).to_xml(lvl + 1)  # subroutine name | (className | varName)
+        next(tokens)  # subroutine name | (className | varName)
         if tokens.peek() == Symbol("("):
-            yield next(tokens).to_xml(lvl + 1)  # (
+            next(tokens).to_xml(lvl + 1)  # (
             for i in self.compile_expression_list(tokens, symbol_table, lvl + 1):
                 yield i
-            yield next(tokens).to_xml(lvl + 1)  # )
+            next(tokens).to_xml(lvl + 1)  # )
         elif tokens.peek() == Symbol("."):
-            yield next(tokens).to_xml(lvl + 1)  # .
-            yield next(tokens).to_xml(lvl + 1)  # subroutineName
-            yield next(tokens).to_xml(lvl + 1)  # (
+            next(tokens).to_xml(lvl + 1)  # .
+            sub_routine_name = next(tokens)  # subroutineName
+            next(tokens).to_xml(lvl + 1)  # (
             for i in self.compile_expression_list(tokens, symbol_table, lvl + 1):
                 yield i
-            yield next(tokens).to_xml(lvl + 1)  # )
+            next(tokens).to_xml(lvl + 1)  # )
         else:
             raise ValueError(f"invalid token: {tokens.peek()}")
 
@@ -192,13 +198,10 @@ class CompilationEngine:
             yield f"{' ' * self.TAB_SIZE * (lvl + 1)}</whileStatement>"
 
         elif tokens.peek() == Keyword("do"):
-            yield f"{' ' * self.TAB_SIZE * (lvl + 1)}<doStatement>"
-
-            yield next(tokens).to_xml(lvl + 2)  # do
+            next(tokens)  # do
             for i in self.compile_subroutine_call(tokens, symbol_table, lvl + 2):
                 yield i
-            yield next(tokens).to_xml(lvl + 2)  # ;
-            yield f"{' ' * self.TAB_SIZE * (lvl + 1)}</doStatement>"
+            next(tokens)  # ;
         elif tokens.peek() == Keyword("return"):
             yield f"{' ' * self.TAB_SIZE * (lvl + 1)}<returnStatement>"
             yield next(tokens).to_xml(lvl + 1)  # return
@@ -282,7 +285,7 @@ class CompilationEngine:
 
     def compile_class(self, tokens, symbol_table: SymbolTable, lvl=0):
         next(tokens).to_xml(lvl + 1)  # class
-        self.class_name = next(tokens)  # className
+        self.class_name = next(tokens).val  # className
         next(tokens).to_xml(lvl + 1)  # (
         while tokens.peek() in [Keyword("static"), Keyword("field")]:
             for i in self.compile_class_var_dec(tokens, symbol_table, lvl + 1):
@@ -294,7 +297,7 @@ class CompilationEngine:
             Keyword("method"),
         ]:
             for i in self.compile_subroutine_dec(
-                tokens, symbol_table, lvl  # TODO fix this indentation bug
+                tokens, symbol_table, lvl  # TODO fix this indentation bug lvl + 1
             ):
                 yield i
 

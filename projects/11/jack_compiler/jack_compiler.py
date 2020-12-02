@@ -40,7 +40,7 @@ def main(argv):
     for file in get_files(source_path):
         tokens = peekable(Tokenizer.parse(file))
         symbol_table = SymbolTable(file)
-        vm_instructions = CompilationEngine.parse(tokens, symbol_table)
+        vm_instructions = CompilationEngine(file).parse(tokens, symbol_table)
 
         output_vm = file.parent.joinpath(f"{file.stem}.vm")
         if output_vm.exists():
