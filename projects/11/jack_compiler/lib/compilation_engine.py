@@ -126,6 +126,7 @@ class CompilationEngine:
             next(tokens).to_xml(lvl + 1)  # )
         else:
             raise ValueError(f"invalid token: {tokens.peek()}")
+        yield f"call Output.printInt 1"
 
     def compile_statements(self, tokens, symbol_table, lvl=0) -> str:
         if tokens.peek() == Symbol("}"):
@@ -213,11 +214,9 @@ class CompilationEngine:
             if tokens.peek() != Symbol(";"):
                 for i in self.compile_expression(tokens, symbol_table, lvl + 2):
                     yield i
-            # if return type is not void:
-            #       push result to the global stack
-            # else when return type is not void:
-            #
 
+            yield "pop temp 0"
+            yield "push constant 0"
             yield "return"
             next(tokens).to_xml(lvl + 2)  # ;
 
@@ -275,6 +274,7 @@ class CompilationEngine:
         next(tokens).to_xml(lvl + 2)  # )
         for i in self.compile_subroutine_body(tokens, symbol_table, lvl + 2):
             yield i
+        yield f"call {sub_routine_name.val} 1"
 
     def compile_class_var_dec(self, tokens, symbol_table, lvl=0):
         scope = next(tokens).to_xml(lvl + 2)  # static|field
