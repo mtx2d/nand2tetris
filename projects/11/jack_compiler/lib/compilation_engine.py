@@ -208,6 +208,8 @@ class CompilationEngine:
             for i in self.compile_subroutine_call(tokens, symbol_table, lvl + 2):
                 yield i
             next(tokens)  # ;
+            # if invoked a void sub_routine
+            yield "pop temp 0"
         elif tokens.peek() == Keyword("return"):
             # TODO: handle return; keep state for sub_method return type
             next(tokens)  # return
@@ -215,7 +217,7 @@ class CompilationEngine:
                 for i in self.compile_expression(tokens, symbol_table, lvl + 2):
                     yield i
 
-            yield "pop temp 0"
+            # if this sub_routine itself return void
             yield "push constant 0"
             yield "return"
             next(tokens).to_xml(lvl + 2)  # ;
