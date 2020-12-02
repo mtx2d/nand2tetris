@@ -213,6 +213,12 @@ class CompilationEngine:
             if tokens.peek() != Symbol(";"):
                 for i in self.compile_expression(tokens, symbol_table, lvl + 2):
                     yield i
+            # if return type is not void:
+            #       push result to the global stack
+            # else when return type is not void:
+            #
+
+            yield "return"
             next(tokens).to_xml(lvl + 2)  # ;
 
         else:
