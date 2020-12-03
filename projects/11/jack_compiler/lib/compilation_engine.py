@@ -10,6 +10,9 @@ class CompilationEngine:
     def __init__(self, srouce_file_name):
         self.source_file_name = srouce_file_name
         self.class_name: str = None
+        self.subroutine_name: str = None
+        self.subroutine_kind: str = None
+        self.sub_routine_return_type: str = None
 
     @staticmethod
     def compile_var_dec(tokens, symbol_table, lvl=0):
@@ -261,22 +264,18 @@ class CompilationEngine:
     def compile_subroutine_dec(self, tokens, symbol_table, lvl=0):
 
         symbol_table.start_subroutine()
-        sub_routine_keyword = next(tokens)  # (constructor | function | method)
-        return_type = next(tokens)  # void | int | String
-        sub_routine_name = next(tokens)  # subroutine_name
+        self.sub_routine_kind = next(tokens)  # (constructor | function | method)
+        self.sub_routine_return_type = next(tokens)  # void | int | String
+        self.sub_routine_name = next(tokens)  # subroutine_name
 
         next(tokens).to_xml(lvl + 2)  # (
         symbol_count_base = sum(symbol_table.var_count.values())
         for i in self.compile_parameter_list(tokens, symbol_table, lvl + 2):
             yield i
 
-        assert self.class_name is not None
-        yield f"{sub_routine_keyword.val} {self.class_name}.{sub_routine_name.val} {sum(symbol_table.var_count.values()) - symbol_count_base}"
-
         next(tokens).to_xml(lvl + 2)  # )
         for i in self.compile_subroutine_body(tokens, symbol_table, lvl + 2):
             yield i
-        yield f"call {sub_routine_name.val} 1"
 
     def compile_class_var_dec(self, tokens, symbol_table, lvl=0):
         scope = next(tokens).to_xml(lvl + 2)  # static|field
@@ -306,10 +305,15 @@ class CompilationEngine:
             Keyword("function"),
             Keyword("method"),
         ]:
-            for i in self.compile_subroutine_dec(
-                tokens, symbol_table, lvl  # TODO fix this indentation bug lvl + 1
-            ):
+            sub_routine_insts = self.compile_subroutine_dec(
+                tokens, symbol_table, lvl + 1
+            )
+
+            yield f"{self.subroutine_kind} {self.class_name}.{self.sub_routine_name} {sum(symbol_table.var_count.values()) - symbol_count_base}"
+
+            for i in sub_routine_insts:
                 yield i
+            yield f"call {self.sub_routine_name} 1"
 
         next(tokens).to_xml(lvl + 1)  # )
 
