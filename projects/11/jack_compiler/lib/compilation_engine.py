@@ -110,27 +110,27 @@ class CompilationEngine:
         for i in self.compile_expression(tokens, symbol_table, lvl + 1):
             yield i
         while tokens.peek() == Symbol(","):
-            next(tokens).to_xml(lvl + 1)  # ,
+            next(tokens)  # ,
             for i in self.compile_expression(tokens, symbol_table, lvl + 1):
                 yield i
 
     def compile_subroutine_call(self, tokens, symbol_table, lvl=0):
-        next(tokens)  # subroutine name | (className | varName)
-        if tokens.peek() == Symbol("("):
-            next(tokens).to_xml(lvl + 1)  # (
-            for i in self.compile_expression_list(tokens, symbol_table, lvl + 1):
-                yield i
-            next(tokens).to_xml(lvl + 1)  # )
-        elif tokens.peek() == Symbol("."):
-            next(tokens).to_xml(lvl + 1)  # .
-            sub_routine_name = next(tokens)  # subroutineName
-            next(tokens).to_xml(lvl + 1)  # (
-            for i in self.compile_expression_list(tokens, symbol_table, lvl + 1):
-                yield i
-            next(tokens).to_xml(lvl + 1)  # )
+        name = next(tokens).val  # subroutine name | (className | varName)
+
+        method_name = None
+        if tokens.peek() == Symbol("."):
+            next(tokens)  # .
+            method_name = next(tokens).val  # subroutineName
+
+        next(tokens)  # (
+        for i in self.compile_expression_list(tokens, symbol_table, lvl + 1):
+            yield i
+        next(tokens)  # )
+
+        if method_name:
+            yield f"call {name}.{method_name} {0}"
         else:
-            raise ValueError(f"invalid token: {tokens.peek()}")
-        yield f"call Output.printInt 1"
+            yield f"call {name} {0}"
 
     def compile_statements(self, tokens, symbol_table, lvl=0) -> str:
         if tokens.peek() == Symbol("}"):
