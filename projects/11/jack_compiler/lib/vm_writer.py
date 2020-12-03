@@ -29,7 +29,7 @@ class VMWriter:
         pass
 
     def write_push(segment: Segment):
-        pass
+        return "\n".join(f"push {segment} ")
 
     def write_pop(segment: Segment):
         pass

@@ -10,25 +10,24 @@ class CompilationEngine:
     def __init__(self, srouce_file_name):
         self.source_file_name = srouce_file_name
         self.class_name: str = None
-        self.subroutine_name: str = None
-        self.subroutine_kind: str = None
+        self.sub_routine_name: str = None
+        self.sub_routine_kind: str = None
         self.sub_routine_return_type: str = None
 
-    @staticmethod
-    def compile_var_dec(tokens, symbol_table, lvl=0):
-
-        next(tokens).to_xml(lvl=lvl + 2)  # 'var'
+    def compile_var_dec(self, tokens, symbol_table, lvl=0):
+        print("DEBUG, compile_var_dec")
+        next(tokens)  # 'var'
         type = next(tokens)  # type
         var_name = next(tokens).to_xml(lvl=lvl + 2)  # varName
-        symbol_table.define(var_name, type, SymbolTable.Kind.VAR)
+        symbol_table.define(var_name, type, "var")
 
         if tokens.peek() == Symbol(";"):
-            next(tokens).to_xml(lvl + 2)
+            next(tokens)
         elif tokens.peek() == Symbol(","):
             while tokens.peek() != Symbol(";"):
-                comma = next(tokens).to_xml(lvl + 2)  # ,
-                var_name = next(tokens).to_xml(lvl + 2)  # varName
-                symbol_table.define(var_name, type, SymbolTable.Kind.VAR)
+                next(tokens)  # ,
+                var_name = next(tokens).val  # varName
+                symbol_table.define(var_name, type, "var")
                 for i in VMWriter.write_push("local"):
                     yield i
 
@@ -229,10 +228,10 @@ class CompilationEngine:
             raise ValueError(f"invalid token: {tokens.peek()}")
 
     def compile_subroutine_body(self, tokens, symbol_table, lvl=0):
-
-        next(tokens).to_xml(lvl + 2)  # {
-        while tokens.peek() == Keyword(SymbolTable.Kind.VAR):
-            self.compile_var_dec(tokens, symbol_table, lvl + 2)
+        next(tokens)  # {
+        while tokens.peek() == Keyword("var"):
+            for i in self.compile_var_dec(tokens, symbol_table, lvl + 2):
+                yield i
 
         while tokens.peek() in [
             Keyword("let"),
@@ -262,14 +261,12 @@ class CompilationEngine:
             yield next(tokens).to_xml(lvl + 2)  # varName
 
     def compile_subroutine_dec(self, tokens, symbol_table, lvl=0):
-
         symbol_table.start_subroutine()
-        self.sub_routine_kind = next(tokens)  # (constructor | function | method)
-        self.sub_routine_return_type = next(tokens)  # void | int | String
-        self.sub_routine_name = next(tokens)  # subroutine_name
+        self.sub_routine_kind = next(tokens).val  # (constructor | function | method)
+        self.sub_routine_return_type = next(tokens).val  # void | int | String
+        self.sub_routine_name = next(tokens).val  # subroutine_name
 
         next(tokens).to_xml(lvl + 2)  # (
-        symbol_count_base = sum(symbol_table.var_count.values())
         for i in self.compile_parameter_list(tokens, symbol_table, lvl + 2):
             yield i
 
@@ -295,7 +292,7 @@ class CompilationEngine:
     def compile_class(self, tokens, symbol_table: SymbolTable, lvl=0):
         next(tokens).to_xml(lvl + 1)  # class
         self.class_name = next(tokens).val  # className
-        next(tokens).to_xml(lvl + 1)  # (
+        next(tokens).to_xml(lvl + 1)  # {
         while tokens.peek() in [Keyword("static"), Keyword("field")]:
             for i in self.compile_class_var_dec(tokens, symbol_table, lvl + 1):
                 yield i
@@ -305,17 +302,17 @@ class CompilationEngine:
             Keyword("function"),
             Keyword("method"),
         ]:
-            sub_routine_insts = self.compile_subroutine_dec(
-                tokens, symbol_table, lvl + 1
-            )
+            sub_routine_insts = [
+                *self.compile_subroutine_dec(tokens, symbol_table, lvl + 1)
+            ]
 
-            yield f"{self.subroutine_kind} {self.class_name}.{self.sub_routine_name} {sum(symbol_table.var_count.values()) - symbol_count_base}"
+            yield f"{self.sub_routine_kind} {self.class_name}.{self.sub_routine_name} {sum(symbol_table.var_count.values())}"
 
             for i in sub_routine_insts:
                 yield i
             yield f"call {self.sub_routine_name} 1"
 
-        next(tokens).to_xml(lvl + 1)  # )
+        next(tokens).to_xml(lvl + 1)  # }
 
     def parse(self, tokens, symbol_table):
         yield self.compile_class(tokens, symbol_table, lvl=1)
