@@ -15,7 +15,6 @@ class CompilationEngine:
         self.sub_routine_return_type: str = None
 
     def compile_var_dec(self, tokens, symbol_table, lvl=0):
-        print("DEBUG, compile_var_dec")
         next(tokens)  # 'var'
         type = next(tokens)  # type
         var_name = next(tokens).to_xml(lvl=lvl + 2)  # varName
@@ -69,9 +68,10 @@ class CompilationEngine:
                 yield i
             next(tokens).to_xml(lvl + 1)  # )
         elif tokens.peek() in [Symbol("-"), Symbol("~")]:
-            yield next(tokens).to_xml(lvl + 1)
+            op = next(tokens)
             for i in self.compile_term(tokens, symbol_table, lvl + 1):
                 yield i
+            yield "neg" if op.val == "-" else "not"
         else:
             raise ValueError(f"invalid token {tokens.peek()}")
 
@@ -100,6 +100,8 @@ class CompilationEngine:
                 yield f"add"
             elif op.val == "*":
                 yield f"call Math.multiply 2"
+            elif op.val == "-":
+                yield f"neg"
             else:
                 raise ValueError("Operator not supported: {op}")
 
