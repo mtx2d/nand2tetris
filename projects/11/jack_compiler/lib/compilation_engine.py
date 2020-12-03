@@ -292,7 +292,6 @@ class CompilationEngine:
             yield next(tokens).to_xml(lvl + 2)
         else:
             raise ValueError(f"invalid token: {tokens.peek()}")
-        yield f"{' ' * self.TAB_SIZE * (lvl + 1)}</classVarDec>"
 
     def compile_class(self, tokens, symbol_table: SymbolTable, lvl=0):
         next(tokens).to_xml(lvl + 1)  # class
