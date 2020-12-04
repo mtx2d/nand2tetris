@@ -13,6 +13,7 @@ class CompilationEngine:
         self.sub_routine_name: str = None
         self.sub_routine_kind: str = None
         self.sub_routine_return_type: str = None
+        self.sub_routine_arg_count: int = 0  # should this be part of the symbol table because it contains other state as well?
 
     def compile_var_dec(self, tokens, symbol_table, lvl=0):
         next(tokens)  # 'var'
@@ -106,10 +107,14 @@ class CompilationEngine:
                 raise ValueError("Operator not supported: {op}")
 
     def compile_expression_list(self, tokens, symbol_table, lvl=0):
+        if tokens.peek() == Symbol(")"):
+            return
 
+        self.sub_routine_arg_count = 1
         for i in self.compile_expression(tokens, symbol_table, lvl + 1):
             yield i
         while tokens.peek() == Symbol(","):
+            self.sub_routine_arg_count += 1
             next(tokens)  # ,
             for i in self.compile_expression(tokens, symbol_table, lvl + 1):
                 yield i
@@ -128,9 +133,9 @@ class CompilationEngine:
         next(tokens)  # )
 
         if method_name:
-            yield f"call {name}.{method_name} {0}"
+            yield f"call {name}.{method_name} {self.sub_routine_arg_count}"
         else:
-            yield f"call {name} {0}"
+            yield f"call {name} {self.sub_routine_arg_count}"
 
     def compile_statements(self, tokens, symbol_table, lvl=0) -> str:
         if tokens.peek() == Symbol("}"):
