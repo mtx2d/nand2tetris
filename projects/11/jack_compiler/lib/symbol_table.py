@@ -25,7 +25,7 @@ class SymbolTable:
         if name in self.subroutine_table:
             raise ValueError(f"{name} already defined")
 
-        new_entry = SymbolTable.Entry(name, type, kind, self.var_count[kind] + 1)
+        new_entry = SymbolTable.Entry(name, type, kind, self.var_count[kind])
         if kind in ["static", "field"]:
             self.global_table[name] = new_entry
         elif kind in ["arg", "var"]:
@@ -43,10 +43,10 @@ class SymbolTable:
 
     def kind_of(self, name: str) -> str:
         if name in self.subroutine_table:
-            return self.subroutine_table[name]
+            return self.subroutine_table[name].kind
 
         if name in self.global_table:
-            return self.global_table[name]
+            return self.global_table[name].kind
 
         raise ValueError(f"name not found: {name}")
 

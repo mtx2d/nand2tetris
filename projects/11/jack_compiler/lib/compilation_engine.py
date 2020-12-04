@@ -63,8 +63,8 @@ class CompilationEngine:
             else:
                 var_name = next(tokens).val  # varName
                 segment = symbol_table.kind_of(var_name)
-                idx = symbol_table.index(var_name)
-                yield f"push {segment} {idx}"
+                idx = symbol_table.index_of(var_name)
+                yield f"pop local {idx}"
         elif tokens.peek() == Symbol("("):
             next(tokens).to_xml(lvl + 1)  # (
             for i in self.compile_expression(tokens, symbol_table, lvl + 1):
