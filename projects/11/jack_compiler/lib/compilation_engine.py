@@ -18,7 +18,7 @@ class CompilationEngine:
     def compile_var_dec(self, tokens, symbol_table, lvl=0):
         next(tokens)  # 'var'
         type = next(tokens)  # type
-        var_name = next(tokens).to_xml(lvl=lvl + 2)  # varName
+        var_name = next(tokens).val  # varName
         symbol_table.define(var_name, type, "var")
 
         if tokens.peek() == Symbol(";"):
@@ -51,7 +51,7 @@ class CompilationEngine:
             next(tokens).to_xml(lvl + 1)
         elif isinstance(tokens.peek(), Identifier):
             if tokens[1] == Symbol("["):
-                var_name = next(tokens).to_xml(lvl + 1)  # varName
+                var_name = next(tokens).val  # varName
                 next(tokens).to_xml(lvl + 1)  # [
                 for i in self.compile_expression(tokens, symbol_table, lvl + 1):
                     yield i
@@ -61,8 +61,10 @@ class CompilationEngine:
                 for i in self.compile_subroutine_call(tokens, symbol_table, lvl + 1):
                     yield i
             else:
-                var_name = next(tokens).to_xml(lvl + 1)  # varName
-                yield f"push {var_name}"
+                var_name = next(tokens).val  # varName
+                segment = symbol_table.kind_of(var_name)
+                idx = symbol_table.index(var_name)
+                yield f"push {segment} {idx}"
         elif tokens.peek() == Symbol("("):
             next(tokens).to_xml(lvl + 1)  # (
             for i in self.compile_expression(tokens, symbol_table, lvl + 1):
@@ -287,7 +289,7 @@ class CompilationEngine:
         var_name = next(tokens).to_xml(lvl + 2)  # varName
 
         if tokens.peek() == Symbol(";"):
-            yield next(tokens).to_xml(lvl + 2)
+            next(tokens)  # ;
         elif tokens.peek() == Symbol(","):
             while tokens.peek() != Symbol(";"):
                 yield next(tokens).to_xml(lvl + 2)  # ,
