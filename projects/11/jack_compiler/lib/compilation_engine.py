@@ -220,7 +220,8 @@ class CompilationEngine:
                 yield i
             next(tokens)  # ;
             # if invoked a void sub_routine
-            yield "pop temp 0"
+            if self.sub_routine_return_type == "void":
+                yield "pop temp 0"
         elif tokens.peek() == Keyword("return"):
             # TODO: handle return; keep state for sub_method return type
             next(tokens)  # return
@@ -284,17 +285,19 @@ class CompilationEngine:
             yield i
 
     def compile_class_var_dec(self, tokens, symbol_table, lvl=0):
-        scope = next(tokens).to_xml(lvl + 2)  # static|field
-        type = next(tokens)  # static|field
-        var_name = next(tokens).to_xml(lvl + 2)  # varName
+        kind = next(tokens).val  # static|field
+        type = next(tokens).val  # int|string etc
+        var_name = next(tokens).val  # varName
 
         if tokens.peek() == Symbol(";"):
             next(tokens)  # ;
+            symbol_table.define(var_name, type, kind)
         elif tokens.peek() == Symbol(","):
             while tokens.peek() != Symbol(";"):
-                yield next(tokens).to_xml(lvl + 2)  # ,
-                yield next(tokens).to_xml(lvl + 2)  # varName
-            yield next(tokens).to_xml(lvl + 2)
+                next(tokens)  # ,
+                var_name = next(tokens).val  # varName
+                symbol_table.define(var_name, type, kind)
+            next(tokens)  # ;
         else:
             raise ValueError(f"invalid token: {tokens.peek()}")
 
