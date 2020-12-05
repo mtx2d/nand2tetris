@@ -263,7 +263,7 @@ class CompilationEngine:
 
         type = next(tokens)  # type
         name = next(tokens).to_xml(lvl + 2)
-        symbol_table.define(name, type, SymbolTable.Kind.VAR)
+        symbol_table.define(name, type, SymbolTable.Kind.ARG)
         while tokens.peek() == Symbol(","):
             yield next(tokens).to_xml(lvl + 2)  # ,
             for i in self.compile_type(tokens, symbol_table, lvl + 2):  # type
