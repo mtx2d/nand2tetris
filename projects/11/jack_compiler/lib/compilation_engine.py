@@ -15,26 +15,6 @@ class CompilationEngine:
         self.sub_routine_return_type: str = None
         self.sub_routine_arg_count: int = 0  # should this be part of the symbol table because it contains other state as well?
 
-    def compile_var_dec(self, tokens, symbol_table, lvl=0):
-        next(tokens)  # 'var'
-        type = next(tokens)  # type
-        var_name = next(tokens).val  # varName
-        symbol_table.define(var_name, type, "var")
-
-        if tokens.peek() == Symbol(";"):
-            next(tokens)
-        elif tokens.peek() == Symbol(","):
-            while tokens.peek() != Symbol(";"):
-                next(tokens)  # ,
-                var_name = next(tokens).val  # varName
-                symbol_table.define(var_name, type, "var")
-                for i in VMWriter.write_push("local"):
-                    yield i
-
-            next(tokens).to_xml(lvl + 2)  # ;
-        else:
-            raise ValueError(f"invalid token: {tokens.peek()}")
-
     def compile_term(self, tokens, symbol_table, lvl=0):
         if isinstance(tokens.peek(), IntegerConstant):
             # consume int constant
@@ -60,11 +40,15 @@ class CompilationEngine:
                 # subRoutineCall
                 for i in self.compile_subroutine_call(tokens, symbol_table, lvl + 1):
                     yield i
-            else:
+            else:  # regular var
                 var_name = next(tokens).val  # varName
-                segment = symbol_table.kind_of(var_name)
+                segment = (
+                    "local"
+                    if symbol_table.kind_of(var_name) == "var"
+                    else symbol_table.kind_of(var_name)
+                )
                 idx = symbol_table.index_of(var_name)
-                yield f"pop local {idx}"
+                yield f"pop {segment} {idx}"
         elif tokens.peek() == Symbol("("):
             next(tokens).to_xml(lvl + 1)  # (
             for i in self.compile_expression(tokens, symbol_table, lvl + 1):
@@ -237,6 +221,27 @@ class CompilationEngine:
         else:
             raise ValueError(f"invalid token: {tokens.peek()}")
 
+    def compile_var_dec(self, tokens, symbol_table, lvl=0):
+        # inside subroutine_body, symbols should be LOL
+        next(tokens)  # 'var'
+        type = next(tokens)  # type
+        var_name = next(tokens).val  # varName
+        symbol_table.define(var_name, type, "var")
+
+        if tokens.peek() == Symbol(";"):
+            next(tokens)
+        elif tokens.peek() == Symbol(","):
+            while tokens.peek() != Symbol(";"):
+                next(tokens)  # ,
+                var_name = next(tokens).val  # varName
+                symbol_table.define(var_name, type, "var")
+                for i in VMWriter.write_push("local"):
+                    yield i
+
+            next(tokens).to_xml(lvl + 2)  # ;
+        else:
+            raise ValueError(f"invalid token: {tokens.peek()}")
+
     def compile_subroutine_body(self, tokens, symbol_table, lvl=0):
         next(tokens)  # {
         while tokens.peek() == Keyword("var"):
@@ -254,21 +259,17 @@ class CompilationEngine:
                 yield i
         next(tokens).to_xml(lvl + 2)  # }
 
-    def compile_type(self, tokens, symbol_table, lvl=0):
-        yield next(tokens).to_xml(lvl + 1)
-
     def compile_parameter_list(self, tokens, symbol_table, lvl=0):
         if tokens.peek() == Symbol(")"):
             return
 
-        type = next(tokens)  # type
-        name = next(tokens).to_xml(lvl + 2)
+        type = next(tokens).val  # type
+        name = next(tokens).val
         symbol_table.define(name, type, SymbolTable.Kind.ARG)
         while tokens.peek() == Symbol(","):
-            yield next(tokens).to_xml(lvl + 2)  # ,
-            for i in self.compile_type(tokens, symbol_table, lvl + 2):  # type
-                yield i
-            yield next(tokens).to_xml(lvl + 2)  # varName
+            yield next(tokens)  # ,
+            yield next(tokens)  # type
+            yield next(tokens)  # varName
 
     def compile_subroutine_dec(self, tokens, symbol_table, lvl=0):
         symbol_table.start_subroutine()
