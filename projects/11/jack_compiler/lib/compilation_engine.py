@@ -87,10 +87,22 @@ class CompilationEngine:
                 yield f"add"
             elif op.val == "*":
                 yield f"call Math.multiply 2"
+            elif op.val == "/":
+                yield f"call Math.divide 2"
             elif op.val == "-":
                 yield f"neg"
+            elif op.val == "&":
+                yield f"and"
+            elif op.val == "|":
+                yield f"or"
+            elif op.val == "=":
+                yield f"eq"
+            elif op.val == ">":
+                yield f"gt"
+            elif op.val == "<":
+                yield f"lt"
             else:
-                raise ValueError("Operator not supported: {op}")
+                raise ValueError(f"Operator not supported: {op}")
 
     def compile_expression_list(self, tokens, symbol_table, lvl=0):
         if tokens.peek() == Symbol(")"):
@@ -121,7 +133,7 @@ class CompilationEngine:
         if method_name:
             yield f"call {name}.{method_name} {self.sub_routine_arg_count}"
         else:
-            yield f"call {name} {self.sub_routine_arg_count}"
+            yield f"call {self.class_name}.{name} {self.sub_routine_arg_count}"
 
     def compile_statements(self, tokens, symbol_table, lvl=0) -> str:
         if tokens.peek() == Symbol("}"):
@@ -271,7 +283,7 @@ class CompilationEngine:
 
         type = next(tokens).val  # type
         name = next(tokens).val
-        symbol_table.define(name, type, SymbolTable.Kind.ARG)
+        symbol_table.define(name, type, "arg")
         while tokens.peek() == Symbol(","):
             yield next(tokens)  # ,
             yield next(tokens)  # type
@@ -283,11 +295,13 @@ class CompilationEngine:
         self.sub_routine_return_type = next(tokens).val  # void | int | String
         self.sub_routine_name = next(tokens).val  # subroutine_name
 
-        next(tokens).to_xml(lvl + 2)  # (
+        # print(self.sub_routine_kind, self.sub_routine_return_type, self.sub_routine_name)
+
+        next(tokens)  # (
         for i in self.compile_parameter_list(tokens, symbol_table, lvl + 2):
             yield i
 
-        next(tokens).to_xml(lvl + 2)  # )
+        next(tokens)  # )
         for i in self.compile_subroutine_body(tokens, symbol_table, lvl + 2):
             yield i
 
@@ -326,10 +340,10 @@ class CompilationEngine:
             ]
 
             yield f"{self.sub_routine_kind} {self.class_name}.{self.sub_routine_name} {sum(symbol_table.var_count.values())}"
-
             for i in sub_routine_insts:
                 yield i
-            yield f"call {self.sub_routine_name} 1"
+
+            # yield f"call {self.class_name}.{self.sub_routine_name} {self.sub_routine_arg_count}"
 
         next(tokens).to_xml(lvl + 1)  # }
 
