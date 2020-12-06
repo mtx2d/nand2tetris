@@ -16,6 +16,7 @@ class CompilationEngine:
         self.sub_routine_arg_count: int = 0  # should this be part of the symbol table because it contains other state as well?
 
     def compile_term(self, tokens, symbol_table, lvl=0):
+        print("DEBUG", (lvl + 1) * " ", "compile_term")
         if isinstance(tokens.peek(), IntegerConstant):
             # consume int constant
             num = next(tokens)
@@ -28,7 +29,17 @@ class CompilationEngine:
                 yield f"push {s}"
         elif isinstance(tokens.peek(), Keyword):
             # consume keyword constant (true/false/null)
-            next(tokens).to_xml(lvl + 1)
+            const_keyword = next(tokens).val
+            print("DEBUG", (lvl + 1) * " ", "const_keyword:", const_keyword)
+            if const_keyword == "true":
+                yield f"push constant 0"
+                yield f"not"
+            elif const_keyword == "false":
+                yield f"push constant 0"
+            elif const_keyword == "null":
+                yield f"push constant 0"
+            else:
+                raise ValueError(f"Invalid constant keyword:{const_keyword}")
         elif isinstance(tokens.peek(), Identifier):
             if tokens[1] == Symbol("["):
                 var_name = next(tokens).val  # varName
@@ -88,10 +99,10 @@ class CompilationEngine:
                 yield f"add"
             elif op.val == "*":
                 yield f"call Math.multiply 2"
+            elif op.val == "-":
+                yield f"sub"
             elif op.val == "/":
                 yield f"call Math.divide 2"
-            elif op.val == "-":
-                yield f"neg"
             elif op.val == "&":
                 yield f"and"
             elif op.val == "|":
@@ -106,6 +117,7 @@ class CompilationEngine:
                 raise ValueError(f"Operator not supported: {op}")
 
     def compile_expression_list(self, tokens, symbol_table, lvl=0):
+        print("DEBUG", (lvl + 1) * " ", "compile_expression_list")
         if tokens.peek() == Symbol(")"):
             return
 
@@ -119,6 +131,7 @@ class CompilationEngine:
                 yield i
 
     def compile_subroutine_call(self, tokens, symbol_table, lvl=0):
+        print("DEBUG", (lvl + 1) * " ", "compile_subroutine_call")
         name = next(tokens).val  # subroutine name | (className | varName)
 
         method_name = None
@@ -152,6 +165,7 @@ class CompilationEngine:
 
     def compile_statement(self, tokens, symbol_table, lvl=0) -> str:
         if tokens.peek() == Keyword("let"):
+            print("DEBUG", (lvl + 1) * " ", "let_statement")
 
             next(tokens)  # let
             var_name = next(tokens).val  # varName
@@ -184,18 +198,18 @@ class CompilationEngine:
                 raise ValueError(f"{tokens.peek()} invalid.")
 
         elif tokens.peek() == Keyword("if"):
-            yield f"{' ' * self.TAB_SIZE * (lvl + 1)}<ifStatement>"
+            print("DEBUG", (lvl + 1) * " ", "if_statement")
 
-            yield next(tokens).to_xml(lvl + 2)  # if
-            yield next(tokens).to_xml(lvl + 2)  # (
+            next(tokens).to_xml(lvl + 2)  # if
+            next(tokens).to_xml(lvl + 2)  # (
             for i in self.compile_expression(tokens, symbol_table, lvl + 2):
                 yield i
-            yield next(tokens).to_xml(lvl + 2)  # )
+            next(tokens).to_xml(lvl + 2)  # )
 
-            yield next(tokens).to_xml(lvl + 2)  # {
+            next(tokens).to_xml(lvl + 2)  # {
             for i in self.compile_statements(tokens, symbol_table, lvl + 2):
                 yield i
-            yield next(tokens).to_xml(lvl + 2)  # }
+            next(tokens).to_xml(lvl + 2)  # }
 
             if tokens and tokens.peek() == Keyword("else"):
                 yield next(tokens).to_xml(lvl + 2)  # else
@@ -203,21 +217,22 @@ class CompilationEngine:
                 for i in self.compile_statements(tokens, symbol_table, lvl + 2):
                     yield i
                 yield next(tokens).to_xml(lvl + 2)  # }
-            yield f"{' ' * self.TAB_SIZE * (lvl + 1)}</ifStatement>"
         elif tokens.peek() == Keyword("while"):
-            yield f"{' ' * self.TAB_SIZE * (lvl + 1)}<whileStatement>"
+            print("DEBUG", (lvl + 1) * " ", "while_statement")
 
-            yield next(tokens).to_xml(lvl + 2)  # while
-            yield next(tokens).to_xml(lvl + 2)  # (
-            yield self.compile_expression(tokens, symbol_table, lvl + 2)
-            yield next(tokens).to_xml(lvl + 2)  # )
+            next(tokens).to_xml(lvl + 2)  # while
+            next(tokens).to_xml(lvl + 2)  # (
+            for i in self.compile_expression(tokens, symbol_table, lvl + 2):
+                yield i
+            next(tokens).to_xml(lvl + 2)  # )
 
-            yield next(tokens).to_xml(lvl + 2)  # {
-            yield self.compile_statements(tokens, symbol_table, lvl + 2)
-            yield next(tokens).to_xml(lvl + 2)  # }
-            yield f"{' ' * self.TAB_SIZE * (lvl + 1)}</whileStatement>"
+            next(tokens).to_xml(lvl + 2)  # {
+            for i in self.compile_statements(tokens, symbol_table, lvl + 2):
+                yield i
+            next(tokens).to_xml(lvl + 2)  # }
 
         elif tokens.peek() == Keyword("do"):
+            print("DEBUG", (lvl + 1) * " ", "do_statement")
             next(tokens)  # do
             for i in self.compile_subroutine_call(tokens, symbol_table, lvl + 2):
                 yield i
@@ -226,6 +241,7 @@ class CompilationEngine:
             if self.sub_routine_return_type == "void":
                 yield "pop temp 0"
         elif tokens.peek() == Keyword("return"):
+            print("DEBUG", (lvl + 1) * " ", "return_statement")
             # TODO: handle return; keep state for sub_method return type
             next(tokens)  # return
             if tokens.peek() != Symbol(";"):
@@ -241,6 +257,7 @@ class CompilationEngine:
             raise ValueError(f"invalid token: {tokens.peek()}")
 
     def compile_var_dec(self, tokens, symbol_table, lvl=0):
+        print("DEBUG", (lvl + 1) * " ", "compile_var_dec")
         # inside subroutine_body, symbols should be LOL
         next(tokens)  # 'var'
         type = next(tokens)  # type
@@ -254,6 +271,7 @@ class CompilationEngine:
                 next(tokens)  # ,
                 var_name = next(tokens).val  # varName
                 symbol_table.define(var_name, type, "var")
+                print("DEBUG:", var_name)
                 yield f"push local {symbol_table.index_of(var_name)}"
 
             next(tokens).to_xml(lvl + 2)  # ;
