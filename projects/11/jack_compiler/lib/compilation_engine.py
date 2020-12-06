@@ -30,8 +30,8 @@ class CompilationEngine:
         elif isinstance(tokens.peek(), Keyword):
             # consume keyword constant (true/false/null)
             const_keyword = next(tokens).val
-            print("DEBUG", (lvl + 1) * " ", "const_keyword:", const_keyword)
             if const_keyword == "true":
+                print("DEBUG", (lvl + 1) * " ", "const_keyword:", const_keyword)
                 yield f"push constant 0"
                 yield f"not"
             elif const_keyword == "false":
@@ -271,8 +271,6 @@ class CompilationEngine:
                 next(tokens)  # ,
                 var_name = next(tokens).val  # varName
                 symbol_table.define(var_name, type, "var")
-                print("DEBUG:", var_name)
-                yield f"push local {symbol_table.index_of(var_name)}"
 
             next(tokens).to_xml(lvl + 2)  # ;
         else:
@@ -281,8 +279,7 @@ class CompilationEngine:
     def compile_subroutine_body(self, tokens, symbol_table, lvl=0):
         next(tokens)  # {
         while tokens.peek() == Keyword("var"):
-            for i in self.compile_var_dec(tokens, symbol_table, lvl + 2):
-                yield i
+            self.compile_var_dec(tokens, symbol_table, lvl + 3)
 
         while tokens.peek() in [
             Keyword("let"),
