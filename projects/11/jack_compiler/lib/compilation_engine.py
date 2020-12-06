@@ -83,6 +83,7 @@ class CompilationEngine:
             for i in self.compile_expression(tokens, symbol_table, lvl + 1):
                 yield i
         if op:
+            # TODO: handle minus operation, how to differentiate from neg?
             if op.val == "+":
                 yield f"add"
             elif op.val == "*":
@@ -253,8 +254,7 @@ class CompilationEngine:
                 next(tokens)  # ,
                 var_name = next(tokens).val  # varName
                 symbol_table.define(var_name, type, "var")
-                for i in VMWriter.write_push("local"):
-                    yield i
+                yield f"push local {symbol_table.index_of(var_name)}"
 
             next(tokens).to_xml(lvl + 2)  # ;
         else:
@@ -294,8 +294,6 @@ class CompilationEngine:
         self.sub_routine_kind = next(tokens).val  # (constructor | function | method)
         self.sub_routine_return_type = next(tokens).val  # void | int | String
         self.sub_routine_name = next(tokens).val  # subroutine_name
-
-        # print(self.sub_routine_kind, self.sub_routine_return_type, self.sub_routine_name)
 
         next(tokens)  # (
         for i in self.compile_parameter_list(tokens, symbol_table, lvl + 2):
@@ -339,7 +337,7 @@ class CompilationEngine:
                 *self.compile_subroutine_dec(tokens, symbol_table, lvl + 1)
             ]
 
-            yield f"{self.sub_routine_kind} {self.class_name}.{self.sub_routine_name} {sum(symbol_table.var_count.values())}"
+            yield f"{self.sub_routine_kind} {self.class_name}.{self.sub_routine_name} {symbol_table.var_count['var']}"
             for i in sub_routine_insts:
                 yield i
 

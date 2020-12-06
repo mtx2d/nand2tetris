@@ -17,6 +17,8 @@ class SymbolTable:
         self.var_count: Dict[str, int] = defaultdict(int)
 
     def start_subroutine(self):
+        for k, v in self.subroutine_table.items():
+            self.var_count[v.kind] -= 1
         self.subroutine_table.clear()
 
     def define(self, name: str, type: str, kind: str):
@@ -35,7 +37,6 @@ class SymbolTable:
             raise ValueError(f"Unknown kind: {kind}")
 
         self.var_count[kind] += 1
-        print("DEBUG", self.var_count)
 
     def var_count(self, kind: str) -> int:
         if kind not in self.var_count:
