@@ -220,16 +220,20 @@ class CompilationEngine:
         elif tokens.peek() == Keyword("while"):
             print("DEBUG", (lvl + 1) * " ", "while_statement")
 
-            next(tokens).to_xml(lvl + 2)  # while
-            next(tokens).to_xml(lvl + 2)  # (
+            yield f"label WHILE_EXP0"
+            next(tokens)  # while
+            next(tokens)  # (
             for i in self.compile_expression(tokens, symbol_table, lvl + 2):
                 yield i
-            next(tokens).to_xml(lvl + 2)  # )
-
-            next(tokens).to_xml(lvl + 2)  # {
+            next(tokens)  # )
+            yield "not"
+            yield "if-goto WHILE_END0"
+            next(tokens)  # {
             for i in self.compile_statements(tokens, symbol_table, lvl + 2):
                 yield i
-            next(tokens).to_xml(lvl + 2)  # }
+            next(tokens)  # }
+            yield "goto WHILE_EXP0"
+            yield "label WHILE_END0"
 
         elif tokens.peek() == Keyword("do"):
             print("DEBUG", (lvl + 1) * " ", "do_statement")
