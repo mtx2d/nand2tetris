@@ -48,7 +48,7 @@ class CompilationEngine:
                     else symbol_table.kind_of(var_name)
                 )
                 idx = symbol_table.index_of(var_name)
-                yield f"pop {segment} {idx}"
+                yield f"push {segment} {idx}"
         elif tokens.peek() == Symbol("("):
             next(tokens).to_xml(lvl + 1)  # (
             for i in self.compile_expression(tokens, symbol_table, lvl + 1):
@@ -140,16 +140,22 @@ class CompilationEngine:
     def compile_statement(self, tokens, symbol_table, lvl=0) -> str:
         if tokens.peek() == Keyword("let"):
 
-            next(tokens).to_xml(lvl + 2)  # let
-            var_name = next(tokens).to_xml(lvl + 2)  # varName
+            next(tokens)  # let
+            var_name = next(tokens).val  # varName
 
             if tokens.peek() == Symbol("="):
-                next(tokens).to_xml(lvl + 2)  # "="
+                next(tokens)  # "="
                 for i in self.compile_expression(
                     tokens, symbol_table, lvl + 2
                 ):  # expression
                     yield i
-                next(tokens).to_xml(lvl + 2)  # ";"
+                next(tokens)  # ";"
+                segment = (
+                    "local"
+                    if symbol_table.kind_of(var_name) == "var"
+                    else symbol_table.kind_of(var_name)
+                )
+                yield f"pop {segment} {symbol_table.index_of(var_name)}"
             elif tokens.peek() == Symbol("["):
                 next(tokens).to_xml(lvl + 2)  # [
                 for i in self.compile_expression(
