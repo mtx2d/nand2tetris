@@ -41,7 +41,10 @@ class CompilationEngine:
                 yield f"push constant 0"
             elif const_keyword == "this":
                 # TODO: need to tell if this term comes from Class.method(expr) or return expr;
-                yield f"push pointer 0"
+                if self.sub_routine_kind == "constructor":
+                    yield f"push pointer 0"
+                else:
+                    yield f"push {symbol_table.kind_of('this')} {symbol_table.index_of('this')}"
             else:
                 raise ValueError(f"Invalid constant keyword:{const_keyword}")
         elif isinstance(tokens.peek(), Identifier):

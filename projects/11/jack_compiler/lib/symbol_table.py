@@ -13,7 +13,7 @@ class SymbolTable:
     def __init__(self):
         self.global_table: Dict[str, SymbolTable.Entry] = {}
         self.global_table["this"] = SymbolTable.Entry(
-            "this", "TYPE_OF_THE_CLASS", "field", 0
+            "this", "TYPE_OF_THE_CLASS", "argument", 0
         )
         self.subroutine_table: Dict[str, SymbolTable.Entry] = {}
         self.var_count: Dict[str, int] = defaultdict(int)
