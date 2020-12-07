@@ -326,6 +326,7 @@ class CompilationEngine:
             symbol_table.define(name, type, "argument")
 
     def compile_subroutine_dec(self, tokens, symbol_table, lvl=0):
+        #TODO: handle constructor and method
         symbol_table.start_subroutine()
         self.sub_routine_kind = next(tokens).val  # (constructor | function | method)
         self.sub_routine_return_type = next(tokens).val  # void | int | String
@@ -374,8 +375,6 @@ class CompilationEngine:
             yield f"{self.sub_routine_kind} {self.class_name}.{self.sub_routine_name} {symbol_table.var_count['var']}"
             for i in sub_routine_insts:
                 yield i
-
-            # yield f"call {self.class_name}.{self.sub_routine_name} {self.sub_routine_arg_count}"
 
         next(tokens).to_xml(lvl + 1)  # }
 
