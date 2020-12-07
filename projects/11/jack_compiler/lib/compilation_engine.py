@@ -341,6 +341,9 @@ class CompilationEngine:
         self.sub_routine_return_type = next(tokens).val  # void | int | String
         self.sub_routine_name = next(tokens).val  # subroutine_name
 
+        if self.sub_routine_kind == "method":
+            symbol_table.define("this", self.class_name, "argument")
+
         next(tokens)  # (
         self.compile_parameter_list(tokens, symbol_table, lvl + 2)
         next(tokens)  # )
