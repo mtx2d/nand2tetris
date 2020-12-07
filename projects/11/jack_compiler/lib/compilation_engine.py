@@ -326,7 +326,7 @@ class CompilationEngine:
             symbol_table.define(name, type, "argument")
 
     def compile_subroutine_dec(self, tokens, symbol_table, lvl=0):
-        #TODO: handle constructor and method
+        # TODO: handle constructor and method
         symbol_table.start_subroutine()
         self.sub_routine_kind = next(tokens).val  # (constructor | function | method)
         self.sub_routine_return_type = next(tokens).val  # void | int | String
