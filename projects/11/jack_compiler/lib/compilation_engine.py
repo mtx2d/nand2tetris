@@ -62,13 +62,8 @@ class CompilationEngine:
                     yield i
             else:  # regular var
                 var_name = next(tokens).val  # varName
-                segment = (
-                    "local"
-                    if symbol_table.kind_of(var_name) == "var"
-                    else symbol_table.kind_of(var_name)
-                )
-                idx = symbol_table.index_of(var_name)
-                yield f"push {segment} {idx}"
+                SEGMENT_MAP = {"var": "local", "field": "this", "argument": "argument"}
+                yield f"push {SEGMENT_MAP[symbol_table.kind_of(var_name)]} {symbol_table.index_of(var_name)}"
         elif tokens.peek() == Symbol("("):
             next(tokens).to_xml(lvl + 1)  # (
             for i in self.compile_expression(tokens, symbol_table, lvl + 1):
@@ -191,7 +186,6 @@ class CompilationEngine:
                 next(tokens)  # ";"
 
                 SEGMENT_MAP = {"var": "local", "field": "this"}
-
                 yield f"pop {SEGMENT_MAP[symbol_table.kind_of(var_name)]} {symbol_table.index_of(var_name)}"
             elif tokens.peek() == Symbol("["):
                 next(tokens).to_xml(lvl + 2)  # [
