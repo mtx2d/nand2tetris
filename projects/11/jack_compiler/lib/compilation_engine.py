@@ -39,6 +39,8 @@ class CompilationEngine:
                 yield f"push constant 0"
             elif const_keyword == "null":
                 yield f"push constant 0"
+            elif const_keyword == "this":
+                yield f"push pointer 0"
             else:
                 raise ValueError(f"Invalid constant keyword:{const_keyword}")
         elif isinstance(tokens.peek(), Identifier):
@@ -371,7 +373,12 @@ class CompilationEngine:
                 *self.compile_subroutine_dec(tokens, symbol_table, lvl + 1)
             ]
 
-            yield f"{self.sub_routine_kind} {self.class_name}.{self.sub_routine_name} {symbol_table.var_count['var']}"
+            yield f"function {self.class_name}.{self.sub_routine_name} {symbol_table.var_count['var']}"
+            if self.sub_routine_kind == "constructor":
+                # allocate RAM slot for newly created object
+                yield f"push constant {symbol_table.var_count['field']}"
+                yield "call Memory.alloc 1"
+                yield "pop pointer 0"
             for i in sub_routine_insts:
                 yield i
 
