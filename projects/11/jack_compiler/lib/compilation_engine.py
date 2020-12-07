@@ -14,6 +14,7 @@ class CompilationEngine:
         self.sub_routine_kind: str = None
         self.sub_routine_return_type: str = None
         self.sub_routine_arg_count: int = 0  # should this be part of the symbol table because it contains other state as well?
+        self.if_level = -1
 
     def compile_term(self, tokens, symbol_table, lvl=0):
         print("DEBUG", (lvl + 1) * " ", "compile_term")
@@ -198,25 +199,39 @@ class CompilationEngine:
                 raise ValueError(f"{tokens.peek()} invalid.")
 
         elif tokens.peek() == Keyword("if"):
+            self.if_level += 1
             print("DEBUG", (lvl + 1) * " ", "if_statement")
 
-            next(tokens).to_xml(lvl + 2)  # if
-            next(tokens).to_xml(lvl + 2)  # (
+            next(tokens)  # if
+            next(tokens)  # (
             for i in self.compile_expression(tokens, symbol_table, lvl + 2):
                 yield i
-            next(tokens).to_xml(lvl + 2)  # )
+            next(tokens)  # )
 
-            next(tokens).to_xml(lvl + 2)  # {
-            for i in self.compile_statements(tokens, symbol_table, lvl + 2):
-                yield i
-            next(tokens).to_xml(lvl + 2)  # }
+            next(tokens)  # {
+            if_statements = [*self.compile_statements(tokens, symbol_table, lvl + 2)]
+            next(tokens)  # }
 
+            else_statements = []
             if tokens and tokens.peek() == Keyword("else"):
-                yield next(tokens).to_xml(lvl + 2)  # else
-                yield next(tokens).to_xml(lvl + 2)  # {
-                for i in self.compile_statements(tokens, symbol_table, lvl + 2):
-                    yield i
-                yield next(tokens).to_xml(lvl + 2)  # }
+                next(tokens)  # else
+                next(tokens)  # {
+                else_statements = [
+                    *self.compile_statements(tokens, symbol_table, lvl + 2)
+                ]
+                next(tokens)  # }
+
+            yield f"if-goto IF_TRUE{self.if_level}"
+            yield f"goto IF_FALSE{self.if_level}"
+            yield f"label IF_TRUE{self.if_level}"
+            for i in if_statements:
+                yield i
+            yield f"goto IF_END{self.if_level}"
+            yield f"label IF_FALSE{self.if_level}"
+            for i in else_statements:
+                yield i
+            yield f"label IF_END{self.if_level}"
+            self.if_level -= 1
         elif tokens.peek() == Keyword("while"):
             print("DEBUG", (lvl + 1) * " ", "while_statement")
 
@@ -253,7 +268,8 @@ class CompilationEngine:
                     yield i
 
             # if this sub_routine itself return void
-            yield "push constant 0"
+            if self.sub_routine_return_type == "void":
+                yield "push constant 0"
             yield "return"
             next(tokens).to_xml(lvl + 2)  # ;
 
@@ -302,7 +318,7 @@ class CompilationEngine:
 
         type = next(tokens).val  # type
         name = next(tokens).val
-        symbol_table.define(name, type, "arg")
+        symbol_table.define(name, type, "argument")
         while tokens.peek() == Symbol(","):
             yield next(tokens)  # ,
             yield next(tokens)  # type
