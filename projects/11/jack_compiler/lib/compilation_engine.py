@@ -342,7 +342,10 @@ class CompilationEngine:
         self.sub_routine_name = next(tokens).val  # subroutine_name
 
         if self.sub_routine_kind == "method":
-            symbol_table.define("this", self.class_name, "argument")
+            symbol_table.define("this", self.class_name, "pointer")
+            # align this object with allocated memory address
+            yield "push argument 0"
+            yield "pop pointer 0"
 
         next(tokens)  # (
         self.compile_parameter_list(tokens, symbol_table, lvl + 2)

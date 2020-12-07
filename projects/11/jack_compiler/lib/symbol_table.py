@@ -30,7 +30,7 @@ class SymbolTable:
         new_entry = SymbolTable.Entry(name, type, kind, self.var_count[kind])
         if kind in ["static", "field"]:
             self.global_table[name] = new_entry
-        elif kind in ["argument", "var"]:
+        elif kind in ["argument", "var", "pointer"]:
             self.subroutine_table[name] = new_entry
         else:
             raise ValueError(f"Unknown kind: {kind}")
