@@ -31,8 +31,8 @@ class CompilationEngine:
         elif isinstance(tokens.peek(), Keyword):
             # consume keyword constant (true/false/null)
             const_keyword = next(tokens).val
+            print("DEBUG", (lvl + 1) * " ", "const_keyword:", const_keyword)
             if const_keyword == "true":
-                print("DEBUG", (lvl + 1) * " ", "const_keyword:", const_keyword)
                 yield f"push constant 0"
                 yield f"not"
             elif const_keyword == "false":
@@ -44,6 +44,8 @@ class CompilationEngine:
             else:
                 raise ValueError(f"Invalid constant keyword:{const_keyword}")
         elif isinstance(tokens.peek(), Identifier):
+            identifier = tokens.peek().val
+            print("DEBUG", (lvl + 1) * " ", "identifier:", identifier)
             if tokens[1] == Symbol("["):
                 var_name = next(tokens).val  # varName
                 next(tokens).to_xml(lvl + 1)  # [
@@ -150,7 +152,10 @@ class CompilationEngine:
         if method_name:
             yield f"call {name}.{method_name} {self.sub_routine_arg_count}"
         else:
-            yield f"call {self.class_name}.{name} {self.sub_routine_arg_count}"
+            # calling an object method
+            yield "push pointer 0"
+            yield f"call {self.class_name}.{name} {self.sub_routine_arg_count + 1}"
+            yield "pop temp 0"
 
     def compile_statements(self, tokens, symbol_table, lvl=0) -> str:
         if tokens.peek() == Symbol("}"):
@@ -180,12 +185,10 @@ class CompilationEngine:
                 ):  # expression
                     yield i
                 next(tokens)  # ";"
-                segment = (
-                    "local"
-                    if symbol_table.kind_of(var_name) == "var"
-                    else symbol_table.kind_of(var_name)
-                )
-                yield f"pop {segment} {symbol_table.index_of(var_name)}"
+
+                SEGMENT_MAP = {"var": "local", "field": "this"}
+
+                yield f"pop {SEGMENT_MAP[symbol_table.kind_of(var_name)]} {symbol_table.index_of(var_name)}"
             elif tokens.peek() == Symbol("["):
                 next(tokens).to_xml(lvl + 2)  # [
                 for i in self.compile_expression(
