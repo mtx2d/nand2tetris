@@ -155,6 +155,8 @@ class CompilationEngine:
             yield "push pointer 0"
             yield f"call {self.class_name}.{name} {self.sub_routine_arg_count + 1}"
             yield "pop temp 0"
+        # TODO remove this stateful sub_routine_arg_count global variable
+        self.sub_routine_arg_count = 0
 
     def compile_statements(self, tokens, symbol_table, lvl=0) -> str:
         if tokens.peek() == Symbol("}"):
