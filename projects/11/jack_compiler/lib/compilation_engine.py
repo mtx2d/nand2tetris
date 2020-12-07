@@ -343,9 +343,9 @@ class CompilationEngine:
         type = next(tokens).val  # int|string etc
         var_name = next(tokens).val  # varName
 
+        symbol_table.define(var_name, type, kind)
         if tokens.peek() == Symbol(";"):
             next(tokens)  # ;
-            symbol_table.define(var_name, type, kind)
         elif tokens.peek() == Symbol(","):
             while tokens.peek() != Symbol(";"):
                 next(tokens)  # ,
@@ -360,8 +360,7 @@ class CompilationEngine:
         self.class_name = next(tokens).val  # className
         next(tokens).to_xml(lvl + 1)  # {
         while tokens.peek() in [Keyword("static"), Keyword("field")]:
-            for i in self.compile_class_var_dec(tokens, symbol_table, lvl + 1):
-                yield i
+            self.compile_class_var_dec(tokens, symbol_table, lvl + 1)
 
         while tokens.peek() in [
             Keyword("constructor"),
