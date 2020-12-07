@@ -320,9 +320,10 @@ class CompilationEngine:
         name = next(tokens).val
         symbol_table.define(name, type, "argument")
         while tokens.peek() == Symbol(","):
-            yield next(tokens)  # ,
-            yield next(tokens)  # type
-            yield next(tokens)  # varName
+            next(tokens)  # ,
+            type = next(tokens)  # type
+            name = next(tokens).val  # varName
+            symbol_table.define(name, type, "argument")
 
     def compile_subroutine_dec(self, tokens, symbol_table, lvl=0):
         symbol_table.start_subroutine()
@@ -331,9 +332,7 @@ class CompilationEngine:
         self.sub_routine_name = next(tokens).val  # subroutine_name
 
         next(tokens)  # (
-        for i in self.compile_parameter_list(tokens, symbol_table, lvl + 2):
-            yield i
-
+        self.compile_parameter_list(tokens, symbol_table, lvl + 2)
         next(tokens)  # )
         for i in self.compile_subroutine_body(tokens, symbol_table, lvl + 2):
             yield i
