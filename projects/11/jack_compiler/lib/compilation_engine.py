@@ -40,6 +40,7 @@ class CompilationEngine:
             elif const_keyword == "null":
                 yield f"push constant 0"
             elif const_keyword == "this":
+                # TODO: need to tell if this term comes from Class.method(expr) or return expr;
                 yield f"push pointer 0"
             else:
                 raise ValueError(f"Invalid constant keyword:{const_keyword}")
