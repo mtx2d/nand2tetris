@@ -1288,6 +1288,274 @@ class TestCompilationEngine(unittest.TestCase):
         self.assertEqual(next(vm_insts), "push constant 0")
         self.assertEqual(next(vm_insts), "return")
 
+    def test_average(self):
+        mock_tokens = peekable(
+            iter(
+                [
+                    Keyword("class"),
+                    Identifier("Main"),
+                    Symbol("{"),
+                    Keyword("function"),
+                    Keyword("void"),
+                    Identifier("main"),
+                    Symbol("("),
+                    Symbol(")"),
+                    Symbol("{"),
+                    Keyword("var"),
+                    Identifier("Array"),
+                    Identifier("a"),
+                    Symbol(";"),
+                    Keyword("var"),
+                    Keyword("int"),
+                    Identifier("length"),
+                    Symbol(";"),
+                    Keyword("var"),
+                    Keyword("int"),
+                    Identifier("i"),
+                    Symbol(","),
+                    Identifier("sum"),
+                    Symbol(";"),
+                    Keyword("let"),
+                    Identifier("length"),
+                    Symbol("="),
+                    Identifier("Keyboard"),
+                    Symbol("."),
+                    Identifier("readInt"),
+                    Symbol("("),
+                    StringConstant("How many numbers? "),
+                    Symbol(")"),
+                    Symbol(";"),
+                    Keyword("let"),
+                    Identifier("a"),
+                    Symbol("="),
+                    Identifier("Array"),
+                    Symbol("."),
+                    Identifier("new"),
+                    Symbol("("),
+                    Identifier("length"),
+                    Symbol(")"),
+                    Symbol(";"),
+                    Keyword("let"),
+                    Identifier("i"),
+                    Symbol("="),
+                    IntegerConstant("0"),
+                    Symbol(";"),
+                    Keyword("while"),
+                    Symbol("("),
+                    Identifier("i"),
+                    Symbol("<"),
+                    Identifier("length"),
+                    Symbol(")"),
+                    Symbol("{"),
+                    Keyword("let"),
+                    Identifier("a"),
+                    Symbol("["),
+                    Identifier("i"),
+                    Symbol("]"),
+                    Symbol("="),
+                    Identifier("Keyboard"),
+                    Symbol("."),
+                    Identifier("readInt"),
+                    Symbol("("),
+                    StringConstant("Enter a number: "),
+                    Symbol(")"),
+                    Symbol(";"),
+                    Keyword("let"),
+                    Identifier("sum"),
+                    Symbol("="),
+                    Identifier("sum"),
+                    Symbol("+"),
+                    Identifier("a"),
+                    Symbol("["),
+                    Identifier("i"),
+                    Symbol("]"),
+                    Symbol(";"),
+                    Keyword("let"),
+                    Identifier("i"),
+                    Symbol("="),
+                    Identifier("i"),
+                    Symbol("+"),
+                    IntegerConstant("1"),
+                    Symbol(";"),
+                    Symbol("}"),
+                    Keyword("do"),
+                    Identifier("Output"),
+                    Symbol("."),
+                    Identifier("printString"),
+                    Symbol("("),
+                    StringConstant("The average is "),
+                    Symbol(")"),
+                    Symbol(";"),
+                    Keyword("do"),
+                    Identifier("Output"),
+                    Symbol("."),
+                    Identifier("printInt"),
+                    Symbol("("),
+                    Identifier("sum"),
+                    Symbol("/"),
+                    Identifier("length"),
+                    Symbol(")"),
+                    Symbol(";"),
+                    Keyword("return"),
+                    Symbol(";"),
+                    Symbol("}"),
+                    Symbol("}"),
+                ]
+            )
+        )
+        engine = CompilationEngine("Average.jack")
+        vm_insts = engine.compile_class(mock_tokens, SymbolTable())
+
+        self.assertEqual(next(vm_insts), "function Main.main 4")
+        self.assertEqual(next(vm_insts), "push constant 18")
+        self.assertEqual(next(vm_insts), "call String.new 1")
+        self.assertEqual(next(vm_insts), "push constant 72")
+        self.assertEqual(next(vm_insts), "call String.appendChar 2")
+        self.assertEqual(next(vm_insts), "push constant 111")
+        self.assertEqual(next(vm_insts), "call String.appendChar 2")
+        self.assertEqual(next(vm_insts), "push constant 119")
+        self.assertEqual(next(vm_insts), "call String.appendChar 2")
+        self.assertEqual(next(vm_insts), "push constant 32")
+        self.assertEqual(next(vm_insts), "call String.appendChar 2")
+        self.assertEqual(next(vm_insts), "push constant 109")
+        self.assertEqual(next(vm_insts), "call String.appendChar 2")
+        self.assertEqual(next(vm_insts), "push constant 97")
+        self.assertEqual(next(vm_insts), "call String.appendChar 2")
+        self.assertEqual(next(vm_insts), "push constant 110")
+        self.assertEqual(next(vm_insts), "call String.appendChar 2")
+        self.assertEqual(next(vm_insts), "push constant 121")
+        self.assertEqual(next(vm_insts), "call String.appendChar 2")
+        self.assertEqual(next(vm_insts), "push constant 32")
+        self.assertEqual(next(vm_insts), "call String.appendChar 2")
+        self.assertEqual(next(vm_insts), "push constant 110")
+        self.assertEqual(next(vm_insts), "call String.appendChar 2")
+        self.assertEqual(next(vm_insts), "push constant 117")
+        self.assertEqual(next(vm_insts), "call String.appendChar 2")
+        self.assertEqual(next(vm_insts), "push constant 109")
+        self.assertEqual(next(vm_insts), "call String.appendChar 2")
+        self.assertEqual(next(vm_insts), "push constant 98")
+        self.assertEqual(next(vm_insts), "call String.appendChar 2")
+        self.assertEqual(next(vm_insts), "push constant 101")
+        self.assertEqual(next(vm_insts), "call String.appendChar 2")
+        self.assertEqual(next(vm_insts), "push constant 114")
+        self.assertEqual(next(vm_insts), "call String.appendChar 2")
+        self.assertEqual(next(vm_insts), "push constant 115")
+        self.assertEqual(next(vm_insts), "call String.appendChar 2")
+        self.assertEqual(next(vm_insts), "push constant 63")
+        self.assertEqual(next(vm_insts), "call String.appendChar 2")
+        self.assertEqual(next(vm_insts), "push constant 32")
+        self.assertEqual(next(vm_insts), "call String.appendChar 2")
+        self.assertEqual(next(vm_insts), "call Keyboard.readInt 1")
+        self.assertEqual(next(vm_insts), "pop local 1")
+        self.assertEqual(next(vm_insts), "push local 1")
+        self.assertEqual(next(vm_insts), "call Array.new 1")
+        self.assertEqual(next(vm_insts), "pop local 0")
+        self.assertEqual(next(vm_insts), "push constant 0")
+        self.assertEqual(next(vm_insts), "pop local 2")
+        self.assertEqual(next(vm_insts), "label WHILE_EXP0")
+        self.assertEqual(next(vm_insts), "push local 2")
+        self.assertEqual(next(vm_insts), "push local 1")
+        self.assertEqual(next(vm_insts), "lt")
+        self.assertEqual(next(vm_insts), "not")
+        self.assertEqual(next(vm_insts), "if-goto WHILE_END0")
+        self.assertEqual(next(vm_insts), "push local 2")
+        self.assertEqual(next(vm_insts), "push local 0")
+        self.assertEqual(next(vm_insts), "add")
+        self.assertEqual(next(vm_insts), "push constant 16")
+        self.assertEqual(next(vm_insts), "call String.new 1")
+        self.assertEqual(next(vm_insts), "push constant 69")
+        self.assertEqual(next(vm_insts), "call String.appendChar 2")
+        self.assertEqual(next(vm_insts), "push constant 110")
+        self.assertEqual(next(vm_insts), "call String.appendChar 2")
+        self.assertEqual(next(vm_insts), "push constant 116")
+        self.assertEqual(next(vm_insts), "call String.appendChar 2")
+        self.assertEqual(next(vm_insts), "push constant 101")
+        self.assertEqual(next(vm_insts), "call String.appendChar 2")
+        self.assertEqual(next(vm_insts), "push constant 114")
+        self.assertEqual(next(vm_insts), "call String.appendChar 2")
+        self.assertEqual(next(vm_insts), "push constant 32")
+        self.assertEqual(next(vm_insts), "call String.appendChar 2")
+        self.assertEqual(next(vm_insts), "push constant 97")
+        self.assertEqual(next(vm_insts), "call String.appendChar 2")
+        self.assertEqual(next(vm_insts), "push constant 32")
+        self.assertEqual(next(vm_insts), "call String.appendChar 2")
+        self.assertEqual(next(vm_insts), "push constant 110")
+        self.assertEqual(next(vm_insts), "call String.appendChar 2")
+        self.assertEqual(next(vm_insts), "push constant 117")
+        self.assertEqual(next(vm_insts), "call String.appendChar 2")
+        self.assertEqual(next(vm_insts), "push constant 109")
+        self.assertEqual(next(vm_insts), "call String.appendChar 2")
+        self.assertEqual(next(vm_insts), "push constant 98")
+        self.assertEqual(next(vm_insts), "call String.appendChar 2")
+        self.assertEqual(next(vm_insts), "push constant 101")
+        self.assertEqual(next(vm_insts), "call String.appendChar 2")
+        self.assertEqual(next(vm_insts), "push constant 114")
+        self.assertEqual(next(vm_insts), "call String.appendChar 2")
+        self.assertEqual(next(vm_insts), "push constant 58")
+        self.assertEqual(next(vm_insts), "call String.appendChar 2")
+        self.assertEqual(next(vm_insts), "push constant 32")
+        self.assertEqual(next(vm_insts), "call String.appendChar 2")
+        self.assertEqual(next(vm_insts), "call Keyboard.readInt 1")
+        self.assertEqual(next(vm_insts), "pop temp 0")
+        self.assertEqual(next(vm_insts), "pop pointer 1")
+        self.assertEqual(next(vm_insts), "push temp 0")
+        self.assertEqual(next(vm_insts), "pop that 0")
+        self.assertEqual(next(vm_insts), "push local 3")
+        self.assertEqual(next(vm_insts), "push local 2")
+        self.assertEqual(next(vm_insts), "push local 0")
+        self.assertEqual(next(vm_insts), "add")
+        self.assertEqual(next(vm_insts), "pop pointer 1")
+        self.assertEqual(next(vm_insts), "push that 0")
+        self.assertEqual(next(vm_insts), "add")
+        self.assertEqual(next(vm_insts), "pop local 3")
+        self.assertEqual(next(vm_insts), "push local 2")
+        self.assertEqual(next(vm_insts), "push constant 1")
+        self.assertEqual(next(vm_insts), "add")
+        self.assertEqual(next(vm_insts), "pop local 2")
+        self.assertEqual(next(vm_insts), "goto WHILE_EXP0")
+        self.assertEqual(next(vm_insts), "label WHILE_END0")
+        self.assertEqual(next(vm_insts), "push constant 15")
+        self.assertEqual(next(vm_insts), "call String.new 1")
+        self.assertEqual(next(vm_insts), "push constant 84")
+        self.assertEqual(next(vm_insts), "call String.appendChar 2")
+        self.assertEqual(next(vm_insts), "push constant 104")
+        self.assertEqual(next(vm_insts), "call String.appendChar 2")
+        self.assertEqual(next(vm_insts), "push constant 101")
+        self.assertEqual(next(vm_insts), "call String.appendChar 2")
+        self.assertEqual(next(vm_insts), "push constant 32")
+        self.assertEqual(next(vm_insts), "call String.appendChar 2")
+        self.assertEqual(next(vm_insts), "push constant 97")
+        self.assertEqual(next(vm_insts), "call String.appendChar 2")
+        self.assertEqual(next(vm_insts), "push constant 118")
+        self.assertEqual(next(vm_insts), "call String.appendChar 2")
+        self.assertEqual(next(vm_insts), "push constant 101")
+        self.assertEqual(next(vm_insts), "call String.appendChar 2")
+        self.assertEqual(next(vm_insts), "push constant 114")
+        self.assertEqual(next(vm_insts), "call String.appendChar 2")
+        self.assertEqual(next(vm_insts), "push constant 97")
+        self.assertEqual(next(vm_insts), "call String.appendChar 2")
+        self.assertEqual(next(vm_insts), "push constant 103")
+        self.assertEqual(next(vm_insts), "call String.appendChar 2")
+        self.assertEqual(next(vm_insts), "push constant 101")
+        self.assertEqual(next(vm_insts), "call String.appendChar 2")
+        self.assertEqual(next(vm_insts), "push constant 32")
+        self.assertEqual(next(vm_insts), "call String.appendChar 2")
+        self.assertEqual(next(vm_insts), "push constant 105")
+        self.assertEqual(next(vm_insts), "call String.appendChar 2")
+        self.assertEqual(next(vm_insts), "push constant 115")
+        self.assertEqual(next(vm_insts), "call String.appendChar 2")
+        self.assertEqual(next(vm_insts), "push constant 32")
+        self.assertEqual(next(vm_insts), "call String.appendChar 2")
+        self.assertEqual(next(vm_insts), "call Output.printString 1")
+        self.assertEqual(next(vm_insts), "pop temp 0")
+        self.assertEqual(next(vm_insts), "push local 3")
+        self.assertEqual(next(vm_insts), "push local 1")
+        self.assertEqual(next(vm_insts), "call Math.divide 2")
+        self.assertEqual(next(vm_insts), "call Output.printInt 1")
+        self.assertEqual(next(vm_insts), "pop temp 0")
+        self.assertEqual(next(vm_insts), "push constant 0")
+        self.assertEqual(next(vm_insts), "return")
+
     def test_compile_statements(self):
         mock_tokens = peekable(
             iter(
