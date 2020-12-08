@@ -24,10 +24,12 @@ class CompilationEngine:
             yield f"push constant {num.val}"
         elif isinstance(tokens.peek(), StringConstant):
             # consume string constant
-            string = next(tokens)
-            yield f"Sys.alloc({len(string)})"
-            for s in string:
-                yield f"push {s}"
+            string_constant = next(tokens).val
+            yield f"push constant {len(string_constant)}"
+            yield f"call String.new 1"
+            for s in string_constant:
+                yield f"push constant {ord(s)}"
+                yield f"call String.appendChar 2"
         elif isinstance(tokens.peek(), Keyword):
             # consume keyword constant (true/false/null)
             const_keyword = next(tokens).val
@@ -150,12 +152,12 @@ class CompilationEngine:
 
         if method_name:
             yield f"call {name}.{method_name} {self.sub_routine_arg_count}"
-            yield "pop temp 0"
+            # yield "pop temp 0"
         else:
             # calling an object method
             yield "push pointer 0"
             yield f"call {self.class_name}.{name} {self.sub_routine_arg_count + 1}"
-            yield "pop temp 0"
+            # yield "pop temp 0"
         # TODO remove this stateful sub_routine_arg_count global variable
         self.sub_routine_arg_count = 0
 
@@ -259,6 +261,7 @@ class CompilationEngine:
             next(tokens)  # do
             for i in self.compile_subroutine_call(tokens, symbol_table, lvl + 2):
                 yield i
+            yield "pop temp 0"
             next(tokens)  # ;
         elif tokens.peek() == Keyword("return"):
             print("DEBUG", (lvl + 1) * " ", "return_statement")
