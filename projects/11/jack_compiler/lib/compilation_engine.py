@@ -15,6 +15,7 @@ class CompilationEngine:
         self.sub_routine_return_type: str = None
         self.sub_routine_arg_count: int = 0  # should this be part of the symbol table because it contains other state as well?
         self.if_level = -1
+        self.while_level = -1
 
     def compile_term(self, tokens, symbol_table, lvl=0):
         print("DEBUG", (lvl + 1) * " ", "compile_term")
@@ -254,22 +255,24 @@ class CompilationEngine:
 
             self.if_level -= 1
         elif tokens.peek() == Keyword("while"):
+            self.while_level += 1
             print("DEBUG", (lvl + 1) * " ", "while_statement")
 
-            yield f"label WHILE_EXP0"
+            yield f"label WHILE_EXP{self.while_level}"
             next(tokens)  # while
             next(tokens)  # (
             for i in self.compile_expression(tokens, symbol_table, lvl + 2):
                 yield i
             next(tokens)  # )
             yield "not"
-            yield "if-goto WHILE_END0"
+            yield f"if-goto WHILE_END{self.while_level}"
             next(tokens)  # {
             for i in self.compile_statements(tokens, symbol_table, lvl + 2):
                 yield i
             next(tokens)  # }
-            yield "goto WHILE_EXP0"
-            yield "label WHILE_END0"
+            yield f"goto WHILE_EXP{self.while_level}"
+            yield f"label WHILE_END{self.while_level}"
+            self.while_level -= 1
 
         elif tokens.peek() == Keyword("do"):
             print("DEBUG", (lvl + 1) * " ", "do_statement")
