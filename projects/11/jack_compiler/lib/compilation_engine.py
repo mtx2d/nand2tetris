@@ -52,19 +52,23 @@ class CompilationEngine:
         elif isinstance(tokens.peek(), Identifier):
             identifier = tokens.peek().val
             print("DEBUG", (lvl + 1) * " ", "identifier:", identifier)
+            SEGMENT_MAP = {"var": "local", "field": "this", "argument": "argument"}
             if tokens[1] == Symbol("["):
                 var_name = next(tokens).val  # varName
-                next(tokens).to_xml(lvl + 1)  # [
+                next(tokens)  # [
                 for i in self.compile_expression(tokens, symbol_table, lvl + 1):
                     yield i
-                next(tokens).to_xml(lvl + 1)  # ]
+                yield f"push {SEGMENT_MAP[symbol_table.kind_of(var_name)]} {symbol_table.index_of(var_name)}"
+                yield f"add"
+                yield f"pop pointer 1"  # a[i] == a + i, save this to THAT
+                yield f"push that 0"  # place the content a[i] onto the global stack
+                next(tokens)  # ]
             elif tokens[1] in [Symbol("("), Symbol(".")]:
                 # subRoutineCall
                 for i in self.compile_subroutine_call(tokens, symbol_table, lvl + 1):
                     yield i
             else:  # regular var
                 var_name = next(tokens).val  # varName
-                SEGMENT_MAP = {"var": "local", "field": "this", "argument": "argument"}
                 yield f"push {SEGMENT_MAP[symbol_table.kind_of(var_name)]} {symbol_table.index_of(var_name)}"
         elif tokens.peek() == Symbol("("):
             next(tokens).to_xml(lvl + 1)  # (
@@ -204,6 +208,10 @@ class CompilationEngine:
                 next(tokens).to_xml(lvl + 2)  # =
                 for i in self.compile_expression(tokens, symbol_table, lvl + 2):
                     yield i
+                yield "pop temp 0"
+                yield "pop pointer 1"
+                yield "push temp 0"
+                yield "pop that 0"  # what does this do?
                 next(tokens).to_xml(lvl + 2)  # ;
             else:
                 raise ValueError(f"{tokens.peek()} invalid.")
