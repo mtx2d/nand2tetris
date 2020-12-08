@@ -155,13 +155,15 @@ class CompilationEngine:
         next(tokens)  # )
 
         if method_name:
-            yield f"call {name}.{method_name} {self.sub_routine_arg_count}"
-            # yield "pop temp 0"
+            if name.istitle():
+                yield f"call {name}.{method_name} {self.sub_routine_arg_count}"
+            else:
+                yield f"call {symbol_table.type_of(name)}.{method_name} {self.sub_routine_arg_count}"
+
         else:
             # calling an object method
             yield "push pointer 0"
             yield f"call {self.class_name}.{name} {self.sub_routine_arg_count + 1}"
-            # yield "pop temp 0"
         # TODO remove this stateful sub_routine_arg_count global variable
         self.sub_routine_arg_count = 0
 

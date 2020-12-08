@@ -53,10 +53,10 @@ class SymbolTable:
 
     def type_of(self, name: str) -> str:
         if name in self.subroutine_table:
-            return self.subroutine_table[name]
+            return self.subroutine_table[name].type
 
         if name in self.global_table:
-            return self.global_table[name]
+            return self.global_table[name].type
 
         raise ValueError(f"name not found: {name}")
 
