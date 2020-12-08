@@ -1556,185 +1556,318 @@ class TestCompilationEngine(unittest.TestCase):
         self.assertEqual(next(vm_insts), "push constant 0")
         self.assertEqual(next(vm_insts), "return")
 
-    def test_compile_statements(self):
-        mock_tokens = peekable(
-            iter(
-                [
-                    Keyword("if"),
-                    Symbol("("),
-                    Identifier("x"),
-                    Symbol("<"),
-                    IntegerConstant("153"),
-                    Symbol(")"),
-                    Symbol("{"),
-                    Keyword("let"),
-                    Identifier("city"),
-                    Symbol("="),
-                    StringConstant("Paris"),
-                    Symbol(";"),
-                    Symbol("}"),
-                ]
-            )
-        )
-        mock_symbol_table = mock.Mock()
-        vm_instructions = CompilationEngine.compile_statements(
-            mock_tokens, mock_symbol_table
-        )
-        self.assertEqual(next(vm_instructions), f'{" " * 2 * 1}<statements>')
-        self.assertEqual(next(vm_instructions), f'{" " * 2 * 2}<ifStatement>')
-        self.assertEqual(next(vm_instructions), Keyword("if").to_xml(3))
-        self.assertEqual(next(vm_instructions), Symbol("(").to_xml(3))
-        self.assertEqual(next(vm_instructions), f'{" " * 2 * 3}<expression>')
-        self.assertEqual(next(vm_instructions), f'{" " * 2 * 4}<term>')
-        self.assertEqual(next(vm_instructions), Identifier("x").to_xml(5))
-        self.assertEqual(next(vm_instructions), f'{" " * 2 * 4}</term>')
-        self.assertEqual(next(vm_instructions), Symbol("<").to_xml(4))
-        self.assertEqual(next(vm_instructions), f'{" " * 2 * 4}<term>')
-        self.assertEqual(next(vm_instructions), IntegerConstant("153").to_xml(5))
-        self.assertEqual(next(vm_instructions), f'{" " * 2 * 4}</term>')
-        self.assertEqual(next(vm_instructions), f'{" " * 2 * 3}</expression>')
-        self.assertEqual(next(vm_instructions), Symbol(")").to_xml(3))
-        self.assertEqual(next(vm_instructions), Symbol("{").to_xml(3))
-        self.assertEqual(next(vm_instructions), f'{" " * 2 * 4}<statements>')
-        self.assertEqual(next(vm_instructions), f'{" " * 2 * 5}<letStatement>')
-        self.assertEqual(next(vm_instructions), Keyword("let").to_xml(6))
-        self.assertEqual(next(vm_instructions), Identifier("city").to_xml(6))
-        self.assertEqual(next(vm_instructions), Symbol("=").to_xml(6))
-        self.assertEqual(next(vm_instructions), f'{" " * 2 * 6}<expression>')
-        self.assertEqual(next(vm_instructions), f'{" " * 2 * 7}<term>')
-        self.assertEqual(next(vm_instructions), StringConstant("Paris").to_xml(8))
-        self.assertEqual(next(vm_instructions), f'{" " * 2 * 7}</term>')
-        self.assertEqual(next(vm_instructions), f'{" " * 2 * 6}</expression>')
-        self.assertEqual(next(vm_instructions), Symbol(";").to_xml(6))
-        self.assertEqual(next(vm_instructions), f'{" " * 2 * 5}</letStatement>')
-        self.assertEqual(next(vm_instructions), f'{" " * 2 * 4}</statements>')
-        self.assertEqual(next(vm_instructions), Symbol("}").to_xml(3))
-        self.assertEqual(next(vm_instructions), f'{" " * 2 * 2}</ifStatement>')
-        self.assertEqual(next(vm_instructions), f'{" " * 2 * 1}</statements>')
-
-    def test_compile_class(self):
+    def test_square_game(self):
         mock_tokens = peekable(
             iter(
                 [
                     Keyword("class"),
-                    Identifier("Main"),
-                    Symbol("{"),
-                    Keyword("static"),
-                    Keyword("boolean"),
-                    Identifier("test"),
-                    Symbol(";"),
-                    Keyword("function"),
-                    Keyword("void"),
-                    Identifier("main"),
-                    Symbol("("),
-                    Symbol(")"),
-                    Symbol("{"),
-                    Keyword("var"),
                     Identifier("SquareGame"),
-                    Identifier("game"),
+                    Symbol("{"),
+                    Keyword("field"),
+                    Identifier("Square"),
+                    Identifier("square"),
                     Symbol(";"),
-                    Keyword("let"),
-                    Identifier("game"),
-                    Symbol("="),
+                    Keyword("field"),
+                    Keyword("int"),
+                    Identifier("direction"),
+                    Symbol(";"),
+                    Keyword("constructor"),
                     Identifier("SquareGame"),
-                    Symbol("."),
                     Identifier("new"),
                     Symbol("("),
                     Symbol(")"),
-                    Symbol(";"),
-                    Keyword("do"),
-                    Identifier("game"),
+                    Symbol("{"),
+                    Keyword("let"),
+                    Identifier("square"),
+                    Symbol("="),
+                    Identifier("Square"),
                     Symbol("."),
-                    Identifier("run"),
+                    Identifier("new"),
                     Symbol("("),
+                    IntegerConstant("0"),
+                    Symbol(","),
+                    IntegerConstant("0"),
+                    Symbol(","),
+                    IntegerConstant("30"),
                     Symbol(")"),
                     Symbol(";"),
+                    Keyword("let"),
+                    Identifier("direction"),
+                    Symbol("="),
+                    IntegerConstant("0"),
+                    Symbol(";"),
+                    Keyword("return"),
+                    Keyword("this"),
+                    Symbol(";"),
+                    Symbol("}"),
+                    Keyword("method"),
+                    Keyword("void"),
+                    Identifier("dispose"),
+                    Symbol("("),
+                    Symbol(")"),
+                    Symbol("{"),
                     Keyword("do"),
-                    Identifier("game"),
+                    Identifier("square"),
                     Symbol("."),
                     Identifier("dispose"),
                     Symbol("("),
                     Symbol(")"),
                     Symbol(";"),
+                    Keyword("do"),
+                    Identifier("Memory"),
+                    Symbol("."),
+                    Identifier("deAlloc"),
+                    Symbol("("),
+                    Keyword("this"),
+                    Symbol(")"),
+                    Symbol(";"),
                     Keyword("return"),
                     Symbol(";"),
                     Symbol("}"),
-                    Keyword("function"),
+                    Keyword("method"),
                     Keyword("void"),
-                    Identifier("test"),
+                    Identifier("moveSquare"),
                     Symbol("("),
                     Symbol(")"),
                     Symbol("{"),
-                    Keyword("var"),
-                    Keyword("int"),
-                    Identifier("i"),
-                    Symbol(","),
-                    Identifier("j"),
-                    Symbol(";"),
-                    Keyword("var"),
-                    Identifier("String"),
-                    Identifier("s"),
-                    Symbol(";"),
-                    Keyword("var"),
-                    Identifier("Array"),
-                    Identifier("a"),
-                    Symbol(";"),
                     Keyword("if"),
                     Symbol("("),
-                    Keyword("false"),
+                    Identifier("direction"),
+                    Symbol("="),
+                    IntegerConstant("1"),
                     Symbol(")"),
                     Symbol("{"),
-                    Keyword("let"),
-                    Identifier("s"),
-                    Symbol("="),
-                    StringConstant("string constant"),
-                    Symbol(";"),
-                    Keyword("let"),
-                    Identifier("s"),
-                    Symbol("="),
-                    Keyword("null"),
-                    Symbol(";"),
-                    Keyword("let"),
-                    Identifier("a"),
-                    Symbol("["),
-                    IntegerConstant("1"),
-                    Symbol("]"),
-                    Symbol("="),
-                    Identifier("a"),
-                    Symbol("["),
-                    IntegerConstant("2"),
-                    Symbol("]"),
+                    Keyword("do"),
+                    Identifier("square"),
+                    Symbol("."),
+                    Identifier("moveUp"),
+                    Symbol("("),
+                    Symbol(")"),
                     Symbol(";"),
                     Symbol("}"),
-                    Keyword("else"),
-                    Symbol("{"),
-                    Keyword("let"),
-                    Identifier("i"),
-                    Symbol("="),
-                    Identifier("i"),
-                    Symbol("*"),
+                    Keyword("if"),
                     Symbol("("),
-                    Symbol("-"),
-                    Identifier("j"),
-                    Symbol(")"),
-                    Symbol(";"),
-                    Keyword("let"),
-                    Identifier("j"),
+                    Identifier("direction"),
                     Symbol("="),
-                    Identifier("j"),
-                    Symbol("/"),
-                    Symbol("("),
-                    Symbol("-"),
                     IntegerConstant("2"),
                     Symbol(")"),
+                    Symbol("{"),
+                    Keyword("do"),
+                    Identifier("square"),
+                    Symbol("."),
+                    Identifier("moveDown"),
+                    Symbol("("),
+                    Symbol(")"),
+                    Symbol(";"),
+                    Symbol("}"),
+                    Keyword("if"),
+                    Symbol("("),
+                    Identifier("direction"),
+                    Symbol("="),
+                    IntegerConstant("3"),
+                    Symbol(")"),
+                    Symbol("{"),
+                    Keyword("do"),
+                    Identifier("square"),
+                    Symbol("."),
+                    Identifier("moveLeft"),
+                    Symbol("("),
+                    Symbol(")"),
+                    Symbol(";"),
+                    Symbol("}"),
+                    Keyword("if"),
+                    Symbol("("),
+                    Identifier("direction"),
+                    Symbol("="),
+                    IntegerConstant("4"),
+                    Symbol(")"),
+                    Symbol("{"),
+                    Keyword("do"),
+                    Identifier("square"),
+                    Symbol("."),
+                    Identifier("moveRight"),
+                    Symbol("("),
+                    Symbol(")"),
+                    Symbol(";"),
+                    Symbol("}"),
+                    Keyword("do"),
+                    Identifier("Sys"),
+                    Symbol("."),
+                    Identifier("wait"),
+                    Symbol("("),
+                    IntegerConstant("5"),
+                    Symbol(")"),
+                    Symbol(";"),
+                    Keyword("return"),
+                    Symbol(";"),
+                    Symbol("}"),
+                    Keyword("method"),
+                    Keyword("void"),
+                    Identifier("run"),
+                    Symbol("("),
+                    Symbol(")"),
+                    Symbol("{"),
+                    Keyword("var"),
+                    Keyword("char"),
+                    Identifier("key"),
+                    Symbol(";"),
+                    Keyword("var"),
+                    Keyword("boolean"),
+                    Identifier("exit"),
                     Symbol(";"),
                     Keyword("let"),
-                    Identifier("i"),
+                    Identifier("exit"),
                     Symbol("="),
-                    Identifier("i"),
-                    Symbol("|"),
-                    Identifier("j"),
+                    Keyword("false"),
                     Symbol(";"),
+                    Keyword("while"),
+                    Symbol("("),
+                    Symbol("~"),
+                    Identifier("exit"),
+                    Symbol(")"),
+                    Symbol("{"),
+                    Keyword("while"),
+                    Symbol("("),
+                    Identifier("key"),
+                    Symbol("="),
+                    IntegerConstant("0"),
+                    Symbol(")"),
+                    Symbol("{"),
+                    Keyword("let"),
+                    Identifier("key"),
+                    Symbol("="),
+                    Identifier("Keyboard"),
+                    Symbol("."),
+                    Identifier("keyPressed"),
+                    Symbol("("),
+                    Symbol(")"),
+                    Symbol(";"),
+                    Keyword("do"),
+                    Identifier("moveSquare"),
+                    Symbol("("),
+                    Symbol(")"),
+                    Symbol(";"),
+                    Symbol("}"),
+                    Keyword("if"),
+                    Symbol("("),
+                    Identifier("key"),
+                    Symbol("="),
+                    IntegerConstant("81"),
+                    Symbol(")"),
+                    Symbol("{"),
+                    Keyword("let"),
+                    Identifier("exit"),
+                    Symbol("="),
+                    Keyword("true"),
+                    Symbol(";"),
+                    Symbol("}"),
+                    Keyword("if"),
+                    Symbol("("),
+                    Identifier("key"),
+                    Symbol("="),
+                    IntegerConstant("90"),
+                    Symbol(")"),
+                    Symbol("{"),
+                    Keyword("do"),
+                    Identifier("square"),
+                    Symbol("."),
+                    Identifier("decSize"),
+                    Symbol("("),
+                    Symbol(")"),
+                    Symbol(";"),
+                    Symbol("}"),
+                    Keyword("if"),
+                    Symbol("("),
+                    Identifier("key"),
+                    Symbol("="),
+                    IntegerConstant("88"),
+                    Symbol(")"),
+                    Symbol("{"),
+                    Keyword("do"),
+                    Identifier("square"),
+                    Symbol("."),
+                    Identifier("incSize"),
+                    Symbol("("),
+                    Symbol(")"),
+                    Symbol(";"),
+                    Symbol("}"),
+                    Keyword("if"),
+                    Symbol("("),
+                    Identifier("key"),
+                    Symbol("="),
+                    IntegerConstant("131"),
+                    Symbol(")"),
+                    Symbol("{"),
+                    Keyword("let"),
+                    Identifier("direction"),
+                    Symbol("="),
+                    IntegerConstant("1"),
+                    Symbol(";"),
+                    Symbol("}"),
+                    Keyword("if"),
+                    Symbol("("),
+                    Identifier("key"),
+                    Symbol("="),
+                    IntegerConstant("133"),
+                    Symbol(")"),
+                    Symbol("{"),
+                    Keyword("let"),
+                    Identifier("direction"),
+                    Symbol("="),
+                    IntegerConstant("2"),
+                    Symbol(";"),
+                    Symbol("}"),
+                    Keyword("if"),
+                    Symbol("("),
+                    Identifier("key"),
+                    Symbol("="),
+                    IntegerConstant("130"),
+                    Symbol(")"),
+                    Symbol("{"),
+                    Keyword("let"),
+                    Identifier("direction"),
+                    Symbol("="),
+                    IntegerConstant("3"),
+                    Symbol(";"),
+                    Symbol("}"),
+                    Keyword("if"),
+                    Symbol("("),
+                    Identifier("key"),
+                    Symbol("="),
+                    IntegerConstant("132"),
+                    Symbol(")"),
+                    Symbol("{"),
+                    Keyword("let"),
+                    Identifier("direction"),
+                    Symbol("="),
+                    IntegerConstant("4"),
+                    Symbol(";"),
+                    Symbol("}"),
+                    Keyword("while"),
+                    Symbol("("),
+                    Symbol("~"),
+                    Symbol("("),
+                    Identifier("key"),
+                    Symbol("="),
+                    IntegerConstant("0"),
+                    Symbol(")"),
+                    Symbol(")"),
+                    Symbol("{"),
+                    Keyword("let"),
+                    Identifier("key"),
+                    Symbol("="),
+                    Identifier("Keyboard"),
+                    Symbol("."),
+                    Identifier("keyPressed"),
+                    Symbol("("),
+                    Symbol(")"),
+                    Symbol(";"),
+                    Keyword("do"),
+                    Identifier("moveSquare"),
+                    Symbol("("),
+                    Symbol(")"),
+                    Symbol(";"),
+                    Symbol("}"),
                     Symbol("}"),
                     Keyword("return"),
                     Symbol(";"),
@@ -1744,422 +1877,185 @@ class TestCompilationEngine(unittest.TestCase):
             )
         )
 
-        mock_symbol_table = mock.Mock()
-        vm_instructions = CompilationEngine.compile_class(
-            mock_tokens, mock_symbol_table
-        )
-        self.assertEqual(next(vm_instructions), "<class>"),
-        self.assertEqual(next(vm_instructions), "  <keyword> class </keyword>"),
-        self.assertEqual(next(vm_instructions), "  <identifier> Main </identifier>"),
-        self.assertEqual(next(vm_instructions), "  <symbol> { </symbol>"),
-        self.assertEqual(next(vm_instructions), "    <classVarDec>"),
-        self.assertEqual(next(vm_instructions), "      <keyword> static </keyword>"),
-        self.assertEqual(next(vm_instructions), "        <keyword> boolean </keyword>"),
-        self.assertEqual(
-            next(vm_instructions), "      <identifier> test </identifier>"
-        ),
-        self.assertEqual(next(vm_instructions), "      <symbol> ; </symbol>"),
-        self.assertEqual(next(vm_instructions), "    </classVarDec>"),
-        self.assertEqual(next(vm_instructions), "  <subroutineDec>"),
-        self.assertEqual(next(vm_instructions), "    <keyword> function </keyword>"),
-        self.assertEqual(next(vm_instructions), "  <keyword> void </keyword>"),
-        self.assertEqual(next(vm_instructions), "    <identifier> main </identifier>"),
-        self.assertEqual(next(vm_instructions), "    <symbol> ( </symbol>"),
-        self.assertEqual(next(vm_instructions), "      <parameterList>"),
-        self.assertEqual(next(vm_instructions), "      </parameterList>"),
-        self.assertEqual(next(vm_instructions), "    <symbol> ) </symbol>"),
-        self.assertEqual(next(vm_instructions), "      <subroutineBody>"),
-        self.assertEqual(next(vm_instructions), "        <symbol> { </symbol>"),
-        self.assertEqual(next(vm_instructions), "          <varDec>"),
-        self.assertEqual(next(vm_instructions), "            <keyword> var </keyword>"),
-        self.assertEqual(
-            next(vm_instructions), "              <identifier> SquareGame </identifier>"
-        ),
-        self.assertEqual(
-            next(vm_instructions), "            <identifier> game </identifier>"
-        ),
-        self.assertEqual(next(vm_instructions), "            <symbol> ; </symbol>"),
-        self.assertEqual(next(vm_instructions), "          </varDec>"),
-        self.assertEqual(next(vm_instructions), "          <statements>"),
-        self.assertEqual(next(vm_instructions), "            <letStatement>"),
-        self.assertEqual(
-            next(vm_instructions), "              <keyword> let </keyword>"
-        ),
-        self.assertEqual(
-            next(vm_instructions), "              <identifier> game </identifier>"
-        ),
-        self.assertEqual(next(vm_instructions), "              <symbol> = </symbol>"),
-        self.assertEqual(next(vm_instructions), "              <expression>"),
-        self.assertEqual(next(vm_instructions), "                <term>"),
-        self.assertEqual(
-            next(vm_instructions),
-            "                    <identifier> SquareGame </identifier>",
-        ),
-        self.assertEqual(
-            next(vm_instructions), "                    <symbol> . </symbol>"
-        ),
-        self.assertEqual(
-            next(vm_instructions), "                    <identifier> new </identifier>"
-        ),
-        self.assertEqual(
-            next(vm_instructions), "                    <symbol> ( </symbol>"
-        ),
-        self.assertEqual(next(vm_instructions), "                    <expressionList>"),
-        self.assertEqual(
-            next(vm_instructions), "                    </expressionList>"
-        ),
-        self.assertEqual(
-            next(vm_instructions), "                    <symbol> ) </symbol>"
-        ),
-        self.assertEqual(next(vm_instructions), "                </term>"),
-        self.assertEqual(next(vm_instructions), "              </expression>"),
-        self.assertEqual(next(vm_instructions), "              <symbol> ; </symbol>"),
-        self.assertEqual(next(vm_instructions), "            </letStatement>"),
-        self.assertEqual(next(vm_instructions), "            <doStatement>"),
-        self.assertEqual(
-            next(vm_instructions), "              <keyword> do </keyword>"
-        ),
-        self.assertEqual(
-            next(vm_instructions), "                <identifier> game </identifier>"
-        ),
-        self.assertEqual(next(vm_instructions), "                <symbol> . </symbol>"),
-        self.assertEqual(
-            next(vm_instructions), "                <identifier> run </identifier>"
-        ),
-        self.assertEqual(next(vm_instructions), "                <symbol> ( </symbol>"),
-        self.assertEqual(next(vm_instructions), "                <expressionList>"),
-        self.assertEqual(next(vm_instructions), "                </expressionList>"),
-        self.assertEqual(next(vm_instructions), "                <symbol> ) </symbol>"),
-        self.assertEqual(next(vm_instructions), "              <symbol> ; </symbol>"),
-        self.assertEqual(next(vm_instructions), "            </doStatement>"),
-        self.assertEqual(next(vm_instructions), "            <doStatement>"),
-        self.assertEqual(
-            next(vm_instructions), "              <keyword> do </keyword>"
-        ),
-        self.assertEqual(
-            next(vm_instructions), "                <identifier> game </identifier>"
-        ),
-        self.assertEqual(next(vm_instructions), "                <symbol> . </symbol>"),
-        self.assertEqual(
-            next(vm_instructions), "                <identifier> dispose </identifier>"
-        ),
-        self.assertEqual(next(vm_instructions), "                <symbol> ( </symbol>"),
-        self.assertEqual(next(vm_instructions), "                <expressionList>"),
-        self.assertEqual(next(vm_instructions), "                </expressionList>"),
-        self.assertEqual(next(vm_instructions), "                <symbol> ) </symbol>"),
-        self.assertEqual(next(vm_instructions), "              <symbol> ; </symbol>"),
-        self.assertEqual(next(vm_instructions), "            </doStatement>"),
-        self.assertEqual(next(vm_instructions), "            <returnStatement>"),
-        self.assertEqual(
-            next(vm_instructions), "            <keyword> return </keyword>"
-        ),
-        self.assertEqual(next(vm_instructions), "              <symbol> ; </symbol>"),
-        self.assertEqual(next(vm_instructions), "            </returnStatement>"),
-        self.assertEqual(next(vm_instructions), "          </statements>"),
-        self.assertEqual(next(vm_instructions), "        <symbol> } </symbol>"),
-        self.assertEqual(next(vm_instructions), "      </subroutineBody>"),
-        self.assertEqual(next(vm_instructions), "  </subroutineDec>"),
-        self.assertEqual(next(vm_instructions), "  <subroutineDec>"),
-        self.assertEqual(next(vm_instructions), "    <keyword> function </keyword>"),
-        self.assertEqual(next(vm_instructions), "  <keyword> void </keyword>"),
-        self.assertEqual(next(vm_instructions), "    <identifier> test </identifier>"),
-        self.assertEqual(next(vm_instructions), "    <symbol> ( </symbol>"),
-        self.assertEqual(next(vm_instructions), "      <parameterList>"),
-        self.assertEqual(next(vm_instructions), "      </parameterList>"),
-        self.assertEqual(next(vm_instructions), "    <symbol> ) </symbol>"),
-        self.assertEqual(next(vm_instructions), "      <subroutineBody>"),
-        self.assertEqual(next(vm_instructions), "        <symbol> { </symbol>"),
-        self.assertEqual(next(vm_instructions), "          <varDec>"),
-        self.assertEqual(next(vm_instructions), "            <keyword> var </keyword>"),
-        self.assertEqual(
-            next(vm_instructions), "              <keyword> int </keyword>"
-        ),
-        self.assertEqual(
-            next(vm_instructions), "            <identifier> i </identifier>"
-        ),
-        self.assertEqual(next(vm_instructions), "            <symbol> , </symbol>"),
-        self.assertEqual(
-            next(vm_instructions), "            <identifier> j </identifier>"
-        ),
-        self.assertEqual(next(vm_instructions), "            <symbol> ; </symbol>"),
-        self.assertEqual(next(vm_instructions), "          </varDec>"),
-        self.assertEqual(next(vm_instructions), "          <varDec>"),
-        self.assertEqual(next(vm_instructions), "            <keyword> var </keyword>"),
-        self.assertEqual(
-            next(vm_instructions), "              <identifier> String </identifier>"
-        ),
-        self.assertEqual(
-            next(vm_instructions), "            <identifier> s </identifier>"
-        ),
-        self.assertEqual(next(vm_instructions), "            <symbol> ; </symbol>"),
-        self.assertEqual(next(vm_instructions), "          </varDec>"),
-        self.assertEqual(next(vm_instructions), "          <varDec>"),
-        self.assertEqual(next(vm_instructions), "            <keyword> var </keyword>"),
-        self.assertEqual(
-            next(vm_instructions), "              <identifier> Array </identifier>"
-        ),
-        self.assertEqual(
-            next(vm_instructions), "            <identifier> a </identifier>"
-        ),
-        self.assertEqual(next(vm_instructions), "            <symbol> ; </symbol>"),
-        self.assertEqual(next(vm_instructions), "          </varDec>"),
-        self.assertEqual(next(vm_instructions), "          <statements>"),
-        self.assertEqual(next(vm_instructions), "            <ifStatement>"),
-        self.assertEqual(
-            next(vm_instructions), "              <keyword> if </keyword>"
-        ),
-        self.assertEqual(next(vm_instructions), "              <symbol> ( </symbol>"),
-        self.assertEqual(next(vm_instructions), "              <expression>"),
-        self.assertEqual(next(vm_instructions), "                <term>"),
-        self.assertEqual(
-            next(vm_instructions), "                  <keyword> false </keyword>"
-        ),
-        self.assertEqual(next(vm_instructions), "                </term>"),
-        self.assertEqual(next(vm_instructions), "              </expression>"),
-        self.assertEqual(next(vm_instructions), "              <symbol> ) </symbol>"),
-        self.assertEqual(next(vm_instructions), "              <symbol> { </symbol>"),
-        self.assertEqual(next(vm_instructions), "                <statements>"),
-        self.assertEqual(next(vm_instructions), "                  <letStatement>"),
-        self.assertEqual(
-            next(vm_instructions), "                    <keyword> let </keyword>"
-        ),
-        self.assertEqual(
-            next(vm_instructions), "                    <identifier> s </identifier>"
-        ),
-        self.assertEqual(
-            next(vm_instructions), "                    <symbol> = </symbol>"
-        ),
-        self.assertEqual(next(vm_instructions), "                    <expression>"),
-        self.assertEqual(next(vm_instructions), "                      <term>"),
-        self.assertEqual(
-            next(vm_instructions),
-            "                        <stringConstant> string constant </stringConstant>",
-        ),
-        self.assertEqual(next(vm_instructions), "                      </term>"),
-        self.assertEqual(next(vm_instructions), "                    </expression>"),
-        self.assertEqual(
-            next(vm_instructions), "                    <symbol> ; </symbol>"
-        ),
-        self.assertEqual(next(vm_instructions), "                  </letStatement>"),
-        self.assertEqual(next(vm_instructions), "                  <letStatement>"),
-        self.assertEqual(
-            next(vm_instructions), "                    <keyword> let </keyword>"
-        ),
-        self.assertEqual(
-            next(vm_instructions), "                    <identifier> s </identifier>"
-        ),
-        self.assertEqual(
-            next(vm_instructions), "                    <symbol> = </symbol>"
-        ),
-        self.assertEqual(next(vm_instructions), "                    <expression>"),
-        self.assertEqual(next(vm_instructions), "                      <term>"),
-        self.assertEqual(
-            next(vm_instructions), "                        <keyword> null </keyword>"
-        ),
-        self.assertEqual(next(vm_instructions), "                      </term>"),
-        self.assertEqual(next(vm_instructions), "                    </expression>"),
-        self.assertEqual(
-            next(vm_instructions), "                    <symbol> ; </symbol>"
-        ),
-        self.assertEqual(next(vm_instructions), "                  </letStatement>"),
-        self.assertEqual(next(vm_instructions), "                  <letStatement>"),
-        self.assertEqual(
-            next(vm_instructions), "                    <keyword> let </keyword>"
-        ),
-        self.assertEqual(
-            next(vm_instructions), "                    <identifier> a </identifier>"
-        ),
-        self.assertEqual(
-            next(vm_instructions), "                    <symbol> [ </symbol>"
-        ),
-        self.assertEqual(next(vm_instructions), "                    <expression>"),
-        self.assertEqual(next(vm_instructions), "                      <term>"),
-        self.assertEqual(
-            next(vm_instructions),
-            "                        <integerConstant> 1 </integerConstant>",
-        ),
-        self.assertEqual(next(vm_instructions), "                      </term>"),
-        self.assertEqual(next(vm_instructions), "                    </expression>"),
-        self.assertEqual(
-            next(vm_instructions), "                    <symbol> ] </symbol>"
-        ),
-        self.assertEqual(
-            next(vm_instructions), "                    <symbol> = </symbol>"
-        ),
-        self.assertEqual(next(vm_instructions), "                    <expression>"),
-        self.assertEqual(next(vm_instructions), "                      <term>"),
-        self.assertEqual(
-            next(vm_instructions),
-            "                        <identifier> a </identifier>",
-        ),
-        self.assertEqual(
-            next(vm_instructions), "                        <symbol> [ </symbol>"
-        ),
-        self.assertEqual(next(vm_instructions), "                        <expression>"),
-        self.assertEqual(next(vm_instructions), "                          <term>"),
-        self.assertEqual(
-            next(vm_instructions),
-            "                            <integerConstant> 2 </integerConstant>",
-        ),
-        self.assertEqual(next(vm_instructions), "                          </term>"),
-        self.assertEqual(
-            next(vm_instructions), "                        </expression>"
-        ),
-        self.assertEqual(
-            next(vm_instructions), "                        <symbol> ] </symbol>"
-        ),
-        self.assertEqual(next(vm_instructions), "                      </term>"),
-        self.assertEqual(next(vm_instructions), "                    </expression>"),
-        self.assertEqual(
-            next(vm_instructions), "                    <symbol> ; </symbol>"
-        ),
-        self.assertEqual(next(vm_instructions), "                  </letStatement>"),
-        self.assertEqual(next(vm_instructions), "                </statements>"),
-        self.assertEqual(next(vm_instructions), "              <symbol> } </symbol>"),
-        self.assertEqual(
-            next(vm_instructions), "              <keyword> else </keyword>"
-        ),
-        self.assertEqual(next(vm_instructions), "              <symbol> { </symbol>"),
-        self.assertEqual(next(vm_instructions), "                <statements>"),
-        self.assertEqual(next(vm_instructions), "                  <letStatement>"),
-        self.assertEqual(
-            next(vm_instructions), "                    <keyword> let </keyword>"
-        ),
-        self.assertEqual(
-            next(vm_instructions), "                    <identifier> i </identifier>"
-        ),
-        self.assertEqual(
-            next(vm_instructions), "                    <symbol> = </symbol>"
-        ),
-        self.assertEqual(next(vm_instructions), "                    <expression>"),
-        self.assertEqual(next(vm_instructions), "                      <term>"),
-        self.assertEqual(
-            next(vm_instructions),
-            "                        <identifier> i </identifier>",
-        ),
-        self.assertEqual(next(vm_instructions), "                      </term>"),
-        self.assertEqual(
-            next(vm_instructions), "                      <symbol> * </symbol>"
-        ),
-        self.assertEqual(next(vm_instructions), "                      <term>"),
-        self.assertEqual(
-            next(vm_instructions), "                        <symbol> ( </symbol>"
-        ),
-        self.assertEqual(next(vm_instructions), "                        <expression>"),
-        self.assertEqual(next(vm_instructions), "                          <term>"),
-        self.assertEqual(
-            next(vm_instructions), "                            <symbol> - </symbol>"
-        ),
-        self.assertEqual(next(vm_instructions), "                            <term>"),
-        self.assertEqual(
-            next(vm_instructions),
-            "                              <identifier> j </identifier>",
-        ),
-        self.assertEqual(next(vm_instructions), "                            </term>"),
-        self.assertEqual(next(vm_instructions), "                          </term>"),
-        self.assertEqual(
-            next(vm_instructions), "                        </expression>"
-        ),
-        self.assertEqual(
-            next(vm_instructions), "                        <symbol> ) </symbol>"
-        ),
-        self.assertEqual(next(vm_instructions), "                      </term>"),
-        self.assertEqual(next(vm_instructions), "                    </expression>"),
-        self.assertEqual(
-            next(vm_instructions), "                    <symbol> ; </symbol>"
-        ),
-        self.assertEqual(next(vm_instructions), "                  </letStatement>"),
-        self.assertEqual(next(vm_instructions), "                  <letStatement>"),
-        self.assertEqual(
-            next(vm_instructions), "                    <keyword> let </keyword>"
-        ),
-        self.assertEqual(
-            next(vm_instructions), "                    <identifier> j </identifier>"
-        ),
-        self.assertEqual(
-            next(vm_instructions), "                    <symbol> = </symbol>"
-        ),
-        self.assertEqual(next(vm_instructions), "                    <expression>"),
-        self.assertEqual(next(vm_instructions), "                      <term>"),
-        self.assertEqual(
-            next(vm_instructions),
-            "                        <identifier> j </identifier>",
-        ),
-        self.assertEqual(next(vm_instructions), "                      </term>"),
-        self.assertEqual(
-            next(vm_instructions), "                      <symbol> / </symbol>"
-        ),
-        self.assertEqual(next(vm_instructions), "                      <term>"),
-        self.assertEqual(
-            next(vm_instructions), "                        <symbol> ( </symbol>"
-        ),
-        self.assertEqual(next(vm_instructions), "                        <expression>"),
-        self.assertEqual(next(vm_instructions), "                          <term>"),
-        self.assertEqual(
-            next(vm_instructions), "                            <symbol> - </symbol>"
-        ),
-        self.assertEqual(next(vm_instructions), "                            <term>"),
-        self.assertEqual(
-            next(vm_instructions),
-            "                              <integerConstant> 2 </integerConstant>",
-        ),
-        self.assertEqual(next(vm_instructions), "                            </term>"),
-        self.assertEqual(next(vm_instructions), "                          </term>"),
-        self.assertEqual(
-            next(vm_instructions), "                        </expression>"
-        ),
-        self.assertEqual(
-            next(vm_instructions), "                        <symbol> ) </symbol>"
-        ),
-        self.assertEqual(next(vm_instructions), "                      </term>"),
-        self.assertEqual(next(vm_instructions), "                    </expression>"),
-        self.assertEqual(
-            next(vm_instructions), "                    <symbol> ; </symbol>"
-        ),
-        self.assertEqual(next(vm_instructions), "                  </letStatement>"),
-        self.assertEqual(next(vm_instructions), "                  <letStatement>"),
-        self.assertEqual(
-            next(vm_instructions), "                    <keyword> let </keyword>"
-        ),
-        self.assertEqual(
-            next(vm_instructions), "                    <identifier> i </identifier>"
-        ),
-        self.assertEqual(
-            next(vm_instructions), "                    <symbol> = </symbol>"
-        ),
-        self.assertEqual(next(vm_instructions), "                    <expression>"),
-        self.assertEqual(next(vm_instructions), "                      <term>"),
-        self.assertEqual(
-            next(vm_instructions),
-            "                        <identifier> i </identifier>",
-        ),
-        self.assertEqual(next(vm_instructions), "                      </term>"),
-        self.assertEqual(
-            next(vm_instructions), "                      <symbol> | </symbol>"
-        ),
-        self.assertEqual(next(vm_instructions), "                      <term>"),
-        self.assertEqual(
-            next(vm_instructions),
-            "                        <identifier> j </identifier>",
-        ),
-        self.assertEqual(next(vm_instructions), "                      </term>"),
-        self.assertEqual(next(vm_instructions), "                    </expression>"),
-        self.assertEqual(
-            next(vm_instructions), "                    <symbol> ; </symbol>"
-        ),
-        self.assertEqual(next(vm_instructions), "                  </letStatement>"),
-        self.assertEqual(next(vm_instructions), "                </statements>"),
-        self.assertEqual(next(vm_instructions), "              <symbol> } </symbol>"),
-        self.assertEqual(next(vm_instructions), "            </ifStatement>"),
-        self.assertEqual(next(vm_instructions), "            <returnStatement>"),
-        self.assertEqual(
-            next(vm_instructions), "            <keyword> return </keyword>"
-        ),
-        self.assertEqual(next(vm_instructions), "              <symbol> ; </symbol>"),
-        self.assertEqual(next(vm_instructions), "            </returnStatement>"),
-        self.assertEqual(next(vm_instructions), "          </statements>"),
-        self.assertEqual(next(vm_instructions), "        <symbol> } </symbol>"),
-        self.assertEqual(next(vm_instructions), "      </subroutineBody>"),
-        self.assertEqual(next(vm_instructions), "  </subroutineDec>"),
-        self.assertEqual(next(vm_instructions), "  <symbol> } </symbol>"),
-        self.assertEqual(next(vm_instructions), "</class>"),
+        engine = CompilationEngine("SquareGame.jack")
+        vm_instructions = engine.compile_class(mock_tokens, SymbolTable())
+
+        self.assertEqual(next(vm_instructions), "function SquareGame.new 0")
+        self.assertEqual(next(vm_instructions), "push constant 2")
+        self.assertEqual(next(vm_instructions), "call Memory.alloc 1")
+        self.assertEqual(next(vm_instructions), "pop pointer 0")
+        self.assertEqual(next(vm_instructions), "push constant 0")
+        self.assertEqual(next(vm_instructions), "push constant 0")
+        self.assertEqual(next(vm_instructions), "push constant 30")
+        self.assertEqual(next(vm_instructions), "call Square.new 3")
+        self.assertEqual(next(vm_instructions), "pop this 0")
+        self.assertEqual(next(vm_instructions), "push constant 0")
+        self.assertEqual(next(vm_instructions), "pop this 1")
+        self.assertEqual(next(vm_instructions), "push pointer 0")
+        self.assertEqual(next(vm_instructions), "return")
+        self.assertEqual(next(vm_instructions), "function SquareGame.dispose 0")
+        self.assertEqual(next(vm_instructions), "push argument 0")
+        self.assertEqual(next(vm_instructions), "pop pointer 0")
+        self.assertEqual(next(vm_instructions), "push this 0")
+        self.assertEqual(next(vm_instructions), "call Square.dispose 1")
+        self.assertEqual(next(vm_instructions), "pop temp 0")
+        self.assertEqual(next(vm_instructions), "push pointer 0")
+        self.assertEqual(next(vm_instructions), "call Memory.deAlloc 1")
+        self.assertEqual(next(vm_instructions), "pop temp 0")
+        self.assertEqual(next(vm_instructions), "push constant 0")
+        self.assertEqual(next(vm_instructions), "return")
+        self.assertEqual(next(vm_instructions), "function SquareGame.moveSquare 0")
+        self.assertEqual(next(vm_instructions), "push argument 0")
+        self.assertEqual(next(vm_instructions), "pop pointer 0")
+        self.assertEqual(next(vm_instructions), "push this 1")
+        self.assertEqual(next(vm_instructions), "push constant 1")
+        self.assertEqual(next(vm_instructions), "eq")
+        self.assertEqual(next(vm_instructions), "if-goto IF_TRUE0")
+        self.assertEqual(next(vm_instructions), "goto IF_FALSE0")
+        self.assertEqual(next(vm_instructions), "label IF_TRUE0")
+        self.assertEqual(next(vm_instructions), "push this 0")
+        self.assertEqual(next(vm_instructions), "call Square.moveUp 1")
+        self.assertEqual(next(vm_instructions), "pop temp 0")
+        self.assertEqual(next(vm_instructions), "label IF_FALSE0")
+        self.assertEqual(next(vm_instructions), "push this 1")
+        self.assertEqual(next(vm_instructions), "push constant 2")
+        self.assertEqual(next(vm_instructions), "eq")
+        self.assertEqual(next(vm_instructions), "if-goto IF_TRUE1")
+        self.assertEqual(next(vm_instructions), "goto IF_FALSE1")
+        self.assertEqual(next(vm_instructions), "label IF_TRUE1")
+        self.assertEqual(next(vm_instructions), "push this 0")
+        self.assertEqual(next(vm_instructions), "call Square.moveDown 1")
+        self.assertEqual(next(vm_instructions), "pop temp 0")
+        self.assertEqual(next(vm_instructions), "label IF_FALSE1")
+        self.assertEqual(next(vm_instructions), "push this 1")
+        self.assertEqual(next(vm_instructions), "push constant 3")
+        self.assertEqual(next(vm_instructions), "eq")
+        self.assertEqual(next(vm_instructions), "if-goto IF_TRUE2")
+        self.assertEqual(next(vm_instructions), "goto IF_FALSE2")
+        self.assertEqual(next(vm_instructions), "label IF_TRUE2")
+        self.assertEqual(next(vm_instructions), "push this 0")
+        self.assertEqual(next(vm_instructions), "call Square.moveLeft 1")
+        self.assertEqual(next(vm_instructions), "pop temp 0")
+        self.assertEqual(next(vm_instructions), "label IF_FALSE2")
+        self.assertEqual(next(vm_instructions), "push this 1")
+        self.assertEqual(next(vm_instructions), "push constant 4")
+        self.assertEqual(next(vm_instructions), "eq")
+        self.assertEqual(next(vm_instructions), "if-goto IF_TRUE3")
+        self.assertEqual(next(vm_instructions), "goto IF_FALSE3")
+        self.assertEqual(next(vm_instructions), "label IF_TRUE3")
+        self.assertEqual(next(vm_instructions), "push this 0")
+        self.assertEqual(next(vm_instructions), "call Square.moveRight 1")
+        self.assertEqual(next(vm_instructions), "pop temp 0")
+        self.assertEqual(next(vm_instructions), "label IF_FALSE3")
+        self.assertEqual(next(vm_instructions), "push constant 5")
+        self.assertEqual(next(vm_instructions), "call Sys.wait 1")
+        self.assertEqual(next(vm_instructions), "pop temp 0")
+        self.assertEqual(next(vm_instructions), "push constant 0")
+        self.assertEqual(next(vm_instructions), "return")
+        self.assertEqual(next(vm_instructions), "function SquareGame.run 2")
+        self.assertEqual(next(vm_instructions), "push argument 0")
+        self.assertEqual(next(vm_instructions), "pop pointer 0")
+        self.assertEqual(next(vm_instructions), "push constant 0")
+        self.assertEqual(next(vm_instructions), "pop local 1")
+        self.assertEqual(next(vm_instructions), "label WHILE_EXP0")
+        self.assertEqual(next(vm_instructions), "push local 1")
+        self.assertEqual(next(vm_instructions), "not")
+        self.assertEqual(next(vm_instructions), "not")
+        self.assertEqual(next(vm_instructions), "if-goto WHILE_END0")
+        self.assertEqual(next(vm_instructions), "label WHILE_EXP1")
+        self.assertEqual(next(vm_instructions), "push local 0")
+        self.assertEqual(next(vm_instructions), "push constant 0")
+        self.assertEqual(next(vm_instructions), "eq")
+        self.assertEqual(next(vm_instructions), "not")
+        self.assertEqual(next(vm_instructions), "if-goto WHILE_END1")
+        self.assertEqual(next(vm_instructions), "call Keyboard.keyPressed 0")
+        self.assertEqual(next(vm_instructions), "pop local 0")
+        self.assertEqual(next(vm_instructions), "push pointer 0")
+        self.assertEqual(next(vm_instructions), "call SquareGame.moveSquare 1")
+        self.assertEqual(next(vm_instructions), "pop temp 0")
+        self.assertEqual(next(vm_instructions), "goto WHILE_EXP1")
+        self.assertEqual(next(vm_instructions), "label WHILE_END1")
+        self.assertEqual(next(vm_instructions), "push local 0")
+        self.assertEqual(next(vm_instructions), "push constant 81")
+        self.assertEqual(next(vm_instructions), "eq")
+        self.assertEqual(next(vm_instructions), "if-goto IF_TRUE0")
+        self.assertEqual(next(vm_instructions), "goto IF_FALSE0")
+        self.assertEqual(next(vm_instructions), "label IF_TRUE0")
+        self.assertEqual(next(vm_instructions), "push constant 0")
+        self.assertEqual(next(vm_instructions), "not")
+        self.assertEqual(next(vm_instructions), "pop local 1")
+        self.assertEqual(next(vm_instructions), "label IF_FALSE0")
+        self.assertEqual(next(vm_instructions), "push local 0")
+        self.assertEqual(next(vm_instructions), "push constant 90")
+        self.assertEqual(next(vm_instructions), "eq")
+        self.assertEqual(next(vm_instructions), "if-goto IF_TRUE1")
+        self.assertEqual(next(vm_instructions), "goto IF_FALSE1")
+        self.assertEqual(next(vm_instructions), "label IF_TRUE1")
+        self.assertEqual(next(vm_instructions), "push this 0")
+        self.assertEqual(next(vm_instructions), "call Square.decSize 1")
+        self.assertEqual(next(vm_instructions), "pop temp 0")
+        self.assertEqual(next(vm_instructions), "label IF_FALSE1")
+        self.assertEqual(next(vm_instructions), "push local 0")
+        self.assertEqual(next(vm_instructions), "push constant 88")
+        self.assertEqual(next(vm_instructions), "eq")
+        self.assertEqual(next(vm_instructions), "if-goto IF_TRUE2")
+        self.assertEqual(next(vm_instructions), "goto IF_FALSE2")
+        self.assertEqual(next(vm_instructions), "label IF_TRUE2")
+        self.assertEqual(next(vm_instructions), "push this 0")
+        self.assertEqual(next(vm_instructions), "call Square.incSize 1")
+        self.assertEqual(next(vm_instructions), "pop temp 0")
+        self.assertEqual(next(vm_instructions), "label IF_FALSE2")
+        self.assertEqual(next(vm_instructions), "push local 0")
+        self.assertEqual(next(vm_instructions), "push constant 131")
+        self.assertEqual(next(vm_instructions), "eq")
+        self.assertEqual(next(vm_instructions), "if-goto IF_TRUE3")
+        self.assertEqual(next(vm_instructions), "goto IF_FALSE3")
+        self.assertEqual(next(vm_instructions), "label IF_TRUE3")
+        self.assertEqual(next(vm_instructions), "push constant 1")
+        self.assertEqual(next(vm_instructions), "pop this 1")
+        self.assertEqual(next(vm_instructions), "label IF_FALSE3")
+        self.assertEqual(next(vm_instructions), "push local 0")
+        self.assertEqual(next(vm_instructions), "push constant 133")
+        self.assertEqual(next(vm_instructions), "eq")
+        self.assertEqual(next(vm_instructions), "if-goto IF_TRUE4")
+        self.assertEqual(next(vm_instructions), "goto IF_FALSE4")
+        self.assertEqual(next(vm_instructions), "label IF_TRUE4")
+        self.assertEqual(next(vm_instructions), "push constant 2")
+        self.assertEqual(next(vm_instructions), "pop this 1")
+        self.assertEqual(next(vm_instructions), "label IF_FALSE4")
+        self.assertEqual(next(vm_instructions), "push local 0")
+        self.assertEqual(next(vm_instructions), "push constant 130")
+        self.assertEqual(next(vm_instructions), "eq")
+        self.assertEqual(next(vm_instructions), "if-goto IF_TRUE5")
+        self.assertEqual(next(vm_instructions), "goto IF_FALSE5")
+        self.assertEqual(next(vm_instructions), "label IF_TRUE5")
+        self.assertEqual(next(vm_instructions), "push constant 3")
+        self.assertEqual(next(vm_instructions), "pop this 1")
+        self.assertEqual(next(vm_instructions), "label IF_FALSE5")
+        self.assertEqual(next(vm_instructions), "push local 0")
+        self.assertEqual(next(vm_instructions), "push constant 132")
+        self.assertEqual(next(vm_instructions), "eq")
+        self.assertEqual(next(vm_instructions), "if-goto IF_TRUE6")
+        self.assertEqual(next(vm_instructions), "goto IF_FALSE6")
+        self.assertEqual(next(vm_instructions), "label IF_TRUE6")
+        self.assertEqual(next(vm_instructions), "push constant 4")
+        self.assertEqual(next(vm_instructions), "pop this 1")
+        self.assertEqual(next(vm_instructions), "label IF_FALSE6")
+        self.assertEqual(next(vm_instructions), "label WHILE_EXP2")
+        self.assertEqual(next(vm_instructions), "push local 0")
+        self.assertEqual(next(vm_instructions), "push constant 0")
+        self.assertEqual(next(vm_instructions), "eq")
+        self.assertEqual(next(vm_instructions), "not")
+        self.assertEqual(next(vm_instructions), "not")
+        self.assertEqual(next(vm_instructions), "if-goto WHILE_END2")
+        self.assertEqual(next(vm_instructions), "call Keyboard.keyPressed 0")
+        self.assertEqual(next(vm_instructions), "pop local 0")
+        self.assertEqual(next(vm_instructions), "push pointer 0")
+        self.assertEqual(next(vm_instructions), "call SquareGame.moveSquare 1")
+        self.assertEqual(next(vm_instructions), "pop temp 0")
+        self.assertEqual(next(vm_instructions), "goto WHILE_EXP2")
+        self.assertEqual(next(vm_instructions), "label WHILE_END2")
+        self.assertEqual(next(vm_instructions), "goto WHILE_EXP0")
+        self.assertEqual(next(vm_instructions), "label WHILE_END0")
+        self.assertEqual(next(vm_instructions), "push constant 0")
+        self.assertEqual(next(vm_instructions), "return")
