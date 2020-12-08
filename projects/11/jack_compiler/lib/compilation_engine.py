@@ -156,9 +156,12 @@ class CompilationEngine:
 
         if method_name:
             if name.istitle():
+                # invoke static method does not need to use this pointer
                 yield f"call {name}.{method_name} {self.sub_routine_arg_count}"
             else:
-                yield f"call {symbol_table.type_of(name)}.{method_name} {self.sub_routine_arg_count}"
+                # invoke object method
+                yield "push this 0"  # aligns the object
+                yield f"call {symbol_table.type_of(name)}.{method_name} {self.sub_routine_arg_count + 1}"
 
         else:
             # calling an object method
