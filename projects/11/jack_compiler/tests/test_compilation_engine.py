@@ -1287,7 +1287,6 @@ class TestCompilationEngine(unittest.TestCase):
         self.assertEqual(next(vm_insts), "label IF_FALSE0")
         self.assertEqual(next(vm_insts), "push constant 0")
         self.assertEqual(next(vm_insts), "return")
-        self.assertEqual(next(vm_insts), "")
 
     def test_compile_statements(self):
         mock_tokens = peekable(
