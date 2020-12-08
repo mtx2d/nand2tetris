@@ -150,6 +150,7 @@ class CompilationEngine:
 
         if method_name:
             yield f"call {name}.{method_name} {self.sub_routine_arg_count}"
+            yield "pop temp 0"
         else:
             # calling an object method
             yield "push pointer 0"
@@ -261,9 +262,6 @@ class CompilationEngine:
             for i in self.compile_subroutine_call(tokens, symbol_table, lvl + 2):
                 yield i
             next(tokens)  # ;
-            # if invoked a void sub_routine
-            if self.sub_routine_return_type == "void":
-                yield "pop temp 0"
         elif tokens.peek() == Keyword("return"):
             print("DEBUG", (lvl + 1) * " ", "return_statement")
             # TODO: handle return; keep state for sub_method return type
@@ -271,12 +269,11 @@ class CompilationEngine:
             if tokens.peek() != Symbol(";"):
                 for i in self.compile_expression(tokens, symbol_table, lvl + 2):
                     yield i
+            next(tokens)  # ;
 
-            # if this sub_routine itself return void
             if self.sub_routine_return_type == "void":
                 yield "push constant 0"
             yield "return"
-            next(tokens).to_xml(lvl + 2)  # ;
 
         else:
             raise ValueError(f"invalid token: {tokens.peek()}")
