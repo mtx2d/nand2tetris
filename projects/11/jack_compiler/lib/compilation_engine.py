@@ -177,6 +177,7 @@ class CompilationEngine:
 
     def compile_statement(self, tokens, symbol_table, lvl=0) -> str:
         if tokens.peek() == Keyword("let"):
+            SEGMENT_MAP = {"var": "local", "field": "this"}
             print("DEBUG", (lvl + 1) * " ", "let_statement")
 
             next(tokens)  # let
@@ -190,7 +191,6 @@ class CompilationEngine:
                     yield i
                 next(tokens)  # ";"
 
-                SEGMENT_MAP = {"var": "local", "field": "this"}
                 yield f"pop {SEGMENT_MAP[symbol_table.kind_of(var_name)]} {symbol_table.index_of(var_name)}"
             elif tokens.peek() == Symbol("["):
                 next(tokens).to_xml(lvl + 2)  # [
@@ -199,6 +199,8 @@ class CompilationEngine:
                 ):  # expression
                     yield i
                 next(tokens).to_xml(lvl + 2)  # "]"
+                yield f"push {SEGMENT_MAP[symbol_table.kind_of(var_name)]} {symbol_table.index_of(var_name)}"
+                yield "add"
                 next(tokens).to_xml(lvl + 2)  # =
                 for i in self.compile_expression(tokens, symbol_table, lvl + 2):
                     yield i
