@@ -253,7 +253,6 @@ class CompilationEngine:
                 for i in else_statements:
                     yield i
 
-            self.if_level -= 1
         elif tokens.peek() == Keyword("while"):
             self.while_level += 1
             print("DEBUG", (lvl + 1) * " ", "while_statement")
@@ -272,7 +271,6 @@ class CompilationEngine:
             next(tokens)  # }
             yield f"goto WHILE_EXP{self.while_level}"
             yield f"label WHILE_END{self.while_level}"
-            self.while_level -= 1
 
         elif tokens.peek() == Keyword("do"):
             print("DEBUG", (lvl + 1) * " ", "do_statement")
@@ -349,6 +347,8 @@ class CompilationEngine:
     def compile_subroutine_dec(self, tokens, symbol_table, lvl=0):
         # TODO: handle constructor and method
         symbol_table.start_subroutine()
+        self.if_level = -1
+        self.while_level = -1
         self.sub_routine_kind = next(tokens).val  # (constructor | function | method)
         self.sub_routine_return_type = next(tokens).val  # void | int | String
         self.sub_routine_name = next(tokens).val  # subroutine_name
