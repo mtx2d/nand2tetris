@@ -151,21 +151,26 @@ class CompilationEngine:
             method_name = next(tokens).val  # subroutineName
 
         next(tokens)  # (
-        for i in self.compile_expression_list(tokens, symbol_table, lvl + 1):
-            yield i
+        expression_list = [*self.compile_expression_list(tokens, symbol_table, lvl + 1)]
         next(tokens)  # )
 
         if method_name:
-            if name.istitle():
+            if name and name[0].isupper():
                 # invoke static method does not need to use this pointer
+                for i in expression_list:
+                    yield i
                 yield f"call {name}.{method_name} {self.sub_routine_arg_count}"
             else:
+                yield f"push this {symbol_table.index_of(name)}"  # aligns the object
                 # invoke object method
-                yield "push this 0"  # aligns the object
+                for i in expression_list:
+                    yield i
                 yield f"call {symbol_table.type_of(name)}.{method_name} {self.sub_routine_arg_count + 1}"
 
         else:
             # calling an object method
+            for i in expression_list:
+                yield i
             yield "push pointer 0"
             yield f"call {self.class_name}.{name} {self.sub_routine_arg_count + 1}"
         # TODO remove this stateful sub_routine_arg_count global variable
