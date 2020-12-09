@@ -197,7 +197,12 @@ class CompilationEngine:
 
     def compile_statement(self, tokens, symbol_table, lvl=0) -> str:
         if tokens.peek() == Keyword("let"):
-            SEGMENT_MAP = {"var": "local", "field": "this", "static": "static"}
+            SEGMENT_MAP = {
+                "var": "local",
+                "field": "this",
+                "static": "static",
+                "argument": "argument",
+            }
             print("DEBUG", (lvl + 1) * " ", "let_statement")
 
             next(tokens)  # let
