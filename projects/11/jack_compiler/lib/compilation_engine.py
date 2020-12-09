@@ -254,8 +254,7 @@ class CompilationEngine:
 
             if tokens and tokens.peek() == Keyword("else"):
                 yield f"goto IF_END{level}"
-            if tokens:
-                yield f"label IF_FALSE{level}"
+            yield f"label IF_FALSE{level}"
             if tokens and tokens.peek() == Keyword("else"):
                 next(tokens)  # else
                 next(tokens)  # {
