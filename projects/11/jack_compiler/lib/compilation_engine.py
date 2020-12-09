@@ -19,6 +19,12 @@ class CompilationEngine:
 
     def compile_term(self, tokens, symbol_table, lvl=0):
         print("DEBUG", (lvl + 1) * " ", "compile_term")
+        SEGMENT_MAP = {
+            "var": "local",
+            "field": "this",
+            "argument": "argument",
+            "static": "static",
+        }
         if isinstance(tokens.peek(), IntegerConstant):
             # consume int constant
             num = next(tokens)
@@ -53,7 +59,6 @@ class CompilationEngine:
         elif isinstance(tokens.peek(), Identifier):
             identifier = tokens.peek().val
             print("DEBUG", (lvl + 1) * " ", "identifier:", identifier)
-            SEGMENT_MAP = {"var": "local", "field": "this", "argument": "argument"}
             if tokens[1] == Symbol("["):
                 var_name = next(tokens).val  # varName
                 next(tokens)  # [
@@ -192,7 +197,7 @@ class CompilationEngine:
 
     def compile_statement(self, tokens, symbol_table, lvl=0) -> str:
         if tokens.peek() == Keyword("let"):
-            SEGMENT_MAP = {"var": "local", "field": "this"}
+            SEGMENT_MAP = {"var": "local", "field": "this", "static": "static"}
             print("DEBUG", (lvl + 1) * " ", "let_statement")
 
             next(tokens)  # let
