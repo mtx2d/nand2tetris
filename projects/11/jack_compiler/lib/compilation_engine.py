@@ -255,22 +255,23 @@ class CompilationEngine:
 
         elif tokens.peek() == Keyword("while"):
             self.while_level += 1
+            level = self.while_level
             print("DEBUG", (lvl + 1) * " ", "while_statement")
 
-            yield f"label WHILE_EXP{self.while_level}"
+            yield f"label WHILE_EXP{level}"
             next(tokens)  # while
             next(tokens)  # (
             for i in self.compile_expression(tokens, symbol_table, lvl + 2):
                 yield i
             next(tokens)  # )
             yield "not"
-            yield f"if-goto WHILE_END{self.while_level}"
+            yield f"if-goto WHILE_END{level}"
             next(tokens)  # {
             for i in self.compile_statements(tokens, symbol_table, lvl + 2):
                 yield i
             next(tokens)  # }
-            yield f"goto WHILE_EXP{self.while_level}"
-            yield f"label WHILE_END{self.while_level}"
+            yield f"goto WHILE_EXP{level}"
+            yield f"label WHILE_END{level}"
 
         elif tokens.peek() == Keyword("do"):
             print("DEBUG", (lvl + 1) * " ", "do_statement")
