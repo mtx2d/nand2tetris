@@ -234,6 +234,7 @@ class CompilationEngine:
 
         elif tokens.peek() == Keyword("if"):
             self.if_level += 1
+            level = self.if_level
             print("DEBUG", (lvl + 1) * " ", "if_statement")
 
             next(tokens)  # if
@@ -242,17 +243,19 @@ class CompilationEngine:
                 yield i
             next(tokens)  # )
 
+            yield f"if-goto IF_TRUE{level}"
+            yield f"goto IF_FALSE{level}"
+            yield f"label IF_TRUE{level}"
             next(tokens)  # {
             if_statements = [*self.compile_statements(tokens, symbol_table, lvl + 2)]
             next(tokens)  # }
-
-            yield f"if-goto IF_TRUE{self.if_level}"
-            yield f"goto IF_FALSE{self.if_level}"
-            yield f"label IF_TRUE{self.if_level}"
             for i in if_statements:
                 yield i
 
-            yield f"label IF_FALSE{self.if_level}"
+            if tokens and tokens.peek() == Keyword("else"):
+                yield f"goto IF_END{level}"
+            if tokens:
+                yield f"label IF_FALSE{level}"
             if tokens and tokens.peek() == Keyword("else"):
                 next(tokens)  # else
                 next(tokens)  # {
@@ -262,6 +265,7 @@ class CompilationEngine:
                 next(tokens)  # }
                 for i in else_statements:
                     yield i
+                yield f"label IF_END{level}"
 
         elif tokens.peek() == Keyword("while"):
             # TODO: remove this stateful expression for while_level
