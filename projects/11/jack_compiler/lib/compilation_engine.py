@@ -430,4 +430,5 @@ class CompilationEngine:
         next(tokens).to_xml(lvl + 1)  # }
 
     def parse(self, tokens, symbol_table):
-        yield self.compile_class(tokens, symbol_table, lvl=1)
+        for i in self.compile_class(tokens, symbol_table, lvl=1):
+            yield i

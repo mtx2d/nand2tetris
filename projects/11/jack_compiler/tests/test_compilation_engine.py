@@ -3002,7 +3002,6 @@ class TestCompilationEngine(unittest.TestCase):
         self.assertEqual(next(vm_insts), "push constant 0"),
         self.assertEqual(next(vm_insts), "return"),
 
-
     def test_complex_array(self):
         mock_tokens = peekable(
             iter(
