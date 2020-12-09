@@ -254,6 +254,7 @@ class CompilationEngine:
                     yield i
 
         elif tokens.peek() == Keyword("while"):
+            # TODO: remove this stateful expression for while_level
             self.while_level += 1
             level = self.while_level
             print("DEBUG", (lvl + 1) * " ", "while_statement")
